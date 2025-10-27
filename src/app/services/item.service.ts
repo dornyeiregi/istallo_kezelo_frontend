@@ -1,0 +1,29 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ItemDTO } from '../models/item.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ItemService {
+  private apiUrl = 'http://localhost:8080/api/items';
+
+  constructor(private http: HttpClient) {}
+
+  getAll(): Observable<ItemDTO[]> {
+    return this.http.get<ItemDTO[]>(this.apiUrl);
+  }
+
+  create(dto: ItemDTO): Observable<ItemDTO> {
+    return this.http.post<ItemDTO>(this.apiUrl, dto);
+  }
+
+  update(id: number, dto: ItemDTO): Observable<ItemDTO> {
+    return this.http.patch<ItemDTO>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+}

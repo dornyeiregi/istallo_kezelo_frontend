@@ -1,12 +1,20 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  template: `
+    <nav class="navbar">
+      <a routerLink="/horses" routerLinkActive="active">Lovak</a>
+      <a routerLink="/stables" routerLinkActive="active">Istállók</a>
+    </nav>
+
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  `,
+  styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('istallo_kezelo_frontend');
-}
+export class AppComponent {}

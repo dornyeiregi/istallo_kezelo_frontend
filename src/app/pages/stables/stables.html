@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>Istállók</h2>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+    @for (stable of stables; track stable.stableName) {
+      <div class="stable-card">
+        <h3>{{ stable.stableName }}</h3>
+        <ul>
+          @for (horse of stable.horses; track horse.horseName) {
+            <li> {{ horse.horseName }}</li>
+          }
+        </ul>
+      </div>
+    }
+  }
+</div>

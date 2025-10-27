@@ -1,0 +1,32 @@
+<div class="container">
+  <h2>Lovak listája</h2>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Név</th>
+          <th>Születési dátum</th>
+          <th>Nem</th>
+          <th>Tulajdonos</th>
+          <th>Istálló</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (horse of horses; track horse.horseName) {
+          <tr>
+            <td>{{ horse.horseName }}</td>
+            <td>{{ horse.dob }}</td>
+            <td>{{ horse.sex }}</td>
+            <td>{{ horse.ownerName }}</td>
+            <td>{{ horse.stableName }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
