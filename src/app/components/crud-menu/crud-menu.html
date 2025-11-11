@@ -1,0 +1,23 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+  rel="stylesheet"
+/>
+
+<div class="crud-menu">
+  <!-- Hamburger ikon -->
+  <button class="menu-button" (click)="toggleMenu()">
+    <span class="material-symbols-rounded">menu</span>
+  </button>
+
+  <!-- Legördülő menü -->
+  <ul class="menu-list" *ngIf="menuOpen">
+    <li
+      class="menu-item"
+      *ngFor="let action of actions"
+      (click)="execute(action)"
+    >
+      <span class="material-symbols-rounded">{{ action.icon }}</span>
+      {{ action.label }}
+    </li>
+  </ul>
+</div>

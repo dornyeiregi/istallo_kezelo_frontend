@@ -1,0 +1,145 @@
+.profile-container {
+  padding: 2rem clamp(1.5rem, 3vw, 3rem);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background: #f7f7fa;
+  color: #3b2a30;
+}
+
+/* Breadcrumb / vissza link */
+.breadcrumb {
+  margin-bottom: 1.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: #fbe3e8;
+  color: #6a1e2f;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  background: #f2b6c0;
+  outline: none;
+}
+
+.back-link .material-symbols-rounded {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+/* Fejléc */
+.profile-header h1 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: #6a1e2f;
+  text-align: center;
+}
+
+/* Gyors statisztikák */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #f2b6c0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-card .label {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #a25565;
+}
+
+.stat-card .value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #6a1e2f;
+}
+
+/* Részletes adatok szekció */
+.horse-section h2 {
+  margin: 0 0 1rem;
+  color: #6a1e2f;
+}
+
+.horse-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.horse-card {
+  background: #fff;
+  border: 1px solid #f2b6c0;
+  border-radius: 10px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.horse-card h3 {
+  margin: 0 0 0.8rem;
+  color: #6a1e2f;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: #533742;
+}
+
+.details p strong {
+  color: #6a1e2f;
+}
+
+/* Állapot üzenetek */
+.info {
+  color: #007bff;
+  font-weight: 500;
+  text-align: center;
+}
+
+.error {
+  color: #d14763;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Üres mező */
+.empty {
+  font-style: italic;
+  color: #8e7a80;
+}
+
+/* Reszponzivitás */
+@media (max-width: 640px) {
+  .profile-container {
+    padding-inline: 1.2rem;
+  }
+
+  .stat-card .value {
+    font-size: 1.4rem;
+  }
+}

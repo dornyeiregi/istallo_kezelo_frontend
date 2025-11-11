@@ -1,35 +1,141 @@
-.container {
-  padding: 1.5rem;
+.horses-container {
+  padding: 2rem clamp(1.5rem, 3vw, 3rem);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background: #f7f7fa;
+  color: #3b2a30;
 }
 
-h2 {
-  margin-bottom: 1rem;
-  color: #222;
+/* Fejléc */
+.page-header {
+  margin-bottom: 2rem;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fdfdfd;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  border-radius: 6px;
-  overflow: hidden;
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: #6a1e2f;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 0.6rem;
-  text-align: left;
+.subtitle {
+  color: #8e7a80;
+  font-size: 1rem;
+  margin-top: 0.4rem;
 }
 
-tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
+/* Állapot üzenetek */
 .info {
   color: #007bff;
+  text-align: center;
+  font-weight: 500;
 }
 
 .error {
-  color: red;
+  color: #d14763;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Ló rács */
+.horse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+/* Ló kártya */
+.horse-card {
+  background: #fff;
+  border: 1px solid #f2b6c0;
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.horse-card:hover,
+.horse-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  border-color: #f2b6c0;
+  outline: none;
+}
+
+/* Kártya fejléc */
+.horse-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.horse-card-header h3 {
+  font-size: 1.2rem;
+  color: #6a1e2f;
+  margin: 0;
+}
+
+.horse-owner {
+  font-size: 0.95rem;
+  color: #a25565;
+  font-weight: 500;
+}
+
+/* Kártya tartalom */
+.horse-details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.horse-details li {
+  font-size: 0.95rem;
+  color: #533742;
+}
+
+.horse-details strong {
+  color: #6a1e2f;
+}
+
+/* Üres lista */
+.no-horses {
+  text-align: center;
+  color: #8e7a80;
+  font-style: italic;
+}
+
+/* CRUD menü pozíció */
+app-crud-menu {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10;
+}
+
+/* Reszponzivitás */
+@media (max-width: 640px) {
+  .horses-container {
+    padding-inline: 1.2rem;
+  }
+
+  .horse-card {
+    padding: 1rem;
+  }
+
+  .horse-card-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .horse-owner {
+    font-size: 0.9rem;
+  }
 }

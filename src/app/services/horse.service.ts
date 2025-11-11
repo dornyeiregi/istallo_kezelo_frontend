@@ -12,7 +12,11 @@ export class HorseService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<HorseDTO[]> {
-    return this.http.get<HorseDTO[]>(this.apiUrl);
+    return this.http.get<HorseDTO[]>(`${this.apiUrl}/all`);
+  }
+
+  getMine(): Observable<HorseDTO[]> {
+    return this.http.get<HorseDTO[]>(`${this.apiUrl}/mine`);
   }
 
   getById(id: number): Observable<HorseDTO> {

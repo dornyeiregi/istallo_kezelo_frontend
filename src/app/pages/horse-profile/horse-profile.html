@@ -1,0 +1,66 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+  rel="stylesheet"
+/>
+
+<div class="profile-container">
+
+  <nav class="breadcrumb">
+    <a routerLink="/horses" class="back-link">
+      <span class="material-symbols-rounded">arrow_back</span>
+      Vissza a lovakhoz
+    </a>
+  </nav>
+
+  <!-- Állapotkezelés -->
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (horse) {
+
+    <!-- Ló adatainak megjelenítése -->
+    <section class="profile-header">
+      <h1>{{ horse.horseName }}</h1>
+
+      <div class="quick-stats">
+        <article class="stat-card">
+          <span class="label">Születési idő</span>
+          <span class="value">
+            {{ horse.dob || 'Nincs megadva' }}
+          </span>
+        </article>
+
+        <article class="stat-card">
+          <span class="label">Tulajdonos</span>
+          <span class="value">
+            {{ horse.ownerName || 'Ismeretlen' }}
+          </span>
+        </article>
+
+        <article class="stat-card">
+          <span class="label">Nem</span>
+          <span class="value">
+            {{ getSexLabel(horse.sex) }}
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Részletes információk -->
+    <section class="horse-section">
+      <h2>Részletes információk</h2>
+
+      <ul class="horse-list">
+        <li class="horse-card">
+          <div class="details">
+            <p><strong>Teljes név:</strong> {{ horse.horseName }}</p>
+            <p><strong>Mikrochip:</strong> {{ horse.microchipNum || 'Nincs megadva' }}</p>
+            <p><strong>Útlevél:</strong> {{ horse.passportNum || 'Nincs megadva' }}</p>
+            <p><strong>Megjegyzés:</strong> {{ horse.additional || '—' }}</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+  }
+</div>

@@ -1,0 +1,50 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+  rel="stylesheet"
+/>
+
+<div class="form-container">
+  <nav class="breadcrumb">
+    <a routerLink="/stables" class="back-link">
+      <span class="material-symbols-rounded">arrow_back</span>
+      Vissza az istállókhoz
+    </a>
+  </nav>
+
+  <h1>Új istálló létrehozása</h1>
+
+  <form (ngSubmit)="onSubmit()" #stableForm="ngForm" novalidate>
+    <div class="form-group">
+      <label for="name">Istálló neve</label>
+      <input
+        type="text"
+        id="name"
+        name="stableName"
+        [(ngModel)]="stable.stableName"
+        required
+        #name="ngModel"
+        placeholder="Pl. Nagymezői istálló"
+      />
+      @if (name.invalid && name.touched) {
+        <div class="error-msg">A név megadása kötelező.</div>
+      }
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="stableForm.invalid || loading"
+      class="submit-button"
+    >
+      <span class="material-symbols-rounded">add_circle</span>
+      Istálló mentése
+    </button>
+
+    @if (error) {
+      <div class="error-msg">{{ error }}</div>
+    }
+
+    @if (success) {
+      <div class="success-msg">Istálló sikeresen létrehozva!</div>
+    }
+  </form>
+</div>

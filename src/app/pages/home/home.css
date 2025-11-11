@@ -1,38 +1,130 @@
-.home-container {
-  text-align: center;
-  margin-top: 50px;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-}
-
-.subtitle {
-  color: #555;
-  margin-bottom: 40px;
-}
-
-.card-grid {
+/* ===== Layout ===== */
+.layout {
   display: flex;
+  min-height: 100vh;
+  background-color: #f7f7fa;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+/* ===== Bal oldali ikon sáv ===== */
+.sidebar {
+  width: 90px;
+  background-color: #f4d6db;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+  gap: 1rem;
+}
+
+.hex {
+  width: 52px;
+  height: 52px;
+  background-color: #e99ba8;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  font-size: 26px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.hex:hover {
+  background-color: #d37684;
+}
+
+.hex-top {
+  margin-bottom: 2rem;
+}
+.hex-bottom {
+  margin-top: auto;
+  margin-bottom: 2rem;
+}
+
+/* ===== Fejléc ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  background-color: #f2b6c0;
+  color: #6a1e2f;
+  font-weight: bold;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-family: 'Georgia', serif;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.signout {
+  background: transparent;
+  border: 1px solid #6a1e2f;
+  color: #6a1e2f;
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.signout:hover {
+  background-color: #6a1e2f;
+  color: white;
+}
+
+/* ===== Kártyák grid ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card {
-  width: 220px;
-  background: #f7f7f7;
-  padding: 20px;
+  background-color: white;
   border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+  color: #6a1e2f;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  background: #fff;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
 }
 
-.card h2 {
-  margin-bottom: 10px;
-  color: #333;
+.icon {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  color: #e05d74;
+}
+
+/* ===== Reszponzív ===== */
+@media (min-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1300px) {
+  .cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.material-symbols-rounded {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
 }

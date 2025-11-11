@@ -1,0 +1,106 @@
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', sans-serif;
+  color: #3b2a30;
+}
+
+h1 {
+  text-align: center;
+  color: #6a1e2f;
+  margin-bottom: 1.5rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  margin-bottom: 1rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: #fbe3e8;
+  color: #6a1e2f;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.back-link:hover {
+  background: #f2b6c0;
+}
+
+/* Form elemek */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1.2rem;
+}
+
+label {
+  font-weight: 500;
+  color: #6a1e2f;
+}
+
+input,
+textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #f2b6c0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #a25565;
+  outline: none;
+}
+
+.submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.5rem;
+  background: #6a1e2f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #8a2f40;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Üzenetek */
+.error-msg {
+  color: #d14763;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.success-msg {
+  color: #357a38;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  text-align: center;
+}

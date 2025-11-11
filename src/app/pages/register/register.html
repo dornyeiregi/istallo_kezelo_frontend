@@ -1,0 +1,131 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+  rel="stylesheet"
+/>
+
+<div class="register-layout">
+  <section class="showcase">
+    <div class="overlay">
+      <h1>Csatlakozz a StableManagerhez</h1>
+      <p>
+        Hozz létre fiókot, válaszd ki szerepköröd, és kezeld az istállók mindennapi működését
+        digitálisan.
+      </p>
+    </div>
+  </section>
+
+  <section class="form-panel">
+    <div class="form-wrapper">
+      <h2>Új felhasználó létrehozása</h2>
+      <p class="subtitle">
+        Állítsd be a felhasználói adataidat, és válaszd ki, hogy tulajdonosként vagy
+        alkalmazottként veszel részt a rendszerben.
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Vezetéknév</span>
+            <input type="text" formControlName="lName" placeholder="pl. Kovács" autocomplete="family-name" />
+            @if (lastNameInvalid) {
+              <span class="field-error">Legalább 2 karakter szükséges.</span>
+            }
+          </label>
+
+          <label class="field">
+            <span class="field-label">Keresztnév</span>
+            <input type="text" formControlName="fName" placeholder="pl. Lilla" autocomplete="given-name" />
+            @if (firstNameInvalid) {
+              <span class="field-error">Legalább 2 karakter szükséges.</span>
+            }
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">E-mail cím</span>
+            <input type="email" formControlName="email" placeholder="pl. lilla@example.com" autocomplete="email" />
+            @if (emailInvalid) {
+              <span class="field-error">Adj meg érvényes e-mail címet.</span>
+            }
+          </label>
+
+          <label class="field">
+            <span class="field-label">Telefonszám (opcionális)</span>
+            <input type="tel" formControlName="phone" placeholder="pl. +36 30 123 4567" autocomplete="tel" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Felhasználónév</span>
+          <input type="text" formControlName="username" placeholder="pl. lillakovacs" autocomplete="username" />
+          @if (usernameInvalid) {
+            <span class="field-error">Legalább 3 karakter szükséges.</span>
+          }
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">Jelszó</span>
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Minimum 8 karakter"
+              autocomplete="new-password"
+            />
+            @if (passwordInvalid) {
+              <span class="field-error">A jelszónak legalább 8 karakter hosszúnak kell lennie.</span>
+            }
+          </label>
+
+          <label class="field">
+            <span class="field-label">Jelszó megerősítése</span>
+            <input type="password" formControlName="confirmPassword" placeholder="Írd be újra a jelszót" />
+            @if (confirmPasswordInvalid) {
+              <span class="field-error">
+                {{ passwordsMismatch ? 'A jelszavak nem egyeznek.' : 'A megerősítés kötelező.' }}
+              </span>
+            }
+          </label>
+        </div>
+
+        <fieldset class="field usertype-field">
+          <legend class="field-label">Felhasználói típus</legend>
+          <div class="option-group">
+            @for (type of userTypes; track type) {
+              <label class="option">
+                <input type="radio" formControlName="userType" [value]="type" />
+                <span class="option-title">{{ type === 'OWNER' ? 'Tulajdonos' : 'Alkalmazott' }}</span>
+                <span class="option-hint">
+                  {{
+                    type === 'OWNER'
+                      ? 'Teljes hozzáférés az istállókhoz és folyamatokhoz.'
+                      : 'Hozzáférés a napi teendőkhöz és lóadatokhoz.'
+                  }}
+                </span>
+              </label>
+            }
+          </div>
+        </fieldset>
+
+        @if (error) {
+          <div class="error">{{ error }}</div>
+        }
+
+        <button type="submit" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner"></span> Felhasználó létrehozása...
+          } @else {
+            <span class="material-symbols-rounded">person_add</span>
+            Regisztráció
+          }
+        </button>
+      </form>
+
+      <p class="switch-link">
+        Már van fiókod?
+        <a routerLink="/login">Jelentkezz be itt</a>.
+      </p>
+    </div>
+  </section>
+</div>

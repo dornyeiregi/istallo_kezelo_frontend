@@ -1,0 +1,55 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+  rel="stylesheet"
+/>
+
+<div class="profile-container">
+  <nav class="breadcrumb">
+    <a routerLink="/stables" class="back-link">
+      <span class="material-symbols-rounded">arrow_back</span>
+      Vissza az istállókhoz
+    </a>
+  </nav>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (stable) {
+    <section class="profile-header">
+      <h1>{{ stable.stableName }}</h1>
+      <div class="quick-stats">
+        <article class="stat-card">
+          <span class="label">Lovak száma</span>
+          <span class="value">{{ horseCount }}</span>
+        </article>
+        <article class="stat-card">
+          <span class="label">Becsült napi széna</span>
+          <span class="value">{{ estimatedDailyHayKg | number:'1.0-0' }} kg</span>
+          <span class="hint">{{ averageHayPerHorseKg }} kg / ló</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="horse-section">
+      <h2>Lovak ebben az istállóban</h2>
+
+      @if (stable.horses && stable.horses.length > 0) {
+        <ul class="horse-list">
+          @for (horse of stable.horses; track horse.horseName) {
+            <li class="horse-card">
+              <h3>{{ horse.horseName }}</h3>
+              <div class="details">
+                <span class="detail"><strong>Nem:</strong> {{ horse.sex }}</span>
+                <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
+                <span class="detail"><strong>Mikrochip:</strong> {{ horse.microchipNum }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">Jelenleg nincs ló ebben az istállóban.</p>
+      }
+    </section>
+  }
+</div>

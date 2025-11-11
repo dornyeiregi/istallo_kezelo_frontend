@@ -1,32 +1,37 @@
-<div class="container">
-  <h2>Lovak listája</h2>
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="horses-container">
+  <header class="page-header">
+    <div>
+      <h1>Lovak</h1>
+      <p class="subtitle">Az összes nyilvántartott ló és alapadataik áttekintése.</p>
+    </div>
+  </header>
 
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Név</th>
-          <th>Születési dátum</th>
-          <th>Nem</th>
-          <th>Tulajdonos</th>
-          <th>Istálló</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (horse of horses; track horse.horseName) {
-          <tr>
-            <td>{{ horse.horseName }}</td>
-            <td>{{ horse.dob }}</td>
-            <td>{{ horse.sex }}</td>
-            <td>{{ horse.ownerName }}</td>
-            <td>{{ horse.stableName }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    <section class="horse-grid" aria-label="Ló lista">
+      @for (horse of horses; track horse.horseName) {
+        <a
+          class="horse-card"
+          [routerLink]="['/horses', horse.horseName]"
+          [state]="{ horse }"
+        >
+          <div class="horse-card-header">
+            <h3>{{ horse.horseName }}</h3>
+            <span class="horse-owner">{{ horse.ownerName }}</span>
+          </div>
+
+          <ul class="horse-details">
+            <li><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</li>
+            <li><strong>Mikrochip:</strong> {{ horse.microchipNum || '—' }}</li>
+            <li><strong>Istálló:</strong> {{ horse.stableName || '—' }}</li>
+          </ul>
+        </a>
+      }
+    </section>
   }
 </div>

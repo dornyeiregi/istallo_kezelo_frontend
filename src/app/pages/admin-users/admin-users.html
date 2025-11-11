@@ -1,0 +1,38 @@
+<div class="admin-users-container">
+  <h1>Felhasználók kezelése</h1>
+
+  <div *ngIf="loading" class="loading">Betöltés...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <table *ngIf="!loading && users.length > 0">
+    <thead>
+      <tr>
+        <th>Felhasználónév</th>
+        <th>Email</th>
+        <th>Telefonszám</th>
+        <th>Szerepkör</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone || '-' }}</td>
+        <td>
+          <select
+            [ngModel]="user.userType"
+            (ngModelChange)="updateRole(user, $event)"
+          >
+            <option value="OWNER">OWNER</option>
+            <option value="EMPLOYEE">EMPLOYEE</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && users.length === 0">
+    Nincsenek felhasználók az adatbázisban.
+  </p>
+</div>

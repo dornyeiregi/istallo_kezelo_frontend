@@ -1,0 +1,149 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
+  rel="stylesheet"
+/>
+
+<div class="form-container">
+  <nav class="breadcrumb">
+    <a routerLink="/horses" class="back-link">
+      <span class="material-symbols-rounded">arrow_back</span>
+      Vissza a lovakhoz
+    </a>
+  </nav>
+
+  <h1>Új ló hozzáadása</h1>
+
+  <form (ngSubmit)="onSubmit()" #horseForm="ngForm" novalidate>
+    <div class="form-group">
+      <label for="horseName">Ló neve *</label>
+      <input
+        type="text"
+        id="horseName"
+        name="horseName"
+        [(ngModel)]="horse.horseName"
+        required
+        #horseName="ngModel"
+        placeholder="Pl. Szilaj"
+      />
+      @if (horseName.invalid && horseName.touched) {
+        <div class="error-msg">A név megadása kötelező.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="dob">Születési idő</label>
+      <input
+        type="date"
+        id="dob"
+        name="dob"
+        [(ngModel)]="horse.dob"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="sex">Ló neme *</label>
+      <select
+        id="sex"
+        name="sex"
+        [(ngModel)]="horse.sex"
+        required
+        #sex="ngModel"
+      >
+        <option [ngValue]="null" disabled selected>Válassz...</option>
+        <option value="G">Herélt</option>
+        <option value="M">Csődör</option>
+        <option value="F">Kanca</option>
+      </select>
+      @if (sex.invalid && sex.touched) {
+        <div class="error-msg">A nem megadása kötelező.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="stable">Istálló *</label>
+      <select
+        id="stable"
+        name="stableName"
+        [(ngModel)]="horse.stableName"
+        required
+        #stable="ngModel"
+      >
+        <option [ngValue]="null" disabled selected>Válassz istállót...</option>
+        @for (stable of stables; track stable.stableName) {
+          <option [ngValue]="stable.stableName">{{ stable.stableName }}</option>
+        }
+      </select>
+      @if (stable.invalid && stable.touched) {
+        <div class="error-msg">Az istálló kiválasztása kötelező.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="owner">Tulajdonos *</label>
+      <select
+        id="owner"
+        name="ownerId"
+        [(ngModel)]="horse.ownerId"
+        required
+        #owner="ngModel"
+      >
+        <option [ngValue]="null" disabled selected>Válassz tulajdonost...</option>
+        @for (user of users; track user.username) {
+          <option [ngValue]="user.id">{{ user.userLname }} {{ user.userFname }}</option>
+        }
+      </select>
+      @if (owner.invalid && owner.touched) {
+        <div class="error-msg">A tulajdonos kiválasztása kötelező.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="passportNum">Útlevélszám</label>
+      <input
+        type="text"
+        id="passportNum"
+        name="passportNum"
+        [(ngModel)]="horse.passportNum"
+        placeholder="Pl. HU123456"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="microchipNum">Mikrochip szám</label>
+      <input
+        type="text"
+        id="microchipNum"
+        name="microchipNum"
+        [(ngModel)]="horse.microchipNum"
+        placeholder="Pl. 987654321"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="additional">Megjegyzés</label>
+      <textarea
+        id="additional"
+        name="additional"
+        [(ngModel)]="horse.additional"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="horseForm.invalid || loading"
+      class="submit-button"
+    >
+      <span class="material-symbols-rounded">add_circle</span>
+      Ló mentése
+    </button>
+
+    @if (error) {
+      <div class="error-msg">{{ error }}</div>
+    }
+
+    @if (success) {
+      <div class="success-msg">Ló sikeresen hozzáadva!</div>
+    }
+  </form>
+</div>
