@@ -89,7 +89,6 @@
   padding: 1.2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: 0.2s ease;
-  text-decoration: none;
   color: inherit;
   cursor: pointer;
 }
@@ -100,6 +99,12 @@
   border-color: #e05d74;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   outline: none;
+}
+
+.stable-card a,
+.stable-card-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .stable-card-header {
@@ -124,10 +129,11 @@
   padding: 0.2rem 0.6rem;
 }
 
+/* 🔹 lovak előnézete */
 .horse-list {
   list-style: none;
   padding-left: 0;
-  margin: 0;
+  margin: 0.5rem 0 0;
 }
 
 .horse-item {
@@ -136,12 +142,61 @@
   border-radius: 6px;
   margin-bottom: 0.3rem;
   padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.more {
+  font-size: 0.85rem;
+  color: #a25565;
+  margin-top: 0.4rem;
 }
 
 .no-horses {
   font-style: italic;
   color: #999;
   margin-top: 0.5rem;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #f2b6c0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #6a1e2f;
+  margin-bottom: 0.5rem;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.save-button,
+.cancel-button {
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.save-button {
+  background: #f2b6c0;
+  color: #6a1e2f;
+}
+
+.save-button:hover {
+  background: #e5929f;
+}
+
+.cancel-button {
+  background: #ddd;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background: #bbb;
 }
 
 @media (min-width: 1000px) {

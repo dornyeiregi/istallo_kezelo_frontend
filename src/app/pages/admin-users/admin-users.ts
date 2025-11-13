@@ -59,7 +59,7 @@ ngOnDestroy(): void {
   updateRole(user: UserDTO, newRole: string): void {
     if (user.userType === newRole) return;
 
-    this.adminService.updateUserRole(user.id, newRole).subscribe({
+    this.adminService.updateUserRole(user.userId!, newRole).subscribe({
       next: (response: string) => {
         user.userType = newRole as any;
         alert(response);

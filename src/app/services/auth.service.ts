@@ -19,6 +19,24 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  getUserRole(): string {
+    const user = this.currentUserSubject.value;
+    if (!user) {
+      return '';
+    }
+
+    if (user.userType) {
+      user.userType;
+    }
+
+    if (user.roles && user.roles.length > 0) {
+      const role = user.roles[0];
+      return role.startsWith('ROLE') ? role.substring(5) : role;
+    }
+
+    return '';
+  }
+
   login(payload: LoginPayload): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiBase}/signin`, payload).pipe(
       tap((response) => {

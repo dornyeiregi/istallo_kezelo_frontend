@@ -5,5 +5,5 @@ export interface UserDTO {
   email: string;
   phone?: string;
   userType: 'ADMIN' | 'OWNER' | 'EMPLOYEE'; // Enum backendről
-  id: number;
+  userId?: number;
 }

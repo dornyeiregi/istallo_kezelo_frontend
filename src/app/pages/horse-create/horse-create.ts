@@ -13,7 +13,7 @@ import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-horse-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './horse-create.html',
   styleUrls: ['./horse-create.css']
 })
@@ -43,7 +43,6 @@ export class HorseCreatePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // betöltjük az istállókat és felhasználókat
     this.stableService.getAll().subscribe({
       next: (data) => (this.stables = data),
       error: () => (this.error = 'Nem sikerült betölteni az istállókat.')
@@ -53,6 +52,14 @@ export class HorseCreatePage implements OnInit {
       next: (data) => (this.users = data),
       error: () => (this.error = 'Nem sikerült betölteni a felhasználókat.')
     });
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/horses']);
+    }
   }
 
   onSubmit(): void {

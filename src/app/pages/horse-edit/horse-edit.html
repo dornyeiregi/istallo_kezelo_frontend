@@ -1,0 +1,94 @@
+<div class="form-container">
+  <nav class="breadcrumb">
+    <button type="button" (click)="goBack()" class="themed-button back-button">
+      <span class="material-symbols-rounded" aria-hidden="true"></span>
+      Vissza
+    </button>
+
+  </nav>
+
+  <h1>Ló szerkesztése</h1>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (horse) {
+
+    <form (ngSubmit)="onSubmit()" #editForm="ngForm" novalidate>
+
+      <div class="form-group">
+        <label for="horseName">Név</label>
+        <input
+          id="horseName"
+          name="horseName"
+          type="text"
+          [(ngModel)]="horse.horseName"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dob">Születési idő</label>
+        <input id="dob" name="dob" type="date" [(ngModel)]="horse.dob" />
+      </div>
+
+      <div class="form-group">
+        <label for="sex">Nem</label>
+        <select id="sex" name="sex" [(ngModel)]="horse.sex">
+          <option [ngValue]="'G'">Herélt</option>
+          <option [ngValue]="'M'">Csődör</option>
+          <option [ngValue]="'F'">Kanca</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ownerId">Tulajdonos</label>
+        <select id="ownerId" name="ownerId" [(ngModel)]="horse.ownerId" required>
+          @for (owner of owners; track owner.userId) {
+            <option [ngValue]="owner.userId">{{ owner.username }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="stableId">Istálló</label>
+        <select id="stableId" name="stableId" [(ngModel)]="horse.stableId" required>
+          @for (stable of stables; track stable.stableId) {
+            <option [ngValue]="stable.stableId">{{ stable.stableName }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="microchip">Mikrochip</label>
+        <input id="microchip" name="microchip" type="text" [(ngModel)]="horse.microchipNum" />
+      </div>
+
+      <div class="form-group">
+        <label for="passport">Útlevélszám</label>
+        <input id="passport" name="passport" type="text" [(ngModel)]="horse.passportNum" />
+      </div>
+
+      <div class="form-group">
+        <label for="additional">Megjegyzések</label>
+        <textarea
+          id="additional"
+          name="additional"
+          [(ngModel)]="horse.additional"
+          rows="4">
+        </textarea>
+      </div>
+
+      <button type="submit" class="submit-button themed-button">
+        <span class="material-symbols-rounded" aria-hidden="true"></span>
+        Mentés
+      </button>
+
+      @if (success) {
+        <div class="success-msg">Ló sikeresen frissítve!</div>
+      }
+
+    </form>
+  }
+</div>

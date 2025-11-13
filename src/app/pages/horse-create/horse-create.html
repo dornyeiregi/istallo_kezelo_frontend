@@ -5,9 +5,9 @@
 
 <div class="form-container">
   <nav class="breadcrumb">
-    <a routerLink="/horses" class="back-link">
+    <a (click)="goBack()" class="back-link">
       <span class="material-symbols-rounded">arrow_back</span>
-      Vissza a lovakhoz
+      Vissza
     </a>
   </nav>
 
@@ -89,7 +89,7 @@
       >
         <option [ngValue]="null" disabled selected>Válassz tulajdonost...</option>
         @for (user of users; track user.username) {
-          <option [ngValue]="user.id">{{ user.userLname }} {{ user.userFname }}</option>
+          <option [ngValue]="user.userId">{{ user.userLname }} {{ user.userFname }}</option>
         }
       </select>
       @if (owner.invalid && owner.touched) {

@@ -19,9 +19,13 @@ export class StableService {
     return this.http.post<StableDTO>(this.apiUrl, dto);
   }
 
-  update(id: number, dto: StableDTO): Observable<StableDTO> {
-    return this.http.patch<StableDTO>(`${this.apiUrl}/${id}`, dto);
+  update(stableId: number, dto: Partial<StableDTO>): Observable<StableDTO> {
+    return this.http.patch<StableDTO>(`${this.apiUrl}/${stableId}`, dto);
   }
+
+  // updateByName(stableName: string, dto: Partial<StableDTO>): Observable<StableDTO> {
+  //   return this.http.patch<StableDTO>(`${this.apiUrl}/byName/${stableName}`, dto);
+  // }
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

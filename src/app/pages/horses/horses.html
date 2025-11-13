@@ -2,10 +2,17 @@
 
 <div class="horses-container">
   <header class="page-header">
-    <div>
+    <div class="header-left">
       <h1>Lovak</h1>
-      <p class="subtitle">Az összes nyilvántartott ló és alapadataik áttekintése.</p>
+
+      @if (canToggleView) {
+        <button class="themed-button" (click)="toggleView()">
+          {{ showAll ? 'Csak a saját lovak' : 'Összes ló' }}
+        </button>
+      }
     </div>
+
+    <p class="subtitle">Az istállóhoz tartozó összes ló listája.</p>
   </header>
 
   @if (loading) {
@@ -15,22 +22,23 @@
   } @else {
     <section class="horse-grid" aria-label="Ló lista">
       @for (horse of horses; track horse.horseName) {
-        <a
-          class="horse-card"
-          [routerLink]="['/horses', horse.horseName]"
-          [state]="{ horse }"
-        >
+        <div class="horse-card" [class.edit-mode]="editMode" (click)="onCardClick(horse)">
           <div class="horse-card-header">
             <h3>{{ horse.horseName }}</h3>
-            <span class="horse-owner">{{ horse.ownerName }}</span>
+            <span class="sex-label">{{ getSexLabel(horse.sex) }}</span>
           </div>
 
-          <ul class="horse-details">
-            <li><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</li>
-            <li><strong>Mikrochip:</strong> {{ horse.microchipNum || '—' }}</li>
-            <li><strong>Istálló:</strong> {{ horse.stableName || '—' }}</li>
-          </ul>
-        </a>
+          <p><strong>Tulajdonos:</strong> {{ horse.ownerName }}</p>
+          <p><strong>Istálló:</strong> {{ horse.stableName }}</p>
+          <p><strong>Mikrochip:</strong> {{ horse.microchipNum || '-' }}</p>
+
+          @if (editMode) {
+            <div class="edit-hint">
+              <span class="material-symbols-rounded">edit</span>
+              <span>Kattints a szerkesztéshez</span>
+            </div>
+          }
+        </div>
       }
     </section>
   }

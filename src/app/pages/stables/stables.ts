@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
-import { Router, RouterLink } from '@angular/router';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-stables',
   standalone: true,
-  imports: [CommonModule, CrudMenuComponent, RouterLink],
+  imports: [CommonModule, FormsModule, CrudMenuComponent, RouterLink],
   templateUrl: './stables.html',
   styleUrls: ['./stables.css']
 })
@@ -17,10 +17,13 @@ export class StablesPage implements OnInit {
   stables: StableDTO[] = [];
   loading = true;
   error = '';
+  editMode = false;
+  editedNames: { [name: string]: string } = {};
   readonly averageHayPerHorseKg = 10;
 
-  constructor(private stableService: StableService,
-              private router: Router
+  constructor(
+    private stableService: StableService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,27 +43,49 @@ export class StablesPage implements OnInit {
     });
   }
 
-  addStable() {
-    this.router.navigate(['/stables/new'])
+  addStable(): void {
+    this.router.navigate(['/stables/new']);
   }
 
-  editStable() {
-    alert("Istálló szerkesztése");
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.editedNames = this.stables.reduce((acc, s) => {
+        acc[s.stableName] = s.stableName;
+        return acc;
+      }, {} as { [name: string]: string });
+    }
   }
 
-  deleteStable() {
-    alert("Istálló törlése");
-  }
+  saveName(stable: StableDTO): void {
+    console.log('Szerkesztett stable objektum:', stable);
+    const newName = this.editedNames[stable.stableName];
+    if (!newName || newName.trim() === '') return;
 
-  get crudActions() {
-    return [
-      { label: "Hozzáadás",
-        icon: "add",
-        onClick: () => this.addStable()
+    if (!stable.stableId) {
+      this.error = 'Hiányzik az istálló azonosítója (id)';
+      return;
+    }
+
+    const dto: Partial<StableDTO> = { stableName: newName };
+
+    this.stableService.update(stable.stableId, dto).subscribe({
+      next: () => {
+        stable.stableName = newName;
+        this.editMode = false;
       },
-      { label: "Szerkesztés", icon: "edit", onClick: () => this.editStable() },
-      { label: "Törlés", icon: "delete", onClick: () => this.deleteStable() }
-    ];
+      error: () => {
+        this.error = 'Nem sikerült módosítani az istálló nevét.';
+      }
+    });
+  }
+
+  cancelEdit(): void {
+    this.editMode = false;
+  }
+
+  deleteStable(): void {
+    alert('Istálló törlése funkció még nincs implementálva.');
   }
 
   get totalHorseCount(): number {
@@ -71,12 +96,16 @@ export class StablesPage implements OnInit {
 
   get totalDailyHayKg(): number {
     return this.stables.reduce((sum, stable) => {
-      return sum + this.estimateDailyHayForStable(stable);
+      const horseCount = stable.horses ? stable.horses.length : 0;
+      return sum + horseCount * this.averageHayPerHorseKg;
     }, 0);
   }
 
-  private estimateDailyHayForStable(stable: StableDTO): number {
-    const horseCount = stable.horses ? stable.horses.length : 0;
-    return horseCount * this.averageHayPerHorseKg;
+  get crudActions() {
+    return [
+      { label: 'Hozzáadás', icon: 'add', onClick: () => this.addStable() },
+      { label: 'Szerkesztés', icon: 'edit', onClick: () => this.toggleEditMode() },
+      { label: 'Törlés', icon: 'delete', onClick: () => this.deleteStable() }
+    ];
   }
 }

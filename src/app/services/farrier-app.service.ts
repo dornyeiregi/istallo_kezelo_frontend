@@ -19,6 +19,10 @@ export class FarrierAppService {
     return this.http.post<FarrierAppDTO>(this.apiUrl, dto);
   }
 
+  update(id: number, dto: FarrierAppDTO): Observable<FarrierAppDTO> {
+    return this.http.patch<FarrierAppDTO>(`${this.apiUrl}/${id}`, dto);
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

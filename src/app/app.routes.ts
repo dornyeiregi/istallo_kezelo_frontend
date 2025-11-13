@@ -10,6 +10,7 @@ import { StableCreatePage } from './pages/stable-create/stable-create';
 import { LoginPage } from './pages/login/login';
 import { RegisterPage } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
+import { HorseEditPage } from './pages/horse-edit/horse-edit';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -35,6 +36,12 @@ export const routes: Routes = [
     component: HorseCreatePage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN']}
+  },
+  {
+    path: 'horses/edit/:id',
+    component: HorseEditPage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'OWNER']}
   },
   {
     path: 'horses/:horseName',

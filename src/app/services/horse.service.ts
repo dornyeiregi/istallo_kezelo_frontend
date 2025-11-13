@@ -23,6 +23,11 @@ export class HorseService {
     return this.http.get<HorseDTO>(`${this.apiUrl}/${id}`);
   }
 
+  // getByName(horseName: string): Observable<HorseDTO> {
+  //   return this.http.get<HorseDTO>(`${this.apiUrl}/byName/${encodeURIComponent(horseName)}`);
+  // }
+
+
   create(dto: HorseDTO): Observable<HorseDTO> {
     return this.http.post<HorseDTO>(this.apiUrl, dto);
   }

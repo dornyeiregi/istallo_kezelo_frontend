@@ -3,11 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
+import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
+
 
 @Component({
   selector: 'app-stable-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CrudMenuComponent],
   templateUrl: './stable-profile.html',
   styleUrls: ['./stable-profile.css']
 })
@@ -66,7 +68,7 @@ export class StableProfilePage implements OnInit {
   }
 
   addStable() {
-    this.router.navigate(['/stables/new'])
+    this.router.navigate(['/horses/new'])
   }
 
   editStable() {

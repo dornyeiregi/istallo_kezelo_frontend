@@ -18,4 +18,12 @@ export class StorageService {
   create(dto: StorageDTO): Observable<StorageDTO> {
     return this.http.post<StorageDTO>(this.apiUrl, dto);
   }
+
+  update(id: number, dto: StorageDTO): Observable<StorageDTO> {
+    return this.http.patch<StorageDTO>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  delete(id:number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

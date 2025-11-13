@@ -4,7 +4,9 @@
   <header class="page-header">
     <div>
       <h1>Istállók</h1>
-      <p class="subtitle">Gyors áttekintés az aktuális kapacitásról és a napi szükségletekről.</p>
+      <p class="subtitle">
+        Gyors áttekintés az aktuális kapacitásról és a napi szükségletekről.
+      </p>
     </div>
   </header>
 
@@ -13,40 +15,73 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else {
+    <!-- Összesítő kártyák -->
     <section class="overview">
       <article class="overview-card">
         <span class="label">Összes ló</span>
         <span class="value">{{ totalHorseCount }}</span>
       </article>
+
       <article class="overview-card">
         <span class="label">Napi széna felhasználás</span>
-        <span class="value">{{ totalDailyHayKg | number:'1.0-0' }} kg</span>
-        <span class="hint">Becsült érték ({{ averageHayPerHorseKg }} kg / ló)</span>
+        <span class="value">{{ totalDailyHayKg | number: '1.0-0' }} kg</span>
+        <span class="hint"
+          >Becsült érték ({{ averageHayPerHorseKg }} kg / ló)</span
+        >
       </article>
     </section>
 
+    <!-- Istálló lista -->
     <section class="stable-grid" aria-label="Istálló lista">
       @for (stable of stables; track stable.stableName) {
-        <a
-          class="stable-card"
-          [routerLink]="['/stables', stable.stableName]"
-          [state]="{ stable }"
-        >
-          <div class="stable-card-header">
-            <h3>{{ stable.stableName }}</h3>
-            <span class="horse-count">{{ stable.horses.length || 0 }} ló</span>
-          </div>
-
-          @if (stable.horses && stable.horses.length > 0) {
-            <ul class="horse-list">
-              @for (horse of stable.horses; track horse.horseName) {
-                <li class="horse-item"> {{ horse.horseName }}</li>
-              }
-            </ul>
+        <div class="stable-card">
+          @if (editMode) {
+            <!-- Szerkesztő mód -->
+            <input
+              [(ngModel)]="editedNames[stable.stableName]"
+              class="edit-input"
+              type="text"
+            />
+            <div class="edit-buttons">
+              <button (click)="saveName(stable)" class="save-button">
+                Mentés
+              </button>
+              <button (click)="cancelEdit()" class="cancel-button">
+                Mégse
+              </button>
+            </div>
           } @else {
-            <p class="no-horses">Nincs ló ebben az istállóban.</p>
+            <!-- Normál nézet -->
+            <a
+              class="stable-card-link"
+              [routerLink]="['/stables', stable.stableName]"
+              [state]="{ stable }"
+            >
+              <div class="stable-card-header">
+                <h3>{{ stable.stableName }}</h3>
+                <span class="horse-count"
+                  >{{ stable.horses.length || 0 }} ló</span
+                >
+              </div>
+
+              @if (stable.horses && stable.horses.length > 0) {
+                <ul class="horse-list">
+                  @for (horse of stable.horses.slice(0, 3); track horse.horseName) {
+                    <li class="horse-item">{{ horse.horseName }}</li>
+                  }
+                </ul>
+
+                @if (stable.horses.length > 3) {
+                  <p class="more">
+                    +{{ stable.horses.length - 3 }} további ló
+                  </p>
+                }
+              } @else {
+                <p class="no-horses">Nincs ló ebben az istállóban.</p>
+              }
+            </a>
           }
-        </a>
+        </div>
       }
     </section>
   }

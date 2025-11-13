@@ -1,11 +1,15 @@
 export interface HorseDTO {
+  horseId?: number;
   horseName: string;
   dob: string;
-  sex: 'M' | 'F' | 'G';   // Enum
-  ownerName: string;
-  ownerId: number;
-  stableName: string;
-  stableId: number;
+  sex: string;
+
+  ownerId?: number;
+  ownerName?: string;
+
+  stableId?: number;
+  stableName?: string;
+
   microchipNum: string;
   passportNum: string;
   additional: string;
