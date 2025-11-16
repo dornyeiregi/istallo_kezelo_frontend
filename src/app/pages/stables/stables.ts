@@ -21,6 +21,12 @@ export class StablesPage implements OnInit {
   editedNames: { [name: string]: string } = {};
   readonly averageHayPerHorseKg = 10;
 
+  deleteMode = false;
+  confirmDeleteStable: StableDTO | null = null;
+
+  toastMessage = '';
+  toastVisible = false;
+
   constructor(
     private stableService: StableService,
     private router: Router
@@ -31,6 +37,8 @@ export class StablesPage implements OnInit {
   }
 
   loadStables(): void {
+    this.loading = true;
+
     this.stableService.getAll().subscribe({
       next: (data) => {
         this.stables = data;
@@ -49,6 +57,7 @@ export class StablesPage implements OnInit {
 
   toggleEditMode(): void {
     this.editMode = !this.editMode;
+
     if (this.editMode) {
       this.editedNames = this.stables.reduce((acc, s) => {
         acc[s.stableName] = s.stableName;
@@ -58,8 +67,8 @@ export class StablesPage implements OnInit {
   }
 
   saveName(stable: StableDTO): void {
-    console.log('Szerkesztett stable objektum:', stable);
     const newName = this.editedNames[stable.stableName];
+
     if (!newName || newName.trim() === '') return;
 
     if (!stable.stableId) {
@@ -85,7 +94,45 @@ export class StablesPage implements OnInit {
   }
 
   deleteStable(): void {
-    alert('Istálló törlése funkció még nincs implementálva.');
+    this.deleteMode = !this.deleteMode;
+    this.confirmDeleteStable = null;
+  }
+
+  confirmDelete(stable: StableDTO) {
+    this.confirmDeleteStable = stable;
+  }
+
+  performDelete() {
+    if (!this.confirmDeleteStable) return;
+
+    this.stableService.delete(this.confirmDeleteStable.stableId!).subscribe({
+      next: () => {
+        this.showToast(`A(z) ${this.confirmDeleteStable!.stableName} sikeresen törölve.`);
+
+        this.loadStables();
+
+        this.confirmDeleteStable = null;
+        this.deleteMode = false;
+      },
+      error: () => {
+        this.showToast('Nem sikerült törölni az istállót.');
+        this.confirmDeleteStable = null;
+        this.deleteMode = false;
+      }
+    });
+  }
+
+  cancelDelete() {
+    this.confirmDeleteStable = null;
+  }
+
+  showToast(message: string) {
+    this.toastMessage = message;
+    this.toastVisible = true;
+
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, 3000);
   }
 
   get totalHorseCount(): number {

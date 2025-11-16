@@ -11,6 +11,8 @@ import { LoginPage } from './pages/login/login';
 import { RegisterPage } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
 import { HorseEditPage } from './pages/horse-edit/horse-edit';
+import { StoragesPage } from './pages/storages/storages';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -65,6 +67,12 @@ export const routes: Routes = [
     component: StableProfilePage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN', 'EMPLOYEE']}
+  },
+  {
+    path: 'storages',
+    component: StoragesPage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'EMPLOYEE'] }
   },
   { path: '**', redirectTo: '' }
 ];

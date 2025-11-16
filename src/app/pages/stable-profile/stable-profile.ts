@@ -67,6 +67,12 @@ export class StableProfilePage implements OnInit {
     });
   }
 
+  onHorseClick(horse: any) {
+    this.router.navigate(['/horses', horse.horseName], {
+      state: { horse },
+    });
+  }
+
   addStable() {
     this.router.navigate(['/horses/new'])
   }

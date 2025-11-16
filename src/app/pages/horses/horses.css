@@ -78,3 +78,78 @@
   background-color: #a25565;
 }
 
+.horse-card.delete-mode {
+  cursor: pointer;
+  border-color: #e05d74;
+  background: #fef1f4;
+}
+
+.delete-hint {
+  margin-top: 0.4rem;
+  color: #a25565;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.delete-warning {
+  margin-bottom: 1rem;
+  padding: 12px;
+  background: #f8d9df;
+  border-left: 5px solid #e05d74;
+  border-radius: 6px;
+  color: #6a1e2f;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.cancel {
+  background-color: #a25565 !important;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f2b6c0;
+  color: #6a1e2f;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: toastIn 0.3s ease-out;
+  z-index: 2000;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

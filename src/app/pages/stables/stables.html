@@ -15,7 +15,13 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else {
-    <!-- Összesítő kártyák -->
+
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt istállóra.
+      </div>
+    }
+
     <section class="overview">
       <article class="overview-card">
         <span class="label">Összes ló</span>
@@ -25,33 +31,19 @@
       <article class="overview-card">
         <span class="label">Napi széna felhasználás</span>
         <span class="value">{{ totalDailyHayKg | number: '1.0-0' }} kg</span>
-        <span class="hint"
-          >Becsült érték ({{ averageHayPerHorseKg }} kg / ló)</span
-        >
+        <span class="hint">Becsült érték ({{ averageHayPerHorseKg }} kg / ló)</span>
       </article>
     </section>
 
-    <!-- Istálló lista -->
     <section class="stable-grid" aria-label="Istálló lista">
-      @for (stable of stables; track stable.stableName) {
-        <div class="stable-card">
-          @if (editMode) {
-            <!-- Szerkesztő mód -->
-            <input
-              [(ngModel)]="editedNames[stable.stableName]"
-              class="edit-input"
-              type="text"
-            />
-            <div class="edit-buttons">
-              <button (click)="saveName(stable)" class="save-button">
-                Mentés
-              </button>
-              <button (click)="cancelEdit()" class="cancel-button">
-                Mégse
-              </button>
-            </div>
-          } @else {
-            <!-- Normál nézet -->
+      @for (stable of stables; track stable.stableId) {
+        <div 
+          class="stable-card"
+          [class.delete-mode]="deleteMode"
+          (click)="deleteMode ? confirmDelete(stable) : null"
+        >
+
+          @if (!editMode) {
             <a
               class="stable-card-link"
               [routerLink]="['/stables', stable.stableName]"
@@ -59,12 +51,10 @@
             >
               <div class="stable-card-header">
                 <h3>{{ stable.stableName }}</h3>
-                <span class="horse-count"
-                  >{{ stable.horses.length || 0 }} ló</span
-                >
+                <span class="horse-count">{{ stable.horses.length || 0 }} ló</span>
               </div>
 
-              @if (stable.horses && stable.horses.length > 0) {
+              @if (stable.horses.length > 0) {
                 <ul class="horse-list">
                   @for (horse of stable.horses.slice(0, 3); track horse.horseName) {
                     <li class="horse-item">{{ horse.horseName }}</li>
@@ -79,10 +69,54 @@
               } @else {
                 <p class="no-horses">Nincs ló ebben az istállóban.</p>
               }
+
             </a>
+          } @else {
+            <input
+              [(ngModel)]="editedNames[stable.stableName]"
+              class="edit-input"
+              type="text"
+            />
+            <div class="edit-buttons">
+              <button (click)="saveName(stable)" class="save-button">Mentés</button>
+              <button (click)="cancelEdit()" class="cancel-button">Mégse</button>
+            </div>
           }
+
+          @if (deleteMode) {
+            <div class="delete-hint">
+              <span class="material-symbols-rounded">delete</span>
+              Kattints a törléshez
+            </div>
+          }
+
         </div>
       }
     </section>
   }
 </div>
+
+@if (confirmDeleteStable) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>A(z) <strong>{{ confirmDeleteStable!.stableName }}</strong> törlésre kerül.</p>
+
+      <div class="modal-actions">
+        <button class="delete-button" (click)="performDelete()">
+          <span class="material-symbols-rounded">delete</span> Törlés
+        </button>
+
+        <button class="cancel-button" (click)="cancelDelete()">
+          <span class="material-symbols-rounded">close</span> Mégse
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

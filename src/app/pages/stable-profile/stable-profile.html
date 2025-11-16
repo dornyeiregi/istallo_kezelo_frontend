@@ -39,7 +39,7 @@
       @if (stable.horses && stable.horses.length > 0) {
         <ul class="horse-list">
           @for (horse of stable.horses; track horse.horseName) {
-            <li class="horse-card">
+            <li class="horse-card" (click)="onHorseClick(horse)">
               <h3>{{ horse.horseName }}</h3>
               <div class="details">
                 <span class="detail"><strong>Nem:</strong> {{ horse.sex }}</span>

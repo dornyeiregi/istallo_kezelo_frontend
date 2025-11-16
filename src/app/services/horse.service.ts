@@ -36,7 +36,7 @@ export class HorseService {
     return this.http.patch<HorseDTO>(`${this.apiUrl}/${id}`, dto);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text'});
   }
 }

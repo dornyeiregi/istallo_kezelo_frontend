@@ -1,0 +1,145 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="storages-container">
+  <header class="page-header">
+    <div>
+      <h1>Tárolók</h1>
+      <p class="subtitle">
+        Készletek és felhasználás áttekintése.
+      </p>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt tárolóra.
+      </div>
+    }
+
+    <!-- Összesítő kártyák -->
+    <section class="overview">
+      <article class="overview-card">
+        <span class="label">Tárolt összes mennyiség</span>
+        <span class="value">{{ totalStored | number:'1.0-1' }}</span>
+      </article>
+
+      <article class="overview-card">
+        <span class="label">Használatban</span>
+        <span class="value">{{ totalInUse | number:'1.0-1' }}</span>
+      </article>
+
+      <article class="overview-card">
+        <span class="label">Tárolók száma</span>
+        <span class="value">{{ totalItems }}</span>
+      </article>
+    </section>
+
+    <!-- Tároló lista -->
+    <section class="storage-grid" aria-label="Tárolók lista">
+      @for (storage of storages; track storage.storageId) {
+        <div
+          class="storage-card"
+          [class.delete-mode]="deleteMode"
+          (click)="deleteMode ? confirmDelete(storage) : null"
+        >
+          <!-- Normál nézet -->
+          @if (!editMode) {
+            <div class="storage-card-header">
+              <div class="title-block">
+                <h3>{{ getItemName(storage) }}</h3>
+                <span class="item-category">{{ getItemCategory(storage) }}</span>
+              </div>
+              <span class="item-type">{{ getItemType(storage) }}</span>
+            </div>
+
+            <div class="storage-stats">
+              <p><strong>Raktáron:</strong> {{ storage.amountStored | number:'1.0-1' }}</p>
+              <p><strong>Használatban:</strong> {{ storage.amountInUse | number:'1.0-1' }}</p>
+              <p><strong>Elérhető:</strong> {{ (storage.amountStored - storage.amountInUse) | number:'1.0-1' }}</p>
+            </div>
+
+            @if (deleteMode) {
+              <div class="delete-hint">
+                <span class="material-symbols-rounded">delete</span>
+                Kattints a törléshez
+              </div>
+            }
+          } @else {
+            <!-- Szerkesztő mód -->
+            <div class="storage-card-header">
+              <div class="title-block">
+                <h3>{{ getItemName(storage) }}</h3>
+                <span class="item-category">{{ getItemCategory(storage) }}</span>
+              </div>
+              <span class="item-type">{{ getItemType(storage) }}</span>
+            </div>
+
+            <div class="edit-fields">
+              <label>
+                Raktáron:
+                <input
+                  type="number"
+                  [(ngModel)]="editedValues[storage.storageId!].amountStored"
+                />
+              </label>
+              <label>
+                Használatban:
+                <input
+                  type="number"
+                  [(ngModel)]="editedValues[storage.storageId!].amountInUse"
+                />
+              </label>
+            </div>
+
+            <div class="edit-buttons">
+              <button class="save-button" (click)="saveStorage(storage)">
+                Mentés
+              </button>
+              <button class="cancel-button" (click)="cancelEdit()">
+                Mégse
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>
+
+<!-- TÖRLÉSI MODAL -->
+@if (confirmDeleteStorage) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>
+        A(z)
+        <strong>{{ getItemName(confirmDeleteStorage) }}</strong>
+        tároló (készlet) törölve lesz.
+      </p>
+
+      <div class="modal-actions">
+        <button class="delete-button" (click)="performDelete()">
+          <span class="material-symbols-rounded">delete</span>
+          Biztos törlöd?
+        </button>
+        <button class="cancel-button" (click)="cancelDelete()">
+          <span class="material-symbols-rounded">close</span>
+          Mégse
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- TOAST -->
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

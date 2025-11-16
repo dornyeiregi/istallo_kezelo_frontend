@@ -20,6 +20,11 @@ export class HorsesPage implements OnInit {
   error = '';
   editMode = false;
   showAll = false;
+  deleteMode = false;
+  deleteSuccess = '';
+  confirmDeleteHorse: HorseDTO | null = null;
+  toastMessage: string = '';
+  toastVisible: boolean = false;
 
   constructor(private horseService: HorseService,
               private router: Router,
@@ -73,8 +78,57 @@ export class HorsesPage implements OnInit {
     this.editMode = !this.editMode;
   }
 
-  deleteHorse(): void {
-    alert('Törlés funkció később kerül hozzáadásra.');
+  showToast(message: string) {
+    this.toastMessage = message;
+    this.toastVisible = true;
+
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, 3000);
+  }
+
+  deleteHorse(horse: HorseDTO): void {
+    if (!horse.horseId) return;
+
+    this.horseService.delete(horse.horseId).subscribe({
+      next: () => {
+        this.deleteSuccess = 'A(z) ${horse.horseName} sikeresen törölve.';
+        this.horses = this.horses.filter(h => h.horseId !== horse.horseId);
+      },
+      error: () => {
+        this.error = 'Nem sikerült törölni a lovat.';
+      }
+    });
+  }
+
+  confirmDelete(horse: HorseDTO) {
+    this.confirmDeleteHorse = horse;
+  }
+
+  performDelete() {
+    if (!this.confirmDeleteHorse) return;
+
+    this.horseService.delete(this.confirmDeleteHorse.horseId!).subscribe({
+      next: () => {
+        this.showToast(`A(z) ${this.confirmDeleteHorse!.horseName} sikeresen törölve.`);
+
+        this.loadHorses();
+
+        this.confirmDeleteHorse = null;
+        this.deleteMode = false;
+      },
+      error: () => {
+        this.showToast('Nem sikerült törölni a lovat.');
+
+        this.confirmDeleteHorse = null;
+        this.deleteMode = false;
+      }
+    });
+  }
+
+
+  cancelDelete() {
+    this.confirmDeleteHorse = null;
   }
 
   get crudActions() {
@@ -92,7 +146,11 @@ export class HorsesPage implements OnInit {
       {
         label: 'Törlés',
         icon: 'delete',
-        onClick: () => this.deleteHorse()
+        onClick: () => {
+          this.deleteMode = !this.deleteMode;
+          this.confirmDeleteHorse = null;
+          this.deleteSuccess = '';
+        }
       }
     ];
   }

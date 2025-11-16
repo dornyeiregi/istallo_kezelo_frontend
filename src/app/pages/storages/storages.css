@@ -1,4 +1,4 @@
-.stables-container {
+.storages-container {
   padding: 2rem;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
@@ -23,6 +23,8 @@
   color: #84606c;
   font-size: 0.95rem;
 }
+
+/* ÖSSZESÍTŐ KÁRTYÁK */
 
 .overview {
   display: grid;
@@ -50,15 +52,12 @@
 }
 
 .overview-card .value {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #6a1e2f;
 }
 
-.overview-card .hint {
-  font-size: 0.85rem;
-  color: #9a7280;
-}
+/* INFO / ERROR */
 
 .info,
 .error {
@@ -74,40 +73,34 @@
   color: red;
 }
 
-.stable-grid {
+/* TÁROLÓ GRID */
+
+.storage-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.4rem;
   margin-top: 1rem;
 }
 
-.stable-card {
-  display: block;
-  background-color: #fff;
+.storage-card {
+  background: #fff;
   border: 2px solid #f2b6c0;
   border-radius: 10px;
   padding: 1.2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: 0.2s ease;
   color: inherit;
-  cursor: pointer;
 }
 
-.stable-card:hover,
-.stable-card:focus-visible {
-  transform: translateY(-3px);
+.storage-card:hover {
+  transform: translateY(-2px);
   border-color: #e05d74;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  outline: none;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
 }
 
-.stable-card a,
-.stable-card-link {
-  text-decoration: none;
-  color: inherit;
-}
+/* HEADER */
 
-.stable-card-header {
+.storage-card-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -115,61 +108,67 @@
   gap: 0.5rem;
 }
 
-.stable-card h3 {
+.storage-card h3 {
+  margin: 0;
   color: #6a1e2f;
-  margin-bottom: 0.5rem;
-  margin-top: 0;
+  font-size: 1.1rem;
 }
 
-.horse-count {
-  font-size: 0.9rem;
+.title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.item-category {
+  font-size: 0.8rem;
   color: #a25565;
   background: #fbe3e8;
   border-radius: 999px;
-  padding: 0.2rem 0.6rem;
+  padding: 0.1rem 0.6rem;
 }
 
-/* 🔹 lovak előnézete */
-.horse-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 0.5rem 0 0;
-}
-
-.horse-item {
-  background-color: #f8d9df;
-  color: #6a1e2f;
-  border-radius: 6px;
-  margin-bottom: 0.3rem;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.9rem;
-}
-
-.more {
+.item-type {
   font-size: 0.85rem;
-  color: #a25565;
-  margin-top: 0.4rem;
+  color: #9a7280;
 }
 
-.no-horses {
-  font-style: italic;
-  color: #999;
+/* STATISZTIKÁK */
+
+.storage-stats p {
+  margin: 0.15rem 0;
+  font-size: 0.95rem;
+}
+
+/* SZERKESZTŐ MEZŐK */
+
+.edit-fields {
+  display: flex;
+  gap: 0.75rem;
   margin-top: 0.5rem;
 }
 
-.edit-input {
-  width: 100%;
-  padding: 0.5rem 0.6rem;
-  border: 1px solid #f2b6c0;
-  border-radius: 6px;
-  font-size: 1rem;
+.edit-fields label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
   color: #6a1e2f;
-  margin-bottom: 0.5rem;
 }
+
+.edit-fields input {
+  margin-top: 0.2rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #f2b6c0;
+  font-size: 0.95rem;
+}
+
+/* SZERKESZTÉS GOMBOK */
 
 .edit-buttons {
   display: flex;
   gap: 0.5rem;
+  margin-top: 0.7rem;
 }
 
 .save-button,
@@ -199,16 +198,12 @@
   background: #bbb;
 }
 
-@media (min-width: 1000px) {
-  .stable-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* DELETE MODE */
 
-.stable-card.delete-mode {
+.storage-card.delete-mode {
+  cursor: pointer;
   border-color: #e05d74;
   background: #fef1f4;
-  cursor: pointer;
 }
 
 .delete-hint {
@@ -220,6 +215,8 @@
   gap: 4px;
 }
 
+/* FIGYELMEZTETŐ BOX */
+
 .delete-warning {
   margin-bottom: 1rem;
   padding: 12px;
@@ -228,6 +225,8 @@
   border-radius: 6px;
   color: #6a1e2f;
 }
+
+/* MODAL */
 
 .modal-backdrop {
   position: fixed;
@@ -256,30 +255,7 @@
   justify-content: center;
 }
 
-.cancel {
-  background-color: #a25565 !important;
-}
-
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #f2b6c0;
-  color: #6a1e2f;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  animation: toastIn 0.3s ease-out;
-  z-index: 2000;
-}
-
-@keyframes toastIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
+/* MODAL GOMBOK */
 
 .delete-button {
   background-color: #e05d74;
@@ -317,4 +293,33 @@
 
 .cancel-button:hover {
   background-color: #8a4957;
+}
+
+/* TOAST */
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f2b6c0;
+  color: #6a1e2f;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: toastIn 0.3s ease-out;
+  z-index: 2000;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@media (min-width: 1000px) {
+  .storage-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

@@ -56,6 +56,14 @@ export class HorseProfilePage implements OnInit {
         });
     }
 
+    goBack(): void {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            this.router.navigate(['/horses']);
+        }
+    }
+
     getSexLabel(sex: string | null | undefined): string {
     switch (sex) {
         case 'G': return 'Herélt';

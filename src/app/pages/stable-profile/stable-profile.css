@@ -128,3 +128,23 @@
     padding-inline: 1.2rem;
   }
 }
+
+.horse-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid #f2b6c0;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.horse-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  border-color: #e05d74;
+}
+
+.horse-card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
