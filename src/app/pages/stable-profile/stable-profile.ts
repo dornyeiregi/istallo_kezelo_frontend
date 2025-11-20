@@ -4,7 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
-
+import { AuthService } from '../../services/auth.service';
+import { HorseDTO } from '../../models/horse.model';
+import { HorseService } from '../../services/horse.service';
 
 @Component({
   selector: 'app-stable-profile',
@@ -18,11 +20,19 @@ export class StableProfilePage implements OnInit {
   loading = true;
   error = '';
   readonly averageHayPerHorseKg = 10;
+  editMode = false;
+  deleteMode = false;
+
+  confirmDeleteHorse: HorseDTO | null = null;
+  toastMessage = '';
+  toastVisible = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private stableService: StableService
+    private stableService: StableService,
+    private horseService: HorseService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -67,32 +77,113 @@ export class StableProfilePage implements OnInit {
     });
   }
 
-  onHorseClick(horse: any) {
-    this.router.navigate(['/horses', horse.horseName], {
-      state: { horse },
+  onHorseClick(horse: HorseDTO): void {
+    if (this.deleteMode) {
+      this.confirmDelete(horse);
+      return;
+    }
+
+    if (this.editMode) {
+      this.router.navigate(
+        ['/horses/edit', horse.horseId],
+        { state: { returnToStable: this.stable?.stableName } }
+      );
+    } else {
+      this.router.navigate(['/horses', horse.horseId]);
+    }
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    this.deleteMode = false;
+  }
+
+  toggleDeleteMode(): void {
+    this.deleteMode = !this.deleteMode;
+    this.editMode = false;
+    this.confirmDeleteHorse = null;
+  }
+
+  confirmDelete(horse: HorseDTO): void {
+    this.confirmDeleteHorse = horse;
+  }
+
+  performDelete(): void {
+    if (!this.confirmDeleteHorse?.horseId) return;
+
+    this.horseService.delete(this.confirmDeleteHorse.horseId).subscribe({
+      next: () => {
+        this.showToast(`A(z) ${this.confirmDeleteHorse?.horseName} törölve.`);
+        this.confirmDeleteHorse = null;
+
+        if (this.stable?.stableName) {
+          this.fetchStable(this.stable.stableName);
+        }
+
+        this.deleteMode = false;
+      },
+      error: () => {
+        this.showToast('Nem sikerült törölni a lovat.');
+        this.confirmDeleteHorse = null;
+        this.deleteMode = false;
+      }
     });
   }
 
-  addStable() {
-    this.router.navigate(['/horses/new'])
+  cancelDelete(): void {
+    this.confirmDeleteHorse = null;
   }
 
-  editStable() {
-    alert("Istálló szerkesztése");
-  }
+  showToast(message: string): void {
+    this.toastMessage = message;
+    this.toastVisible = true;
 
-  deleteStable() {
-    alert("Istálló törlése");
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, 3000);
   }
 
   get crudActions() {
     return [
-      { label: "Hozzáadás",
+      {
+        label: "Hozzáadás",
         icon: "add",
-        onClick: () => this.addStable()
+        onClick: () => {
+          this.router.navigate(
+            ['/horses/new'],
+            { 
+              state: { 
+                preselectStableId: this.stable?.stableId,
+                preselectStableName: this.stable?.stableName
+              }
+            }
+          );
+        }
       },
-      { label: "Szerkesztés", icon: "edit", onClick: () => this.editStable() },
-      { label: "Törlés", icon: "delete", onClick: () => this.deleteStable() }
+      {
+        label: "Szerkesztés",
+        icon: "edit",
+        onClick: () => this.toggleEditMode()
+      },
+      {
+        label: "Törlés",
+        icon: "delete",
+        onClick: () => this.toggleDeleteMode()
+      }
     ];
   }
+
+  getSexLabel(sex: string | undefined): string {
+    switch (sex) {
+      case 'M':
+        return 'Csődör';
+      case 'F':
+        return 'Kanca';
+      case 'G':
+        return 'Herélt';
+      default:
+        return sex ?? '';
+    }
+  }
+
 }

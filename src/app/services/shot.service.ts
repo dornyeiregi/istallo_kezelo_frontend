@@ -15,15 +15,21 @@ export class ShotService {
     return this.http.get<ShotDTO[]>(this.apiUrl);
   }
 
+  getById(id: number): Observable<ShotDTO> {
+    return this.http.get<ShotDTO>(`${this.apiUrl}/${id}`);
+  }
+
   create(dto: ShotDTO): Observable<ShotDTO> {
     return this.http.post<ShotDTO>(this.apiUrl, dto);
   }
 
-  update(id: number, dto: ShotDTO): Observable<ShotDTO> {
-    return this.http.patch<ShotDTO>(`${this.apiUrl}/${id}`, dto);
+  update(id: number, dto: ShotDTO): Observable<string> {
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, { responseType: 'text' }) as Observable<string>;
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+
+  delete(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' }) as Observable<string>;
   }
+
 }

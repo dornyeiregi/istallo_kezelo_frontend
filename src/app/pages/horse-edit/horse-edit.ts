@@ -6,8 +6,7 @@ import { HorseService } from '../../services/horse.service';
 import { HorseDTO } from '../../models/horse.model';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
-import { UserService } from '../../services/user.service';   // <-- NEW
-
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-horse-edit',
@@ -33,6 +32,8 @@ export class HorseEditPage implements OnInit {
   error: string | null = null;
   success = false;
 
+  returnToStable: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -42,8 +43,9 @@ export class HorseEditPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.returnToStable = history.state['returnToStable'] || null;
 
+    const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loading = true;
 
     this.horseService.getById(id).subscribe(h => {
@@ -52,8 +54,7 @@ export class HorseEditPage implements OnInit {
     });
 
     this.stableService.getAll().subscribe(st => (this.stables = st));
-
-    this.userService.getAllOwners().subscribe(o => (this.owners = o));  // <-- NEW
+    this.userService.getAll().subscribe(o => (this.owners = o));
   }
 
   onSubmit(): void {
@@ -75,7 +76,14 @@ export class HorseEditPage implements OnInit {
       next: () => {
         this.success = true;
         this.loading = false;
-        setTimeout(() => this.router.navigate(['/horses']), 1000);
+
+        setTimeout(() => {
+          if (this.returnToStable) {
+            this.router.navigate(['/stables', this.returnToStable]);
+          } else {
+            this.router.navigate(['/horses']);
+          }
+        }, 800);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a ló adatait.';

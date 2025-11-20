@@ -1,0 +1,63 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="profile-container">
+
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <span class="material-symbols-rounded"></span>
+      Vissza
+    </a>
+  </nav>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  }
+
+  @else if (error) {
+    <div class="error">{{ error }}</div>
+  }
+
+  @else if (item && storage) {
+
+    <section class="header-section">
+      <h1>{{ item.name }}</h1>
+      <span class="badge">{{ itemTypeLabels[item.itemType] }}</span>
+      <span class="badge category">{{ itemCategoryLabels[item.itemCategory] }}</span>
+    </section>
+
+    <section class="stats">
+    <div class="stat-card">
+        <span class="label">Raktáron</span>
+        <span class="value">{{ storage.amountStored | number:'1.0-1' }}</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="label">Használatban</span>
+        <span class="value">{{ storage.amountInUse | number:'1.0-1' }}</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="label">Elérhető</span>
+        <span class="value">{{ available | number:'1.0-1' }}</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="label">Napi becsült fogyás</span>
+        <span class="value">{{ estimatedDailyUse | number:'1.0-1' }}</span>
+        <span class="hint">/ nap</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="label">Várhatóan elég</span>
+        <span class="value">
+        @if (isRemainingInfinite) {
+            Nem fogy
+        } @else {
+            {{ remainingDays | number:'1.0-0' }} nap
+        }
+        </span>
+    </div>
+    </section>
+
+  }
+</div>

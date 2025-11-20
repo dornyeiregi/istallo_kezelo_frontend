@@ -323,3 +323,12 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+.edit-name-input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid #e05d74;
+  border-radius: 6px;
+}

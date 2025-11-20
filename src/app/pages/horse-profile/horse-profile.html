@@ -3,6 +3,9 @@
   rel="stylesheet"
 />
 
+<!-- Hamburger menü -->
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
 <div class="profile-container">
 
   <nav class="breadcrumb">
@@ -12,14 +15,12 @@
     </a>
   </nav>
 
-  <!-- Állapotkezelés -->
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else if (horse) {
 
-    <!-- Ló adatainak megjelenítése -->
     <section class="profile-header">
       <h1>{{ horse.horseName }}</h1>
 
@@ -47,7 +48,6 @@
       </div>
     </section>
 
-    <!-- Részletes információk -->
     <section class="horse-section">
       <h2>Részletes információk</h2>
 

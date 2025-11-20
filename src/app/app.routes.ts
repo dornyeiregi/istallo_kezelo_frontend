@@ -12,7 +12,9 @@ import { RegisterPage } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
 import { HorseEditPage } from './pages/horse-edit/horse-edit';
 import { StoragesPage } from './pages/storages/storages';
-
+import { StorageItemCreatePage } from './pages/storage-item-create/storage-item-create';
+import { ItemProfilePage } from './pages/item-profile/item-profile';
+import { ShotsPage } from './pages/shots/shots';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -73,6 +75,24 @@ export const routes: Routes = [
     component: StoragesPage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN', 'EMPLOYEE'] }
+  },
+  {
+    path: 'storages/new-item',
+    component: StorageItemCreatePage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  {
+    path: 'items/:itemId',
+    component: ItemProfilePage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'EMPLOYEE'] }
+  },
+  {
+    path: 'shots',
+    component: ShotsPage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN'] }
   },
   { path: '**', redirectTo: '' }
 ];

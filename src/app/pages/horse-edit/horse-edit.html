@@ -46,7 +46,9 @@
         <label for="ownerId">Tulajdonos</label>
         <select id="ownerId" name="ownerId" [(ngModel)]="horse.ownerId" required>
           @for (owner of owners; track owner.userId) {
-            <option [ngValue]="owner.userId">{{ owner.username }}</option>
+            <option [ngValue]="owner.userId">
+              {{ owner.userLname }} {{ owner.userFname }} ({{ owner.username }})
+            </option>
           }
         </select>
       </div>

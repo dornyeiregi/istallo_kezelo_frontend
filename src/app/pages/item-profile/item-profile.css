@@ -1,0 +1,81 @@
+.profile-container {
+  padding: 1.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.breadcrumb {
+  margin-bottom: 16px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #a25565;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.header-section {
+  margin-bottom: 1.2rem;
+}
+
+.header-section h1 {
+  margin-bottom: 0.6rem;
+  color: #6a1e2f;
+}
+
+.badge {
+  display: inline-block;
+  margin-right: 8px;
+  margin-top: 4px;
+  background: #f2b6c0;
+  color: #6a1e2f;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.badge.category {
+  background: #e05d74;
+  color: #fff;
+}
+
+
+.stats {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid #f2b6c0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-card .label {
+  font-size: 0.85rem;
+  color: #a25565;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-card .value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #6a1e2f;
+}
+
+.stat-card .hint {
+  font-size: 0.8rem;
+  color: #9a7280;
+  margin-top: -4px;
+}
+

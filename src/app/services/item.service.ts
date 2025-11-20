@@ -15,12 +15,18 @@ export class ItemService {
     return this.http.get<ItemDTO[]>(this.apiUrl);
   }
 
+  getItemById(id: number): Observable<ItemDTO> {
+    return this.http.get<ItemDTO>(`${this.apiUrl}/${id}`)
+  } 
+
   create(dto: ItemDTO): Observable<ItemDTO> {
     return this.http.post<ItemDTO>(this.apiUrl, dto);
   }
 
-  update(id: number, dto: ItemDTO): Observable<ItemDTO> {
-    return this.http.patch<ItemDTO>(`${this.apiUrl}/${id}`, dto);
+  update(id: number, dto: ItemDTO): Observable<any> {
+    return this.http.patch(`/api/items/${id}`, dto, {
+      responseType: 'text' as 'json'
+    });
   }
 
   delete(id: number): Observable<void> {

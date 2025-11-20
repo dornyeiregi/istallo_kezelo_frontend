@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HorseDTO } from '../../models/horse.model';
 import { HorseService } from '../../services/horse.service';
+import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
 
 @Component({
   selector: 'app-horse-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CrudMenuComponent],
   templateUrl: './horse-profile.html',
   styleUrls: ['./horse-profile.css']
 })
@@ -65,12 +66,63 @@ export class HorseProfilePage implements OnInit {
     }
 
     getSexLabel(sex: string | null | undefined): string {
-    switch (sex) {
-        case 'G': return 'Herélt';
-        case 'M': return 'Csődör';
-        case 'F': return 'Kanca';
-        default: return 'Ismeretlen';
+      switch (sex) {
+          case 'G': return 'Herélt';
+          case 'M': return 'Csődör';
+          case 'F': return 'Kanca';
+          default: return 'Ismeretlen';
+      }
     }
-}
 
+
+    editHorse() {
+      if (!this.horse?.horseId) return;
+      this.router.navigate(['/horses/edit', this.horse.horseId]);
+    }
+
+    editFeeding() {
+      console.log("Etetés szerkesztése");
+    }
+
+    addVaccination() {
+      console.log("Oltás hozzáadása");
+    }
+
+    addShoeing() {
+      console.log("Patkolás hozzáadása");
+    }
+
+    addTreatment() {
+      console.log("Kezelés hozzáadása");
+    }
+
+    get crudActions() {
+      return [
+        {
+          label: "Lóadatok szerkesztése",
+          icon: "edit",
+          onClick: () => this.editHorse()
+        },
+        {
+          label: "Etetés szerkesztése",
+          icon: "restaurant",
+          onClick: () => this.editFeeding()
+        },
+        {
+          label: "Oltás hozzáadása",
+          icon: "syringe",
+          onClick: () => this.addVaccination()
+        },
+        {
+          label: "Patkolás hozzáadása",
+          icon: "construction",
+          onClick: () => this.addShoeing()
+        },
+        {
+          label: "Kezelés hozzáadása",
+          icon: "medical_services",
+          onClick: () => this.addTreatment()
+        }
+      ];
+    }
 }

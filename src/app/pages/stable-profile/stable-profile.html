@@ -18,6 +18,7 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else if (stable) {
+
     <section class="profile-header">
       <h1>{{ stable.stableName }}</h1>
       <div class="quick-stats">
@@ -33,19 +34,44 @@
       </div>
     </section>
 
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt lóra.
+      </div>
+    }
+
     <section class="horse-section">
       <h2>Lovak ebben az istállóban</h2>
 
       @if (stable.horses && stable.horses.length > 0) {
         <ul class="horse-list">
-          @for (horse of stable.horses; track horse.horseName) {
-            <li class="horse-card" (click)="onHorseClick(horse)">
+          @for (horse of stable.horses; track horse.horseId) {
+            <li 
+              class="horse-card"
+              [class.edit-mode]="editMode"
+              [class.delete-mode]="deleteMode"
+              (click)="onHorseClick(horse)"
+            >
               <h3>{{ horse.horseName }}</h3>
               <div class="details">
-                <span class="detail"><strong>Nem:</strong> {{ horse.sex }}</span>
+                <span class="detail"><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</span>
                 <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
                 <span class="detail"><strong>Mikrochip:</strong> {{ horse.microchipNum }}</span>
               </div>
+
+              @if (editMode) {
+                <div class="edit-hint">
+                  <span class="material-symbols-rounded">edit</span>
+                  <span>Kattints a szerkesztéshez</span>
+                </div>
+              }
+
+              @if (deleteMode) {
+                <div class="delete-hint">
+                  <span class="material-symbols-rounded">delete</span>
+                  <span>Kattints a törléshez</span>
+                </div>
+              }
             </li>
           }
         </ul>
@@ -55,3 +81,23 @@
     </section>
   }
 </div>
+
+@if (confirmDeleteHorse) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>A(z) <strong>{{ confirmDeleteHorse.horseName }}</strong> ló törlődni fog.</p>
+
+      <div class="modal-actions">
+        <button class="themed-button" (click)="performDelete()">Törlés</button>
+        <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

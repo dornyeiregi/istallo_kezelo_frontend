@@ -53,7 +53,7 @@ export class HorsesPage implements OnInit {
   }
 
   get canToggleView(): boolean {
-    return this.authService.hasAnyRole(['ADMIN', 'EMPLOYEE', 'ROLE_ADMIN', 'ROLE_EMPLOYEE']);
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   toggleView(): void {

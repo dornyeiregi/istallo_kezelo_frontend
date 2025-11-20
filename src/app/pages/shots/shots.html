@@ -1,0 +1,85 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="shots-container">
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Oltások</h1>
+    </div>
+
+    <p class="subtitle">A rendszerben rögzített oltások listája</p>
+  </header>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt oltásra.
+      </div>
+    }
+
+    <section class="shot-grid" aria-label="Oltás lista">
+
+      @for (shot of shots; track shot.shotId) {
+        <div
+          class="shot-card"
+          [class.edit-mode]="editMode"
+          [class.delete-mode]="deleteMode"
+          (click)="onCardClick(shot)"
+        >
+
+          <div class="shot-card-header">
+            <h3>{{ shot.shotName }}</h3>
+            <span class="date-label">
+              {{ shot.date || '-' }}
+            </span>
+          </div>
+
+          <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel(shot) }}</p>
+          <p><strong>Érintett lovak száma:</strong> {{ shot.horseIds?.length || 0 }}</p>
+
+          @if (editMode) {
+            <div class="edit-hint">
+              <span class="material-symbols-rounded">edit</span>
+              <span>Kattints a szerkesztéshez</span>
+            </div>
+          }
+
+          @if (deleteMode) {
+            <div class="delete-hint">
+              <span class="material-symbols-rounded">delete</span>
+              <span>Kattints a törléshez</span>
+            </div>
+          }
+
+        </div>
+      }
+
+    </section>
+  }
+</div>
+
+@if (confirmDeleteShot) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>
+        A(z) <strong>{{ confirmDeleteShot.shotName }}</strong> oltás el fog tűnni.
+      </p>
+
+      <div class="modal-actions">
+        <button class="themed-button" (click)="performDelete()">Törlés</button>
+        <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

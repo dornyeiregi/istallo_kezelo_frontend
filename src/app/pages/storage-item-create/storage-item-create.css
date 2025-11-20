@@ -1,0 +1,125 @@
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-family: 'Inter', sans-serif;
+}
+
+.breadcrumb {
+  margin-bottom: 16px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #a25565;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #6a1e2f;
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #6a1e2f;
+}
+
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+input,
+select {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d0d0d0;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #f2b6c0;
+  box-shadow: 0 0 0 2px rgba(242, 182, 192, 0.4);
+}
+
+.submit-button {
+  background-color: #e05d74;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.25s ease;
+}
+
+.submit-button:hover {
+  background-color: #c94b60;
+}
+
+.info {
+  margin-top: 12px;
+  padding: 10px;
+  background: #fbe3e8;
+  border-left: 4px solid #e05d74;
+  border-radius: 6px;
+  color: #6a1e2f;
+  font-size: 0.95rem;
+}
+
+.success-msg {
+  margin-bottom: 16px;
+  padding: 10px;
+  background: #e8f6e8;
+  border-left: 5px solid #4b674c;
+  border-radius: 6px;
+  color: #2e4b31;
+}
+
+.error {
+  margin-bottom: 16px;
+  padding: 10px;
+  background: #fbeaea;
+  border-left: 5px solid #d9534f;
+  border-radius: 6px;
+  color: #b52b27;
+}
+
+@media (max-width: 520px) {
+  .form-container {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .submit-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

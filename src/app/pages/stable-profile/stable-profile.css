@@ -148,3 +148,140 @@
   transform: translateY(-1px);
   box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
+
+.horse-card.edit-mode {
+  border: 2px dashed #ff9800;
+  background-color: #fff3e0;
+  cursor: pointer;
+}
+
+.edit-hint {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ff9800;
+  font-size: 0.9rem;
+}
+
+.horse-card.delete-mode {
+  border: 2px solid #d32f2f;
+  background: #ffebee;
+  cursor: pointer;
+}
+
+.delete-hint {
+  margin-top: 8px;
+  color: #d32f2f;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.delete-warning {
+  padding: 8px;
+  background: #d32f2f;
+  color: white;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.2s ease-out;
+  text-align: center;
+}
+
+.modal h3 {
+  margin-top: 0;
+  color: #6a1e2f;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.modal p {
+  color: #533742;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.themed-button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: #6a1e2f;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.themed-button:hover {
+  background: #8a2e43;
+}
+
+.themed-button.cancel {
+  background: #ccc;
+  color: #333;
+}
+
+.themed-button.cancel:hover {
+  background: #bbb;
+}
+
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: #6a1e2f;
+  color: white;
+  padding: 1rem 1.3rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.3s ease-out;
+  z-index: 1000;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

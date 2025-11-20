@@ -36,6 +36,13 @@ export class HomePage implements OnInit {
       roles: ['ADMIN', 'EMPLOYEE']
     },
     {
+      icon: 'syringe',
+      title: 'Oltások',
+      description: 'Megtörtént oltások archívuma',
+      link: '/shots',
+      roles: ['ADMIN']
+    },
+    {
       icon: 'calendar_month',
       title: 'Naptár',
       description: 'Ütemezett oltások és kezelések megtekintése.',

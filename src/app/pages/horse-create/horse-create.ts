@@ -18,6 +18,7 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./horse-create.css']
 })
 export class HorseCreatePage implements OnInit {
+
   horse: Partial<HorseDTO> = {
     horseName: '',
     dob: '',
@@ -28,27 +29,36 @@ export class HorseCreatePage implements OnInit {
     stableName: '',
     ownerId: undefined
   };
+
   stables: StableDTO[] = [];
   users: UserDTO[] = [];
   loading = false;
   error = '';
   success = false;
 
+  preselectStableName: string | null = null;
+
   constructor(
     private horseService: HorseService,
     private stableService: StableService,
     private userService: UserService,
-    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+
+    this.preselectStableName = history.state['preselectStableName'] || null;
+
+    if (this.preselectStableName) {
+      this.horse.stableName = this.preselectStableName;
+    }
+
     this.stableService.getAll().subscribe({
       next: (data) => (this.stables = data),
       error: () => (this.error = 'Nem sikerült betölteni az istállókat.')
     });
 
-    this.userService.getAll?.().subscribe({
+    this.userService.getAll().subscribe({
       next: (data) => (this.users = data),
       error: () => (this.error = 'Nem sikerült betölteni a felhasználókat.')
     });
@@ -71,7 +81,17 @@ export class HorseCreatePage implements OnInit {
       next: () => {
         this.success = true;
         this.loading = false;
-        setTimeout(() => this.router.navigate(['/horses']), 1500);
+
+        setTimeout(() => {
+          if (this.preselectStableName) {
+            const stable = this.stables.find(s => s.stableName === this.preselectStableName);
+            if (stable) {
+              this.router.navigate(['/stables', stable.stableName]);
+              return;
+            }
+          }
+          this.router.navigate(['/horses']);
+        }, 1200);
       },
       error: (err) => {
         console.error(err);

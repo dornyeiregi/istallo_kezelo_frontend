@@ -4,9 +4,7 @@
   <header class="page-header">
     <div>
       <h1>Tárolók</h1>
-      <p class="subtitle">
-        Készletek és felhasználás áttekintése.
-      </p>
+      <p class="subtitle">Készletek és felhasználás áttekintése.</p>
     </div>
   </header>
 
@@ -22,7 +20,7 @@
       </div>
     }
 
-    <!-- Összesítő kártyák -->
+    <!-- Összesítők -->
     <section class="overview">
       <article class="overview-card">
         <span class="label">Tárolt összes mennyiség</span>
@@ -40,79 +38,114 @@
       </article>
     </section>
 
-    <!-- Tároló lista -->
-    <section class="storage-grid" aria-label="Tárolók lista">
-      @for (storage of storages; track storage.storageId) {
-        <div
-          class="storage-card"
-          [class.delete-mode]="deleteMode"
-          (click)="deleteMode ? confirmDelete(storage) : null"
-        >
-          <!-- Normál nézet -->
-          @if (!editMode) {
-            <div class="storage-card-header">
-              <div class="title-block">
-                <h3>{{ getItemName(storage) }}</h3>
-                <span class="item-category">{{ getItemCategory(storage) }}</span>
-              </div>
-              <span class="item-type">{{ getItemType(storage) }}</span>
-            </div>
+    <!-- ======================================= -->
+    <!--   TAKARMÁNY TÁROLÓK (CONSUMABLE)        -->
+    <!-- ======================================= -->
+    <h2 class="storage-section-title">Takarmány tárolók</h2>
 
-            <div class="storage-stats">
-              <p><strong>Raktáron:</strong> {{ storage.amountStored | number:'1.0-1' }}</p>
-              <p><strong>Használatban:</strong> {{ storage.amountInUse | number:'1.0-1' }}</p>
-              <p><strong>Elérhető:</strong> {{ (storage.amountStored - storage.amountInUse) | number:'1.0-1' }}</p>
-            </div>
+    @if (consumableStorages.length === 0) {
+      <p class="empty-text">Nincs takarmány jellegű tároló.</p>
+    } @else {
+      <section class="storage-grid">
+        @for (storage of consumableStorages; track storage.storageId) {
+          <div
+            class="storage-card"
+            [class.delete-mode]="deleteMode"
+            (click)="onStorageClick(storage)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="cardTemplate"
+              [ngTemplateOutletContext]="{ storage: storage }"
+            ></ng-container>
+          </div>
+        }
+      </section>
+    }
 
-            @if (deleteMode) {
-              <div class="delete-hint">
-                <span class="material-symbols-rounded">delete</span>
-                Kattints a törléshez
-              </div>
-            }
-          } @else {
-            <!-- Szerkesztő mód -->
-            <div class="storage-card-header">
-              <div class="title-block">
-                <h3>{{ getItemName(storage) }}</h3>
-                <span class="item-category">{{ getItemCategory(storage) }}</span>
-              </div>
-              <span class="item-type">{{ getItemType(storage) }}</span>
-            </div>
+    <!-- ======================================= -->
+    <!--            ESZKÖZ TÁROLÓK               -->
+    <!-- ======================================= -->
+    <h2 class="storage-section-title">Eszköz tárolók</h2>
 
-            <div class="edit-fields">
-              <label>
-                Raktáron:
-                <input
-                  type="number"
-                  [(ngModel)]="editedValues[storage.storageId!].amountStored"
-                />
-              </label>
-              <label>
-                Használatban:
-                <input
-                  type="number"
-                  [(ngModel)]="editedValues[storage.storageId!].amountInUse"
-                />
-              </label>
-            </div>
+    @if (objectStorages.length === 0) {
+      <p class="empty-text">Nincs eszköz jellegű tároló.</p>
+    } @else {
+      <section class="storage-grid">
+        @for (storage of objectStorages; track storage.storageId) {
+          <div
+            class="storage-card"
+            [class.delete-mode]="deleteMode"
+            (click)="onStorageClick(storage)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="cardTemplate"
+              [ngTemplateOutletContext]="{ storage: storage }"
+            ></ng-container>
+          </div>
+        }
+      </section>
+    }
 
-            <div class="edit-buttons">
-              <button class="save-button" (click)="saveStorage(storage)">
-                Mentés
-              </button>
-              <button class="cancel-button" (click)="cancelEdit()">
-                Mégse
-              </button>
-            </div>
-          }
-        </div>
-      }
-    </section>
   }
 </div>
 
-<!-- TÖRLÉSI MODAL -->
+
+
+<!-- =========================== -->
+<!--       KÁRTYA TEMPLATE       -->
+<!-- =========================== -->
+<ng-template #cardTemplate let-storage="storage">
+  @if (!editMode) {
+    <div class="storage-card-header">
+      <div class="title-block">
+        <h3>{{ getItemName(storage) }}</h3>
+        <span class="item-type">{{ getItemType(storage) }}</span>
+      </div>
+      <span class="item-category">{{ getItemCategory(storage) }}</span>
+    </div>
+
+    <div class="storage-stats">
+      <p><strong>Raktáron:</strong> {{ storage.amountStored | number:'1.0-1' }}</p>
+      <p><strong>Használatban:</strong> {{ storage.amountInUse | number:'1.0-1' }}</p>
+      <p><strong>Elérhető:</strong> {{ (storage.amountStored - storage.amountInUse) | number:'1.0-1' }}</p>
+    </div>
+
+    @if (deleteMode) {
+      <div class="delete-hint">
+        <span class="material-symbols-rounded">delete</span>
+        Kattints a törléshez
+      </div>
+    }
+  } @else {
+
+      <div class="storage-card-header">
+        <div class="title-block">
+          <!-- Név szerkesztése -->
+          <input
+            class="edit-name-input"
+            type="text"
+            [(ngModel)]="editedNames[storage.storageId!]"
+            (click)="$event.stopPropagation()"
+          />
+          <span class="item-category">{{ getItemCategory(storage) }}</span>
+        </div>
+        <span class="item-type">{{ getItemType(storage) }}</span>
+      </div>
+
+      <div class="edit-buttons">
+        <button class="save-button" (click)="saveStorage(storage)">Mentés</button>
+        <button class="cancel-button" (click)="cancelEdit()">Mégse</button>
+      </div>
+
+    }
+
+</ng-template>
+
+
+
+<!-- ======================== -->
+<!--       TÖRLÉSI MODAL      -->
+<!-- ======================== -->
 @if (confirmDeleteStorage) {
   <div class="modal-backdrop">
     <div class="modal">
@@ -139,7 +172,5 @@
 
 <!-- TOAST -->
 @if (toastVisible) {
-  <div class="toast">
-    {{ toastMessage }}
-  </div>
+  <div class="toast">{{ toastMessage }}</div>
 }
