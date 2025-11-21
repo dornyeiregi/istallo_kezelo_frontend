@@ -38,9 +38,9 @@
       </article>
     </section>
 
-    <!-- ======================================= -->
-    <!--   TAKARMÁNY TÁROLÓK (CONSUMABLE)        -->
-    <!-- ======================================= -->
+    <!-- =============================== -->
+    <!--      TAKARMÁNY TÁROLÓK         -->
+    <!-- =============================== -->
     <h2 class="storage-section-title">Takarmány tárolók</h2>
 
     @if (consumableStorages.length === 0) {
@@ -51,7 +51,7 @@
           <div
             class="storage-card"
             [class.delete-mode]="deleteMode"
-            (click)="onStorageClick(storage)"
+            (click)="editMode ? null : onStorageClick(storage)"
           >
             <ng-container
               [ngTemplateOutlet]="cardTemplate"
@@ -62,9 +62,9 @@
       </section>
     }
 
-    <!-- ======================================= -->
-    <!--            ESZKÖZ TÁROLÓK               -->
-    <!-- ======================================= -->
+    <!-- =============================== -->
+    <!--         ESZKÖZ TÁROLÓK         -->
+    <!-- =============================== -->
     <h2 class="storage-section-title">Eszköz tárolók</h2>
 
     @if (objectStorages.length === 0) {
@@ -75,7 +75,7 @@
           <div
             class="storage-card"
             [class.delete-mode]="deleteMode"
-            (click)="onStorageClick(storage)"
+            (click)="editMode ? null : onStorageClick(storage)"
           >
             <ng-container
               [ngTemplateOutlet]="cardTemplate"
@@ -89,13 +89,12 @@
   }
 </div>
 
-
-
-<!-- =========================== -->
-<!--       KÁRTYA TEMPLATE       -->
-<!-- =========================== -->
+<!-- =============================== -->
+<!--          KÁRTYA TEMPLATE        -->
+<!-- =============================== -->
 <ng-template #cardTemplate let-storage="storage">
   @if (!editMode) {
+
     <div class="storage-card-header">
       <div class="title-block">
         <h3>{{ getItemName(storage) }}</h3>
@@ -116,36 +115,33 @@
         Kattints a törléshez
       </div>
     }
+
   } @else {
 
-      <div class="storage-card-header">
-        <div class="title-block">
-          <!-- Név szerkesztése -->
-          <input
-            class="edit-name-input"
-            type="text"
-            [(ngModel)]="editedNames[storage.storageId!]"
-            (click)="$event.stopPropagation()"
-          />
-          <span class="item-category">{{ getItemCategory(storage) }}</span>
-        </div>
-        <span class="item-type">{{ getItemType(storage) }}</span>
+    <div class="storage-card-header">
+      <div class="title-block">
+        <input
+          class="edit-name-input"
+          type="text"
+          [(ngModel)]="editedNames[storage.storageId!]"
+          (click)="$event.stopPropagation()"
+        />
+        <span class="item-category">{{ getItemCategory(storage) }}</span>
       </div>
+      <span class="item-type">{{ getItemType(storage) }}</span>
+    </div>
 
-      <div class="edit-buttons">
-        <button class="save-button" (click)="saveStorage(storage)">Mentés</button>
-        <button class="cancel-button" (click)="cancelEdit()">Mégse</button>
-      </div>
+    <div class="edit-buttons">
+      <button class="save-button" (click)="saveStorage(storage)">Mentés</button>
+      <button class="cancel-button" (click)="cancelEdit()">Mégse</button>
+    </div>
 
-    }
-
+  }
 </ng-template>
 
-
-
-<!-- ======================== -->
-<!--       TÖRLÉSI MODAL      -->
-<!-- ======================== -->
+<!-- ============================ -->
+<!--       TÖRLÉSI MODAL          -->
+<!-- ============================ -->
 @if (confirmDeleteStorage) {
   <div class="modal-backdrop">
     <div class="modal">
@@ -153,7 +149,7 @@
       <p>
         A(z)
         <strong>{{ getItemName(confirmDeleteStorage) }}</strong>
-        tároló (készlet) törölve lesz.
+        tároló törölve lesz.
       </p>
 
       <div class="modal-actions">
@@ -170,7 +166,7 @@
   </div>
 }
 
-<!-- TOAST -->
+<!-- Toast -->
 @if (toastVisible) {
   <div class="toast">{{ toastMessage }}</div>
 }

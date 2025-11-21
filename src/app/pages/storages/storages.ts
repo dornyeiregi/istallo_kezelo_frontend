@@ -18,6 +18,10 @@ import { ItemService } from '../../services/item.service';
   styleUrls: ['./storages.css']
 })
 export class StoragesPage implements OnInit {
+
+  // ========================
+  //   ADATOK
+  // ========================
   storages: StorageDTO[] = [];
   consumableStorages: StorageDTO[] = [];
   objectStorages: StorageDTO[] = [];
@@ -26,15 +30,13 @@ export class StoragesPage implements OnInit {
 
   loading = true;
   error = '';
+
   editMode = false;
   deleteMode = false;
 
-  // Csak a név szerkesztéséhez
   editedNames: { [storageId: number]: string } = {};
-
   confirmDeleteStorage: StorageDTO | null = null;
 
-  // Toast
   toastMessage = '';
   toastVisible = false;
 
@@ -60,6 +62,9 @@ export class StoragesPage implements OnInit {
     this.loadData();
   }
 
+  // ======================
+  //   ADATOK BETÖLTÉSE
+  // ======================
   loadData(): void {
     this.loading = true;
     this.error = '';
@@ -77,12 +82,11 @@ export class StoragesPage implements OnInit {
           return acc;
         }, {} as { [id: number]: ItemDTO });
 
-        // Szétválasztás kategória szerint
-        this.consumableStorages = this.storages.filter(
+        this.consumableStorages = storages.filter(
           s => this.getItemCategory(s) === 'Takarmány'
         );
 
-        this.objectStorages = this.storages.filter(
+        this.objectStorages = storages.filter(
           s => this.getItemCategory(s) === 'Eszköz'
         );
 
@@ -95,8 +99,9 @@ export class StoragesPage implements OnInit {
     });
   }
 
-  // ------- CRUD -------
-
+  // ================================
+  //   CRUD MŰVELETEK
+  // ================================
   addItemWithStorage(): void {
     this.router.navigate(['/storages/new-item']);
   }
@@ -105,9 +110,12 @@ export class StoragesPage implements OnInit {
     this.editMode = !this.editMode;
 
     if (this.editMode) {
+      this.deleteMode = false;
+      this.confirmDeleteStorage = null;
+
       this.editedNames = this.storages.reduce((acc, s) => {
         if (s.storageId != null) {
-          acc[s.storageId] = this.getItemName(s); // Jelenlegi item név
+          acc[s.storageId] = this.getItemName(s);
         }
         return acc;
       }, {} as { [id: number]: string });
@@ -116,38 +124,33 @@ export class StoragesPage implements OnInit {
 
   deleteStorageMode(): void {
     this.deleteMode = !this.deleteMode;
+    if (this.deleteMode) this.editMode = false;
     this.confirmDeleteStorage = null;
   }
 
-  // ------- Tároló név mentése (Item frissítés) -------
-
   saveStorage(storage: StorageDTO): void {
-    if (!storage.storageId) return;
-
-    const itemId = storage.itemId;
-    if (!itemId) return;
+    if (!storage.storageId || !storage.itemId) return;
 
     const newName = this.editedNames[storage.storageId];
-    if (!newName || newName.trim().length === 0) {
+    if (!newName || newName.trim() === '') {
       this.error = 'A név nem lehet üres.';
       return;
     }
 
-    // teljes ItemDTO összeállítása
-    const item = this.itemsMap[itemId];
+    const item = this.itemsMap[storage.itemId];
 
     const dto: ItemDTO = {
-      itemId: itemId,
+      itemId: item.itemId!,
       name: newName,
-      itemType: item.itemType,           // 🔥 KELL
-      itemCategory: item.itemCategory    // 🔥 KELL
+      itemType: item.itemType,
+      itemCategory: item.itemCategory
     };
 
-    this.itemService.update(itemId, dto).subscribe({
+    this.itemService.update(item.itemId!, dto).subscribe({
       next: () => {
-        this.itemsMap[itemId].name = newName;
         this.showToast('Tétel neve sikeresen módosítva.');
         this.editMode = false;
+        this.loadData();
       },
       error: () => {
         this.error = 'Nem sikerült módosítani a tétel nevét.';
@@ -159,15 +162,13 @@ export class StoragesPage implements OnInit {
     this.editMode = false;
   }
 
-  // ------- Törlés -------
-
   confirmDelete(storage: StorageDTO): void {
     this.confirmDeleteStorage = storage;
   }
 
   performDelete(): void {
     const storage = this.confirmDeleteStorage;
-    if (!storage || !storage.storageId) return;
+    if (!storage?.storageId) return;
 
     this.storageService.delete(storage.storageId).subscribe({
       next: () => {
@@ -188,17 +189,19 @@ export class StoragesPage implements OnInit {
     this.confirmDeleteStorage = null;
   }
 
-  // ------- Toast -------
-
+  // ======================
+  //   TOAST
+  // ======================
   showToast(message: string): void {
     this.toastMessage = message;
     this.toastVisible = true;
 
-    setTimeout(() => { this.toastVisible = false; }, 3000);
+    setTimeout(() => (this.toastVisible = false), 3000);
   }
 
-  // ------- Kiíró segédmetódusok -------
-
+  // ======================
+  //   SEGÉD FÜGGVÉNYEK
+  // ======================
   getItemName(storage: StorageDTO): string {
     const item = this.itemsMap[storage.itemId];
     return item ? item.name : 'Ismeretlen tétel';
@@ -214,6 +217,9 @@ export class StoragesPage implements OnInit {
     return item ? this.itemCategoryLabels[item.itemCategory] : '-';
   }
 
+  // ======================
+  //   ÖSSZEGZŐ ADATOK
+  // ======================
   get totalStored(): number {
     return this.storages.reduce((sum, s) => sum + (s.amountStored || 0), 0);
   }
@@ -226,28 +232,24 @@ export class StoragesPage implements OnInit {
     return this.storages.length;
   }
 
-  // ------- Kártya kattintás -------
-
+  // ======================
+  //   KÁRTYA KATTINTÁS
+  // ======================
   onStorageClick(storage: StorageDTO): void {
-
-    // 1) Szerkesztés módban nem történik kattintás
     if (this.editMode) return;
-
-    // 2) Törlés módban törlés indul
     if (this.deleteMode) {
       this.confirmDelete(storage);
       return;
     }
 
-    // 3) Normál esetben navigáció
     this.router.navigate(['/items', storage.itemId], {
       state: { storage }
     });
   }
 
-
-  // ------- CRUD menü -------
-
+  // ======================
+  //   CRUD MENÜ
+  // ======================
   get crudActions() {
     return [
       {

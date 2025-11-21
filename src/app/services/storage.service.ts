@@ -19,12 +19,15 @@ export class StorageService {
     return this.http.post<StorageDTO>(this.apiUrl, dto);
   }
 
-  update(id: number, dto: StorageDTO): Observable<StorageDTO> {
-    return this.http.patch<StorageDTO>(`${this.apiUrl}/${id}`, dto);
+  update(id: number, dto: StorageDTO): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, {
+      responseType: 'text'
+    });
   }
 
-  delete(id: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      responseType: 'text'
+    });
   }
-
 }

@@ -26,38 +26,210 @@
     </section>
 
     <section class="stats">
-    <div class="stat-card">
+      <div class="stat-card">
         <span class="label">Raktáron</span>
         <span class="value">{{ storage.amountStored | number:'1.0-1' }}</span>
-    </div>
+      </div>
 
-    <div class="stat-card">
+      <div class="stat-card">
         <span class="label">Használatban</span>
         <span class="value">{{ storage.amountInUse | number:'1.0-1' }}</span>
-    </div>
+      </div>
 
-    <div class="stat-card">
+      <div class="stat-card">
         <span class="label">Elérhető</span>
         <span class="value">{{ available | number:'1.0-1' }}</span>
-    </div>
+      </div>
 
-    <div class="stat-card">
+      <div class="stat-card">
         <span class="label">Napi becsült fogyás</span>
         <span class="value">{{ estimatedDailyUse | number:'1.0-1' }}</span>
         <span class="hint">/ nap</span>
-    </div>
+      </div>
 
-    <div class="stat-card">
+      <div class="stat-card">
         <span class="label">Várhatóan elég</span>
         <span class="value">
-        @if (isRemainingInfinite) {
+          @if (isRemainingInfinite) {
             Nem fogy
-        } @else {
+          } @else {
             {{ remainingDays | number:'1.0-0' }} nap
-        }
+          }
         </span>
-    </div>
+      </div>
     </section>
 
   }
 </div>
+
+<!-- ============================ -->
+<!--   KÉSZLET HOZZÁADÁSA MODAL   -->
+<!-- ============================ -->
+@if (showAddStockModal && item && storage) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Készlet hozzáadása</h3>
+      <p>
+        Add meg, mennyi <strong>{{ item.name }}</strong> készletet szeretnél
+        <strong>hozzáadni</strong> a raktárhoz.
+      </p>
+
+      <div class="form-group">
+        <label>Mennyiség</label>
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          [(ngModel)]="stockChangeAmount"
+        />
+      </div>
+
+      @if (modalError) {
+        <div class="error">{{ modalError }}</div>
+      }
+
+      <div class="modal-actions">
+        <button class="save-button" (click)="confirmAddStock()">
+          Mentés
+        </button>
+        <button class="cancel-button" (click)="closeAddStockModal()">
+          Mégse
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ============================ -->
+<!--   KÉSZLET LEVONÁSA MODAL     -->
+<!-- ============================ -->
+@if (showRemoveStockModal && item && storage) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Készlet levonása</h3>
+      <p>
+        Add meg, mennyi <strong>{{ item.name }}</strong> készletet szeretnél
+        <strong>levonni</strong>.
+      </p>
+
+      <p class="hint">
+        Jelenleg elérhető: <strong>{{ available | number:'1.0-1' }}</strong>
+      </p>
+
+      <div class="form-group">
+        <label>Mennyiség</label>
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          [(ngModel)]="stockChangeAmount"
+        />
+      </div>
+
+      @if (modalError) {
+        <div class="error">{{ modalError }}</div>
+      }
+
+      <div class="modal-actions">
+        <button class="save-button" (click)="confirmRemoveStock()">
+          Mentés
+        </button>
+        <button class="cancel-button" (click)="closeRemoveStockModal()">
+          Mégse
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ============================ -->
+<!--     TÉTEL SZERKESZTÉS MODAL  -->
+<!-- ============================ -->
+@if (showEditItemModal && item) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Tétel szerkesztése</h3>
+      <p>Csak az alapadatok módosíthatók, a készletmennyiségek nem.</p>
+
+      <div class="form-group">
+        <label>Név</label>
+        <input
+          type="text"
+          [(ngModel)]="editItemName"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Típus</label>
+        <select [(ngModel)]="editItemType">
+          @for (key of itemTypeKeys; track key) {
+            <option [ngValue]="key">{{ itemTypeLabels[key] }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Kategória</label>
+        <select [(ngModel)]="editItemCategory">
+          @for (key of itemCategoryKeys; track key) {
+            <option [ngValue]="key">{{ itemCategoryLabels[key] }}</option>
+          }
+        </select>
+      </div>
+
+      @if (modalError) {
+        <div class="error">{{ modalError }}</div>
+      }
+
+      <div class="modal-actions">
+        <button class="save-button" (click)="saveEditedItem()">
+          Mentés
+        </button>
+        <button class="cancel-button" (click)="closeEditItemModal()">
+          Mégse
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ============================ -->
+<!--      TÉTEL TÖRLÉS MODAL      -->
+<!-- ============================ -->
+@if (showDeleteItemModal && item) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Tétel törlése</h3>
+      <p>
+        Biztosan törölni szeretnéd a(z)
+        <strong>{{ item.name }}</strong> tételt?
+      </p>
+
+      @if (storage) {
+        <p class="hint">
+          A hozzátartozó tároló bejegyzés is törlésre kerül.
+        </p>
+      }
+
+      <div class="modal-actions">
+        <button class="delete-button" (click)="confirmDeleteItem()">
+          <span class="material-symbols-rounded">delete</span>
+          Törlés
+        </button>
+        <button class="cancel-button" (click)="closeDeleteItemModal()">
+          <span class="material-symbols-rounded">close</span>
+          Mégse
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ============================ -->
+<!--             TOAST            -->
+<!-- ============================ -->
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

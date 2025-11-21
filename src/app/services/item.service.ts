@@ -24,12 +24,14 @@ export class ItemService {
   }
 
   update(id: number, dto: ItemDTO): Observable<any> {
-    return this.http.patch(`/api/items/${id}`, dto, {
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, {
       responseType: 'text' as 'json'
     });
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      responseType: 'text'
+    });
   }
 }

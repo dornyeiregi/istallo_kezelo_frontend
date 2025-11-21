@@ -1,81 +1,246 @@
 .profile-container {
-  padding: 1.5rem;
-  font-family: 'Inter', sans-serif;
+  padding: 2rem 1.6rem;
+  font-family: "Inter", sans-serif;
+  color: #4a1e27;
 }
 
 .breadcrumb {
-  margin-bottom: 16px;
+  margin-bottom: 1.2rem;
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #a25565;
-  cursor: pointer;
+  color: #8a3a4c;
   font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #6a1e2f;
 }
 
 .header-section {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.8rem;
 }
 
 .header-section h1 {
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.3rem;
+  font-size: 1.9rem;
+  font-weight: 700;
   color: #6a1e2f;
 }
 
 .badge {
   display: inline-block;
   margin-right: 8px;
-  margin-top: 4px;
-  background: #f2b6c0;
+  margin-top: 6px;
+  background: #f8d8de;
   color: #6a1e2f;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 0.9rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .badge.category {
-  background: #e05d74;
+  background: #d94a64;
   color: #fff;
 }
-
 
 .stats {
   margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.2rem;
 }
 
 .stat-card {
   background: #fff;
-  padding: 1rem;
-  border-radius: 10px;
+  padding: 1.2rem;
+  border-radius: 16px;
   border: 2px solid #f2b6c0;
+  box-shadow: 0 2px 5px rgba(106, 30, 47, 0.08);
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(106, 30, 47, 0.15);
 }
 
 .stat-card .label {
-  font-size: 0.85rem;
-  color: #a25565;
+  font-size: 0.8rem;
+  color: #964c5c;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  font-weight: 600;
 }
 
 .stat-card .value {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #6a1e2f;
 }
 
 .stat-card .hint {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #9a7280;
-  margin-top: -4px;
 }
 
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(50, 0, 20, 0.35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: white;
+  padding: 1.8rem;
+  border-radius: 14px;
+  width: 92%;
+  max-width: 420px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+  animation: modalFade 0.17s ease-out;
+}
+
+.modal h3 {
+  margin-top: 0.2rem;
+  margin-bottom: 0.8rem;
+  color: #6a1e2f;
+  font-size: 1.3rem;
+}
+
+.modal p {
+  color: #4a1e27;
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #6a1e2f;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 2px solid #f2b6c0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.modal input:focus,
+.modal select:focus {
+  border-color: #c93a55;
+  outline: none;
+}
+
+.modal-actions {
+  margin-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.save-button,
+.cancel-button,
+.delete-button {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.save-button {
+  background: #c93a55;
+  color: white;
+  border: none;
+}
+
+.save-button:hover {
+  background: #a02c42;
+}
+
+.cancel-button {
+  background: #f4dce1;
+  color: #6a1e2f;
+  border: none;
+}
+
+.cancel-button:hover {
+  background: #e9c2cb;
+}
+
+.delete-button {
+  background: #c93636;
+  color: white;
+  border: none;
+}
+
+.delete-button:hover {
+  background: #992626;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #6a1e2f;
+  color: white;
+  padding: 0.7rem 1.4rem;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  animation: toastFade 0.25s ease-out;
+}
+
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
