@@ -15,6 +15,10 @@ export class ShotService {
     return this.http.get<ShotDTO[]>(this.apiUrl);
   }
 
+  getAllOfHorseById(horseId: number): Observable<ShotDTO[]> {
+    return this.http.get<ShotDTO[]>(`${this.apiUrl}/horseId/${horseId}`);
+  }
+
   getById(id: number): Observable<ShotDTO> {
     return this.http.get<ShotDTO>(`${this.apiUrl}/${id}`);
   }

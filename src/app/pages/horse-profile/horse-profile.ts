@@ -4,6 +4,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HorseDTO } from '../../models/horse.model';
 import { HorseService } from '../../services/horse.service';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
+import { ShotDTO } from '../../models/shot.model';
+import { ShotService } from '../../services/shot.service';
 
 @Component({
   selector: 'app-horse-profile',
@@ -16,11 +18,14 @@ export class HorseProfilePage implements OnInit {
     horse?: HorseDTO;
     loading = true;
     error = '';
+    shots: ShotDTO[] = [];
+    showAllShots = false;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private horseService: HorseService
+        private horseService: HorseService,
+        private shotService: ShotService
     ) {}
 
     ngOnInit(): void {
@@ -42,19 +47,52 @@ export class HorseProfilePage implements OnInit {
     }
 
     private fetchHorse(horsename: string): void {
-        this.horseService.getAll().subscribe({
-            next: (horses) => {
-                this.horse = horses.find((horse) => horse.horseName === horsename);
-                if (!this.horse) {
-                    this.error = 'Nem található ló ezzel a névvel.';
-                }
-                this.loading = false;
-            },
-            error: () => {
-                this.error = 'Nem sikerült betölteni a ló adatait.';
-                this.loading = false;
-            }
-        });
+      this.horseService.getAll().subscribe({
+        next: (horses) => {
+          this.horse = horses.find((horse) => horse.horseName === horsename);
+
+          if (!this.horse) {
+            this.error = 'Nem található ló ezzel a névvel.';
+            this.loading = false;
+            return;
+          }
+
+          this.loadShots(this.horse.horseId!);
+
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Nem sikerült betölteni a ló adatait.';
+          this.loading = false;
+        }
+      });
+    }
+
+
+    frequencyLabels: { [key: string]: string } = {
+      DAYS: 'Nap',
+      WEEKS: 'Hét',
+      MONTHS: 'Hónap',
+      YEARS: 'Év'
+    };
+
+    loadShots(horseId: number): void {
+      this.shotService.getAllOfHorseById(horseId).subscribe({
+        next: (data) => {
+          // Legújabb → legrégebbi
+          this.shots = data.sort((a, b) =>
+            new Date(b.date!).getTime() - new Date(a.date!).getTime()
+          );
+        },
+        error: () => {
+          console.error("Nem sikerült betölteni az oltásokat.");
+        }
+      });
+    }
+
+    getFrequencyLabel(shot: ShotDTO): string {
+      if (!shot.frequencyUnit || !shot.frequencyValue) return '-';
+      return `${shot.frequencyValue} ${this.frequencyLabels[shot.frequencyUnit]}`;
     }
 
     goBack(): void {
@@ -65,6 +103,10 @@ export class HorseProfilePage implements OnInit {
         }
     }
 
+    goToShot(id: number): void {
+      this.router.navigate(['/shots', id]);
+    }
+
     getSexLabel(sex: string | null | undefined): string {
       switch (sex) {
           case 'G': return 'Herélt';
@@ -73,7 +115,6 @@ export class HorseProfilePage implements OnInit {
           default: return 'Ismeretlen';
       }
     }
-
 
     editHorse() {
       if (!this.horse?.horseId) return;

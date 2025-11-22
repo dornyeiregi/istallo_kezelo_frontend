@@ -62,5 +62,39 @@
         </li>
       </ul>
     </section>
+
+    <section class="horse-section">
+      <h2>Oltások</h2>
+
+      @if (shots.length === 0) {
+        <p class="no-shots">Nincs rögzített oltás.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (shot of (showAllShots ? shots : shots.slice(0, 3)); track shot.shotId) {
+            <li class="shot-card" (click)="goToShot(shot.shotId!)">
+
+              <div class="shot-title">
+                <span class="material-symbols-rounded icon">vaccines</span>
+                <strong>{{ shot.shotName }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Dátum:</strong> {{ shot.date }}</span>
+                <span><strong>Gyakoriság:</strong> {{ getFrequencyLabel(shot) }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (shots.length > 3) {
+          <button class="toggle-button" (click)="showAllShots = !showAllShots">
+            {{ showAllShots ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+
   }
 </div>

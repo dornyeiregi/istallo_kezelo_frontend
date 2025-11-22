@@ -1,0 +1,88 @@
+<div class="form-container">
+
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <span class="material-symbols-rounded"></span>
+      Vissza az oltásokhoz
+    </a>
+  </nav>
+
+  <h1>Új oltás hozzáadása</h1>
+
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
+
+  @if (success) {
+    <div class="success-msg">Oltás sikeresen létrehozva!</div>
+  }
+
+  <form (ngSubmit)="onSubmit()" #shotForm="ngForm">
+
+    <div class="form-group">
+      <label>Oltás neve *</label>
+      <input type="text"
+             name="shotName"
+             [(ngModel)]="form.shotName"
+             required />
+    </div>
+
+    <div class="form-group">
+      <label>Dátum *</label>
+      <input type="date"
+             name="date"
+             [(ngModel)]="form.date"
+             required />
+    </div>
+
+    <div class="form-group">
+      <label>Gyakoriság (érték)</label>
+      <input type="number"
+             name="frequencyValue"
+             [(ngModel)]="form.frequencyValue" />
+    </div>
+
+    <div class="form-group">
+      <label>Gyakoriság (egység)</label>
+      <select name="frequencyUnit"
+              [(ngModel)]="form.frequencyUnit">
+        <option value="" disabled selected>Válassz egységet</option>
+        @for (unit of frequencyUnits; track unit) {
+          <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group horse-list">
+      <label>Lovak hozzárendelése az oltáshoz</label>
+
+      @if (horses.length === 0) {
+        <p>Nincs elérhető ló.</p>
+      } @else {
+
+        @for (horse of horses; track horse.horseId) {
+          <label class="horse-row">
+            <input
+              type="checkbox"
+              [checked]="selectedHorseIds.has(toNumber(horse.horseId!))"
+              (change)="toggleHorseSelection(toNumber(horse.horseId!))"
+            />
+            {{ horse.horseName }}
+          </label>
+        }
+
+      }
+    </div>
+
+    <button type="submit" class="submit-button" [disabled]="loading || !shotForm.form.valid">
+      <span class="material-symbols-rounded"></span>
+      Létrehozás
+    </button>
+
+    @if (loading) {
+      <div class="info">Mentés folyamatban...</div>
+    }
+
+  </form>
+
+</div>

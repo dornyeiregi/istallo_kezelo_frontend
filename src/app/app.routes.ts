@@ -15,6 +15,8 @@ import { StoragesPage } from './pages/storages/storages';
 import { StorageItemCreatePage } from './pages/storage-item-create/storage-item-create';
 import { ItemProfilePage } from './pages/item-profile/item-profile';
 import { ShotsPage } from './pages/shots/shots';
+import { ShotCreatePage } from './pages/shot-create/shot-create';
+import { ShotProfilePage } from './pages/shot-profile/shot-profile';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -93,6 +95,18 @@ export const routes: Routes = [
     component: ShotsPage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN'] }
+  },
+  {
+    path: 'shots/new',
+    component: ShotCreatePage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'OWNER'] }
+  },
+  {
+    path: 'shots/:shotId',
+    component: ShotProfilePage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'OWNER'] }
   },
   { path: '**', redirectTo: '' }
 ];

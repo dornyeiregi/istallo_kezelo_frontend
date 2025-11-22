@@ -1,4 +1,3 @@
-// src/app/pages/shots/shots.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -41,7 +40,10 @@ export class ShotsPage implements OnInit {
 
     this.shotService.getAll().subscribe({
       next: (data) => {
-        this.shots = data;
+        this.shots = data.sort((a, b) =>
+          new Date(b.date!).getTime() - new Date(a.date!).getTime()
+        );
+
         this.loading = false;
         this.error = '';
       },
@@ -56,22 +58,25 @@ export class ShotsPage implements OnInit {
     this.router.navigate(['/shots/new']);
   }
 
-  toggleEditMode(): void {
-    this.editMode = !this.editMode;
-  }
 
   onCardClick(shot: ShotDTO): void {
+    // Törlés mód
     if (this.deleteMode) {
       this.confirmDelete(shot);
       return;
     }
 
-    if (this.editMode && shot.shotId != null) {
-      this.router.navigate(['/shots/edit', shot.shotId]);
-      this.editMode = false;
-    } else {
-      // Ha lesz később részletes nézet: pl. /shots/:id
-      // this.router.navigate(['/shots', shot.shotId]);
+    // Szerkesztés mód
+    // if (this.editMode) {
+    //   if (shot.shotId != null) {
+    //     this.router.navigate(['/shots/edit', shot.shotId]);
+    //   }
+    //   return;
+    // }
+
+    // Normál kattintás
+    if (shot.shotId != null) {
+      this.router.navigate(['/shots', shot.shotId]);
     }
   }
 
@@ -111,7 +116,6 @@ export class ShotsPage implements OnInit {
   }
 
   get crudActions() {
-    // opcionálisan lekorlátozhatod csak ADMIN/OWNER-re
     const isAdminOrOwner = this.authService.hasAnyRole([
       'ADMIN',
       'OWNER',
@@ -127,17 +131,23 @@ export class ShotsPage implements OnInit {
       {
         label: 'Új oltás hozzáadása',
         icon: 'add_circle',
-        onClick: () => this.addShot()
-      },
-      {
-        label: 'Szerkesztés mód',
-        icon: 'edit',
         onClick: () => {
-          this.editMode = !this.editMode;
+          this.editMode = false;
           this.deleteMode = false;
           this.confirmDeleteShot = null;
+          this.addShot();
         }
       },
+      // {
+      //   label: 'Szerkesztés mód',
+      //   icon: 'edit',
+      //   onClick: () => {
+      //     this.editMode = !this.editMode;
+      //     this.deleteMode = false;
+      //     this.confirmDeleteShot = null;
+      //     this.toastVisible = false;
+      //   }
+      // },
       {
         label: 'Törlés mód',
         icon: 'delete',
@@ -145,16 +155,23 @@ export class ShotsPage implements OnInit {
           this.deleteMode = !this.deleteMode;
           this.editMode = false;
           this.confirmDeleteShot = null;
-          this.deleteSuccess = '';
+          this.toastVisible = false;
         }
       }
     ];
   }
 
+  frequencyLabels: { [key: string]: string } = {
+    DAYS: 'Nap',
+    WEEKS: 'Hét',
+    MONTHS: 'Hónap',
+    YEARS: 'Év'
+  };
+
   getFrequencyLabel(shot: ShotDTO): string {
-    if (!shot.frequencyValue || !shot.frequencyUnit) {
-      return '-';
-    }
-    return `${shot.frequencyValue} ${shot.frequencyUnit}`;
+    if (!shot.frequencyValue || !shot.frequencyUnit) return '-';
+
+    const unitLabel = this.frequencyLabels[shot.frequencyUnit] || shot.frequencyUnit;
+    return `${shot.frequencyValue} ${unitLabel}`;
   }
 }

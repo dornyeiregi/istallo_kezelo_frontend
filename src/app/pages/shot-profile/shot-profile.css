@@ -1,0 +1,113 @@
+.shot-profile-container {
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background: #f7f7fa;
+}
+
+.breadcrumb {
+  margin-bottom: 1.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6a1e2f;
+  cursor: pointer;
+
+  background: #fbe8ec;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 2px solid #e5b3be;
+
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.back-link:hover {
+  background: #f2d6dc;
+  border-color: #d28a99;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #6a1e2f;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #666;
+}
+
+.shot-details {
+  margin-top: 1.5rem;
+  background: white;
+  padding: 1.3rem;
+  border-radius: 10px;
+  border: 2px solid #f2b6c0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.detail-row .label {
+  font-weight: 600;
+  color: #6a1e2f;
+}
+
+.detail-row .value {
+  color: #444;
+}
+
+.horse-list {
+  margin-top: 1.5rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid #f2b6c0;
+}
+
+.horse-list h2 {
+  margin-top: 0;
+  color: #6a1e2f;
+}
+
+.horse-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.horse-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  cursor: pointer;
+  border-bottom: 1px solid #f3d3d8;
+}
+
+.horse-list li:last-child {
+  border-bottom: none;
+}
+
+.horse-list li:hover {
+  background: #fef3f5;
+}
+
+.horse-list .material-symbols-rounded {
+  font-size: 20px;
+  color: #a25565;
+}
+
+.no-horses {
+  margin-top: 1rem;
+  color: #777;
+  font-style: italic;
+}

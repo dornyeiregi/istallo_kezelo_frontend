@@ -41,12 +41,12 @@
           <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel(shot) }}</p>
           <p><strong>Érintett lovak száma:</strong> {{ shot.horseIds?.length || 0 }}</p>
 
-          @if (editMode) {
+          <!-- @if (editMode) {
             <div class="edit-hint">
               <span class="material-symbols-rounded">edit</span>
               <span>Kattints a szerkesztéshez</span>
             </div>
-          }
+          } -->
 
           @if (deleteMode) {
             <div class="delete-hint">

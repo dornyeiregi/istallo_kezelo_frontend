@@ -1,0 +1,58 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="shot-profile-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <span class="material-symbols-rounded">arrow_back</span>
+      Vissza az oltásokhoz
+    </a>
+  </nav>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (shot) {
+
+    <header class="page-header">
+      <h1>{{ shot.shotName }}</h1>
+      <p class="subtitle">Oltás részletes adatai</p>
+    </header>
+
+    <section class="shot-details">
+      <div class="detail-row">
+        <span class="label">Dátum:</span>
+        <span class="value">{{ shot.date }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Gyakoriság:</span>
+        <span class="value">{{ getFrequencyLabel() }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Érintett lovak száma:</span>
+        <span class="value">{{ shot.horseIds?.length || 0 }}</span>
+      </div>
+    </section>
+
+    <section class="horse-list" *ngIf="treatedHorses.length > 0">
+      <h2>Érintett lovak</h2>
+
+      <ul>
+        @for (horse of treatedHorses; track horse.horseId) {
+          <li (click)="goToHorseProfile(horse.horseName)">
+            <span class="material-symbols-rounded">pets</span>
+            {{ horse.horseName }}
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section *ngIf="treatedHorses.length === 0">
+      <p class="no-horses">Ehhez az oltáshoz nincs ló hozzárendelve.</p>
+    </section>
+
+
+  }
+</div>

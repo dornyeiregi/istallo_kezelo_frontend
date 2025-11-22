@@ -136,3 +136,67 @@
     font-size: 1.4rem;
   }
 }
+
+/* Oltások kártya */
+.shot-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.shot-card {
+  background: white;
+  border: 2px solid #f2b6c0;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.shot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+  background: #fff7fa;
+}
+
+.shot-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6a1e2f;
+  margin-bottom: 4px;
+}
+
+.shot-title .icon {
+  font-size: 22px;
+}
+
+.shot-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #444;
+}
+
+.toggle-button {
+  background-color: #e05d74;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: block;
+  margin: 0.5rem auto 0;
+}
+
+.toggle-button:hover {
+  background-color: #a64558;
+}
+
+.no-shots {
+  font-style: italic;
+  color: #777;
+}
