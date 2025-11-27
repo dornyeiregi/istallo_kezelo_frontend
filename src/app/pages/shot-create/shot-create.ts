@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ShotService } from '../../services/shot.service';
 import { ShotDTO } from '../../models/shot.model';
 import { HorseService } from '../../services/horse.service';
@@ -36,10 +36,19 @@ export class ShotCreatePage implements OnInit {
   constructor(
     private shotService: ShotService,
     private horseService: HorseService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    const horseIdParam = this.route.snapshot.paramMap.get('horseId');
+    if (horseIdParam) {
+      const id = Number(horseIdParam);
+      if (!Number.isNaN(id)) {
+        this.selectedHorseIds.add(id);
+      }
+    }
+
     this.loadHorses();
   }
 

@@ -16,12 +16,26 @@ export class AdminService {
     return this.http.get<UserDTO[]>(`${this.baseUrl}/users`);
   }
 
-  //user szerepkör frissítése
+  // user szerepkör frissítése
   updateUserRole(id: number, userType: string): Observable<string> {
     return this.http.patch(
       `${this.baseUrl}/update-role/${id}`,
       { userType },
       { responseType: 'text' }
     );
+  }
+
+  // user törlése
+  deleteUser(id: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/users/${id}`, {
+      responseType: 'text'
+    });
+  }
+
+  // új felhasználó létrehozása
+  createUser(dto: any): Observable<string> {
+    return this.http.post(`${this.baseUrl}/users`, dto, {
+      responseType: 'text'
+    });
   }
 }

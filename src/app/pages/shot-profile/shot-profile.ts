@@ -22,6 +22,11 @@ export class ShotProfilePage implements OnInit {
   horses: HorseDTO[] = [];
   treatedHorses: HorseDTO[] = [];
 
+  editHorsesMode = false;
+  selectedHorseIds: Set<number> = new Set();
+  saving = false;
+  successMessage = '';
+
   constructor(
     private route: ActivatedRoute,
     private shotService: ShotService,
@@ -52,8 +57,10 @@ export class ShotProfilePage implements OnInit {
             this.horses = horses;
 
             this.treatedHorses = horses.filter(
-              h => this.shot!.horseIds?.includes(h.horseId!)
+              h => this.shot!.horseIds?.includes(h.id!)
             );
+
+            this.selectedHorseIds = new Set(this.shot!.horseIds || []);
 
             this.loading = false;
           },
@@ -85,6 +92,11 @@ export class ShotProfilePage implements OnInit {
     return `${this.shot.frequencyValue} ${unitLabel}`;
   }
 
+  getHorseNameById(id: number): string {
+    const horse = this.horses.find(h => h.id === id);
+    return horse ? horse.horseName : 'Ismeretlen ló';
+  }
+
   goBack(): void {
     this.router.navigate(['/shots']);
   }
@@ -93,10 +105,8 @@ export class ShotProfilePage implements OnInit {
     this.router.navigate(['/horses', horseName]);
   }
 
-
   editShot(): void {
-    if (!this.shot?.shotId) return;
-    this.router.navigate(['/shots/edit', this.shot.shotId]);
+    this.editHorsesMode = true;
   }
 
   deleteShot(): void {
@@ -114,16 +124,54 @@ export class ShotProfilePage implements OnInit {
     });
   }
 
+  toggleHorseAssignment(horseId: number) {
+    if (this.selectedHorseIds.has(horseId)) {
+      this.selectedHorseIds.delete(horseId);
+    } else {
+      this.selectedHorseIds.add(horseId);
+    }
+  }
+
+  saveHorseAssignments() {
+    if (!this.shot?.shotId) return;
+    this.saving = true;
+
+    const dto: Partial<ShotDTO> = {
+      horseIds: Array.from(this.selectedHorseIds)
+    };
+
+    this.shotService.update(this.shot.shotId, dto as ShotDTO).subscribe({
+      next: () => {
+        this.successMessage = 'Lovak sikeresen frissítve.';
+        this.saving = false;
+        this.editHorsesMode = false;
+
+        this.shot!.horseIds = Array.from(this.selectedHorseIds);
+        this.treatedHorses = this.horses.filter(h =>
+          this.selectedHorseIds.has(h.id!)
+        );
+
+        setTimeout(() => this.successMessage = '', 2000);
+      },
+      error: () => {
+        this.error = 'Nem sikerült frissíteni a lovakat.';
+        this.saving = false;
+      }
+    });
+  }
+
   get crudActions() {
     return [
       {
-        label: 'Oltás szerkesztése',
-        icon: 'edit',
-        onClick: () => this.editShot(),
+        label: 'Csatolt lovak szerkesztése',
+        icon: 'fa-pen-to-square',
+        onClick: () => {
+          this.editHorsesMode = true;
+        }
       },
       {
         label: 'Oltás törlése',
-        icon: 'delete',
+        icon: 'fa-trash',
         onClick: () => this.deleteShot(),
       }
     ];

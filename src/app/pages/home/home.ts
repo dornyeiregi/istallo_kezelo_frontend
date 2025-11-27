@@ -16,47 +16,47 @@ export class HomePage implements OnInit {
   
   tiles = [
     {
-      icon: 'storefront',
+      icon: 'fa-house',
       title: 'Istállók',
       description: 'Kapacitás, állapot és feladatok áttekintése.',
       link: '/stables',
       roles: ['ADMIN', 'EMPLOYEE']
     },
     {
-      icon: 'pets',
+      icon: 'fa-horse-head',
       title: 'Lovak',
       description: 'Lóadatok, állapot és tulajdonosi információk.',
       link: '/horses'
     },
     {
-      icon: 'warehouse',
+      icon: 'fa-warehouse',
       title: 'Tárolók',
       description: 'Takarmány- és eszközkészletek naprakészen tartása.',
       link: '/storages',
       roles: ['ADMIN', 'EMPLOYEE']
     },
     {
-      icon: 'syringe',
+      icon: 'fa-syringe',
       title: 'Oltások',
       description: 'Megtörtént oltások archívuma',
       link: '/shots',
       roles: ['ADMIN']
     },
     {
-      icon: 'calendar_month',
+      icon: 'fa-calendar-days',
       title: 'Naptár',
       description: 'Ütemezett oltások és kezelések megtekintése.',
       link: '/calendar'
     },
     {
-      icon: 'group',
+      icon: 'fa-user-group',
       title: 'Tagok',
       description: 'Munkatársak és partnerek jogosultságainak kezelése.',
       link: '/admin/users',
       roles: ['ADMIN']
     },
     {
-      icon: 'settings',
+      icon: 'fa-gear',
       title: 'Beállítások',
       description: 'Szervezeti és rendszerbeállítások testreszabása.',
       link: '/settings'

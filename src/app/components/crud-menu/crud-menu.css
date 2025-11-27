@@ -1,89 +1,124 @@
-.crud-menu {
+.hex-crud-menu {
   position: fixed;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  z-index: 1000;
-  pointer-events: none;
+  bottom: 24px;
+  left: 24px;
+
+  width: 45px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  z-index: 50;
 }
 
-.menu-button {
-  pointer-events: all;
-  background-color: #e05d74;
+.hex-button {
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  color: white;
-  font-size: 30px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hex-button .hex-shape {
+  width: 45px;
+  height: 40px;
+  background: #d94a64;
+  clip-path: polygon(
+    25% 0%, 75% 0%,
+    100% 50%,
+    75% 100%, 25% 100%,
+    0% 50%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  font-size: 20px;
+  transition: background 0.2s;
+}
+
+.hex-button:hover .hex-shape {
+  background: #b93a4f;
+}
+
+.hex-menu-list {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.hex-item {
+  position: relative;
+  width: 45px;
+  height: 40px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: hexFadeIn 0.25s forwards ease-out;
 }
 
-.menu-button:hover {
-  background-color: #d14763;
-  transform: scale(1.05);
-}
 
-/* Felfelé nyíló menü */
-.menu-list {
-  position: absolute;
-  bottom: 70px;
-  left: 0;
-  background-color: white;
-  border: 1px solid #f2b6c0;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  list-style: none;
-  margin: 0;
-  padding: 0.5rem 0;
-  min-width: 180px;
-  animation: fadeInUp 0.25s ease;
-  pointer-events: all;
-}
-
-.menu-item {
+.hex-item .hex-shape {
+  width: 45px;
+  height: 40px;
+  background: #f8d4dc;
+  clip-path: polygon(
+    25% 0%, 75% 0%,
+    100% 50%,
+    75% 100%, 25% 100%,
+    0% 50%
+  );
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 1rem;
+  justify-content: center;
   color: #6a1e2f;
-  cursor: pointer;
-  transition: 0.2s;
+  font-size: 18px;
+  transition: background 0.2s, transform 0.1s;
 }
 
-.menu-item:hover {
-  background-color: #f9d9de;
+.connector-line {
+  width: 4px;
+  height: 16px;
+  background: #d94a64;
+  border-radius: 4px;
+
+  margin: -1.5px auto 0 auto;
 }
 
-.material-symbols-rounded {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+.hex-item:hover .hex-shape {
+  background: #ffd2db;
+  transform: scale(1.06);
 }
 
-/* Animáció */
-@keyframes fadeInUp {
+.hex-label {
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff1f4;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #e6b6c1;
+  color: #6a1e2f;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.hex-item:hover .hex-label {
+  opacity: 1;
+}
+
+@keyframes hexFadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px) scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Méretezés*/
-@media (max-width: 600px) {
-  .menu-button {
-    width: 52px;
-    height: 52px;
-    font-size: 26px;
-  }
-
-  .menu-list {
-    min-width: 160px;
+    transform: translateY(0) scale(1);
   }
 }

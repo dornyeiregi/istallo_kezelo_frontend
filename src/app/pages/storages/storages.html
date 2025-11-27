@@ -111,7 +111,7 @@
 
     @if (deleteMode) {
       <div class="delete-hint">
-        <span class="material-symbols-rounded">delete</span>
+        <i class="fa-solid fa-trash" aria-hidden="true"></i>
         Kattints a törléshez
       </div>
     }
@@ -154,11 +154,11 @@
 
       <div class="modal-actions">
         <button class="delete-button" (click)="performDelete()">
-          <span class="material-symbols-rounded">delete</span>
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
           Biztos törlöd?
         </button>
         <button class="cancel-button" (click)="cancelDelete()">
-          <span class="material-symbols-rounded">close</span>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
           Mégse
         </button>
       </div>

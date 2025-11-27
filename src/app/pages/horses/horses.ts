@@ -63,7 +63,7 @@ export class HorsesPage implements OnInit {
 
   onCardClick(horse: HorseDTO): void {
     if (this.editMode) {
-      this.router.navigate(['/horses/edit', horse.horseId]);
+      this.router.navigate(['/horses/edit', horse.id]);
       this.editMode = false;
     } else {
       this.router.navigate(['/horses', horse.horseName], { state: { horse } });
@@ -88,12 +88,12 @@ export class HorsesPage implements OnInit {
   }
 
   deleteHorse(horse: HorseDTO): void {
-    if (!horse.horseId) return;
+    if (!horse.id) return;
 
-    this.horseService.delete(horse.horseId).subscribe({
+    this.horseService.delete(horse.id).subscribe({
       next: () => {
         this.deleteSuccess = 'A(z) ${horse.horseName} sikeresen törölve.';
-        this.horses = this.horses.filter(h => h.horseId !== horse.horseId);
+        this.horses = this.horses.filter(h => h.id !== horse.id);
       },
       error: () => {
         this.error = 'Nem sikerült törölni a lovat.';
@@ -108,7 +108,7 @@ export class HorsesPage implements OnInit {
   performDelete() {
     if (!this.confirmDeleteHorse) return;
 
-    this.horseService.delete(this.confirmDeleteHorse.horseId!).subscribe({
+    this.horseService.delete(this.confirmDeleteHorse.id!).subscribe({
       next: () => {
         this.showToast(`A(z) ${this.confirmDeleteHorse!.horseName} sikeresen törölve.`);
 
@@ -135,17 +135,17 @@ export class HorsesPage implements OnInit {
     return [
       {
         label: 'Új ló hozzáadása',
-        icon: 'add_circle',
+        icon: 'fa-circle-plus',
         onClick: () => this.addHorse()
       },
       {
         label: 'Szerkesztés',
-        icon: 'edit',
+        icon: 'fa-pen-to-square',
         onClick: () => this.toggleEditMode()
       },
       {
         label: 'Törlés',
-        icon: 'delete',
+        icon: 'fa-trash',
         onClick: () => {
           this.deleteMode = !this.deleteMode;
           this.confirmDeleteHorse = null;

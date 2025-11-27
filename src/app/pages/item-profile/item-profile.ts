@@ -354,22 +354,22 @@ export class ItemProfilePage implements OnInit {
     return [
       {
         label: 'Készlet hozzáadása',
-        icon: 'add',
+        icon: 'fa-plus',
         onClick: () => this.openAddStockModal(),
       },
       {
         label: 'Készlet levonása',
-        icon: 'remove',
+        icon: 'fa-minus',
         onClick: () => this.openRemoveStockModal(),
       },
       {
         label: 'Szerkesztés',
-        icon: 'edit',
+        icon: 'fa-pen-to-square',
         onClick: () => this.openEditItemModal(),
       },
       {
         label: 'Tétel törlése',
-        icon: 'delete',
+        icon: 'fa-trash',
         onClick: () => this.openDeleteItemModal(),
       },
     ];

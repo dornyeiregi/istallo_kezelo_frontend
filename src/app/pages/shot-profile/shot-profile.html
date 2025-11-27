@@ -3,8 +3,8 @@
 <div class="shot-profile-container">
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
-      <span class="material-symbols-rounded">arrow_back</span>
-      Vissza az oltásokhoz
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza
     </a>
   </nav>
 
@@ -14,45 +14,60 @@
     <div class="error">{{ error }}</div>
   } @else if (shot) {
 
-    <header class="page-header">
-      <h1>{{ shot.shotName }}</h1>
-      <p class="subtitle">Oltás részletes adatai</p>
-    </header>
+    <h1>{{ shot.shotName }}</h1>
 
-    <section class="shot-details">
-      <div class="detail-row">
-        <span class="label">Dátum:</span>
-        <span class="value">{{ shot.date }}</span>
-      </div>
+    <div class="shot-details">
+      <p><strong>Dátum:</strong> {{ shot.date }}</p>
+      <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel() }}</p>
+      <p><strong>Érintett lovak száma:</strong> {{ shot.horseIds?.length || 0 }}</p>
+    </div>
 
-      <div class="detail-row">
-        <span class="label">Gyakoriság:</span>
-        <span class="value">{{ getFrequencyLabel() }}</span>
-      </div>
+    <hr />
 
-      <div class="detail-row">
-        <span class="label">Érintett lovak száma:</span>
-        <span class="value">{{ shot.horseIds?.length || 0 }}</span>
-      </div>
-    </section>
+    @if (!editHorsesMode) {
 
-    <section class="horse-list" *ngIf="treatedHorses.length > 0">
-      <h2>Érintett lovak</h2>
+      <h2>Csatolt lovak</h2>
 
-      <ul>
-        @for (horse of treatedHorses; track horse.horseId) {
-          <li (click)="goToHorseProfile(horse.horseName)">
-            <span class="material-symbols-rounded">pets</span>
-            {{ horse.horseName }}
-          </li>
+      <ul class="horse-list">
+        @if (shot.horseIds?.length === 0) {
+          <li class="no-horses">Nincs csatolt ló</li>
+        } @else {
+          @for (id of shot.horseIds; track id) {
+            <li class="horse-item">
+              {{ getHorseNameById(id) }}
+            </li>
+          }
         }
       </ul>
-    </section>
 
-    <section *ngIf="treatedHorses.length === 0">
-      <p class="no-horses">Ehhez az oltáshoz nincs ló hozzárendelve.</p>
-    </section>
+    } @else {
 
+      <h2>Lovak szerkesztése</h2>
 
+      @if (successMessage) {
+        <div class="success-msg">{{ successMessage }}</div>
+      }
+
+      <ul class="edit-horse-list">
+        @for (horse of horses; track horse.id) {
+          <label class="horse-row">
+            <input
+              type="checkbox"
+              [checked]="selectedHorseIds.has(horse.id!)"
+              (change)="toggleHorseAssignment(horse.id!)"
+            />
+            {{ horse.horseName }}
+          </label>
+        }
+      </ul>
+
+      <button class="save-button" (click)="saveHorseAssignments()" [disabled]="saving">
+        Mentés
+      </button>
+
+      <button class="cancel-button" (click)="editHorsesMode = false">
+        Mégse
+      </button>
+    }
   }
 </div>

@@ -254,17 +254,17 @@ export class StoragesPage implements OnInit {
     return [
       {
         label: 'Tétel hozzáadása',
-        icon: 'add',
+        icon: 'fa-plus',
         onClick: () => this.addItemWithStorage()
       },
       {
         label: 'Szerkesztés',
-        icon: 'edit',
+        icon: 'fa-pen-to-square',
         onClick: () => this.toggleEditMode()
       },
       {
         label: 'Törlés',
-        icon: 'delete',
+        icon: 'fa-trash',
         onClick: () => this.deleteStorageMode()
       }
     ];

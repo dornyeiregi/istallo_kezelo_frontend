@@ -130,7 +130,7 @@ export class ShotsPage implements OnInit {
     return [
       {
         label: 'Új oltás hozzáadása',
-        icon: 'add_circle',
+        icon: 'fa-circle-plus',
         onClick: () => {
           this.editMode = false;
           this.deleteMode = false;
@@ -150,7 +150,7 @@ export class ShotsPage implements OnInit {
       // },
       {
         label: 'Törlés mód',
-        icon: 'delete',
+        icon: 'fa-trash',
         onClick: () => {
           this.deleteMode = !this.deleteMode;
           this.editMode = false;

@@ -31,7 +31,7 @@
   border-color: #d28a99;
 }
 
-.page-header h1 {
+h1 {
   margin: 0;
   color: #6a1e2f;
 }
@@ -43,7 +43,7 @@
 
 .shot-details {
   margin-top: 1.5rem;
-  background: white;
+  background: #fff;
   padding: 1.3rem;
   border-radius: 10px;
   border: 2px solid #f2b6c0;
@@ -101,7 +101,7 @@
   background: #fef3f5;
 }
 
-.horse-list .material-symbols-rounded {
+.horse-list i {
   font-size: 20px;
   color: #a25565;
 }
@@ -110,4 +110,86 @@
   margin-top: 1rem;
   color: #777;
   font-style: italic;
+}
+
+.edit-horse-list {
+  margin-top: 1.2rem;
+  background: #fff7fa;
+  border: 2px solid #f2b6c0;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.horse-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.horse-row:hover {
+  background: #fde7ec;
+}
+
+.horse-row input[type="checkbox"] {
+  transform: scale(1.25);
+  margin-right: 6px;
+}
+
+.save-button,
+.cancel-button,
+.themed-button {
+  background-color: #e05d74;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+  margin-top: 1rem;
+}
+
+.save-button:hover,
+.themed-button:hover {
+  background-color: #a64558;
+}
+
+.cancel-button {
+  background-color: #a25565;
+  margin-left: 10px;
+}
+
+.cancel-button:hover {
+  background-color: #7a3e4a;
+}
+
+.success-msg {
+  background: #d4f8d4;
+  border-left: 5px solid #59b359;
+  padding: 10px 14px;
+  border-radius: 6px;
+  color: #2a662a;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.info {
+  color: #555;
+}
+
+.error {
+  color: #b00;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+hr {
+  margin: 1.8rem 0;
+  border: none;
+  border-top: 2px solid #f2b6c0;
 }

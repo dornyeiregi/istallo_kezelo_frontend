@@ -1,6 +1,10 @@
 <div class="admin-users-container">
   <h1>Felhasználók kezelése</h1>
 
+  <button class="new-user-btn" (click)="showCreatePopup = true">
+    + Új felhasználó
+  </button>
+
   <div *ngIf="loading" class="loading">Betöltés...</div>
   <div *ngIf="error" class="error">{{ error }}</div>
 
@@ -8,14 +12,17 @@
     <thead>
       <tr>
         <th>Felhasználónév</th>
+        <th>Teljes név</th>
         <th>Email</th>
         <th>Telefonszám</th>
         <th>Szerepkör</th>
+        <th>Műveletek</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
         <td>{{ user.username }}</td>
+        <td>{{ getFullName(user) }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.phone || '-' }}</td>
         <td>
@@ -28,11 +35,123 @@
             <option value="ADMIN">ADMIN</option>
           </select>
         </td>
+        <td>
+          <button class="delete-btn" (click)="deleteUser(user)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
 
   <p *ngIf="!loading && users.length === 0">
-    Nincsenek felhasználók az adatbázisban.
+    Nincsenek felhasználók az adatbázban.
   </p>
+</div>
+
+<!-- Új felhasználó popup -->
+<div class="popup-backdrop" *ngIf="showCreatePopup">
+  <div class="popup-card">
+
+    <h2>Új felhasználó létrehozása</h2>
+    <p class="subtitle">Add meg az összes szükséges adatot a fiók létrehozásához.</p>
+
+    <form [formGroup]="form" (ngSubmit)="createUser()">
+
+      <!-- Névpár -->
+      <div class="field-row">
+        <label class="field">
+          <span class="field-label">Vezetéknév</span>
+          <input type="text" formControlName="lName" />
+          <span class="field-error" *ngIf="f['lName'].touched && f['lName'].invalid">
+            Legalább 2 karakter szükséges.
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Keresztnév</span>
+          <input type="text" formControlName="fName" />
+          <span class="field-error" *ngIf="f['fName'].touched && f['fName'].invalid">
+            Legalább 2 karakter szükséges.
+          </span>
+        </label>
+      </div>
+
+      <!-- Email + telefon -->
+      <div class="field-row">
+        <label class="field">
+          <span class="field-label">E-mail cím</span>
+          <input type="email" formControlName="email" />
+          <span class="field-error" *ngIf="f['email'].touched && f['email'].invalid">
+            Adj meg érvényes e-mail címet.
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Telefonszám</span>
+          <input type="tel" formControlName="phone" />
+        </label>
+      </div>
+
+      <!-- Felhasználónév -->
+      <label class="field">
+        <span class="field-label">Felhasználónév</span>
+        <input type="text" formControlName="username" />
+        <span class="field-error" *ngIf="f['username'].touched && f['username'].invalid">
+          Legalább 3 karakter szükséges.
+        </span>
+      </label>
+
+      <!-- Jelszó pár -->
+      <div class="field-row">
+        <label class="field">
+          <span class="field-label">Jelszó</span>
+          <input type="password" formControlName="password" />
+          <span class="field-error" *ngIf="f['password'].touched && f['password'].invalid">
+            Legalább 8 karakter hosszúnak kell lennie.
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Jelszó megerősítése</span>
+          <input type="password" formControlName="confirmPassword" />
+          <span class="field-error" *ngIf="f['confirmPassword'].touched && passwordsMismatch()">
+            A jelszavak nem egyeznek.
+          </span>
+        </label>
+      </div>
+
+      <!-- Felhasználói szerepkör -->
+      <fieldset class="field usertype-field">
+        <legend class="field-label">Felhasználói szerepkör</legend>
+
+        <label class="option">
+          <input type="radio" formControlName="userType" value="OWNER" />
+          <span class="option-title">Tulajdonos</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" formControlName="userType" value="EMPLOYEE" />
+          <span class="option-title">Alkalmazott</span>
+        </label>
+
+        <label class="option">
+          <input type="radio" formControlName="userType" value="ADMIN" />
+          <span class="option-title">Admin</span>
+        </label>
+      </fieldset>
+
+      <div class="btn-row">
+        <button type="button" class="secondary" (click)="showCreatePopup = false">
+          Mégse
+        </button>
+
+        <button type="submit" class="primary">
+          <i class="fa-solid fa-user-plus"></i>
+          Létrehozás
+        </button>
+      </div>
+    </form>
+
+  </div>
 </div>

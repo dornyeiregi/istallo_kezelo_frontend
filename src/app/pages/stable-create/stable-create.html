@@ -1,12 +1,7 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
-  rel="stylesheet"
-/>
-
 <div class="form-container">
   <nav class="breadcrumb">
     <a routerLink="/stables" class="back-link">
-      <span class="material-symbols-rounded">arrow_back</span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza az istállókhoz
     </a>
   </nav>
@@ -35,7 +30,7 @@
       [disabled]="stableForm.invalid || loading"
       class="submit-button"
     >
-      <span class="material-symbols-rounded">add_circle</span>
+      <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
       Istálló mentése
     </button>
 

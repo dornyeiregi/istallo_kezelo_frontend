@@ -1,7 +1,7 @@
 <div class="form-container">
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
-      <span class="material-symbols-rounded"></span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza a tárolókhoz
     </a>
   </nav>
@@ -82,7 +82,7 @@
       class="submit-button"
       [disabled]="loading || !itemForm.form.valid"
     >
-      <span class="material-symbols-rounded"></span>
+      <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
       Létrehozás
     </button>
 

@@ -1,12 +1,7 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
-  rel="stylesheet"
-/>
-
 <div class="form-container">
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
-      <span class="material-symbols-rounded">arrow_back</span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza
     </a>
   </nav>
@@ -36,21 +31,14 @@
     <div class="form-group">
       <label for="dob">Születési idő</label>
       <input
-        type="text"
+        type="date"
         id="dob"
         name="dob"
         [(ngModel)]="horse.dob"
-        placeholder="ÉÉÉÉ.HH.NN"
-        pattern="^[0-9]{4}\.[0-9]{2}\.[0-9]{2}$"
-        #dob="ngModel"
         required
       />
-      @if (dob.invalid && dob.touched) {
-        <div class="error-msg">
-          Érvényes dátumot adj meg (pl. 2025.01.31)
-        </div>
-      }
     </div>
+
 
     <!-- Nem -->
     <div class="form-group">
@@ -161,7 +149,7 @@
       [disabled]="horseForm.invalid || loading"
       class="submit-button"
     >
-      <span class="material-symbols-rounded">add_circle</span>
+      <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
       Ló mentése
     </button>
 

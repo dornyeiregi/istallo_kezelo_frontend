@@ -2,7 +2,7 @@
 
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
-      <span class="material-symbols-rounded"></span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza az oltásokhoz
     </a>
   </nav>
@@ -60,22 +60,22 @@
         <p>Nincs elérhető ló.</p>
       } @else {
 
-        @for (horse of horses; track horse.horseId) {
-          <label class="horse-row">
+        @for (horse of horses; track horse.id) {
+
+          <label class="horse-row" [attr.data-key]="horse.id">
             <input
               type="checkbox"
-              [checked]="selectedHorseIds.has(toNumber(horse.horseId!))"
-              (change)="toggleHorseSelection(toNumber(horse.horseId!))"
+              [checked]="selectedHorseIds.has(toNumber(horse.id!))"
+              (change)="toggleHorseSelection(toNumber(horse.id!))"
             />
             {{ horse.horseName }}
           </label>
         }
-
       }
     </div>
 
     <button type="submit" class="submit-button" [disabled]="loading || !shotForm.form.valid">
-      <span class="material-symbols-rounded"></span>
+      <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
       Létrehozás
     </button>
 

@@ -1,5 +1,5 @@
 export interface HorseDTO {
-  horseId?: number;
+  id?: number;
   horseName: string;
   dob: string;
   sex: string;

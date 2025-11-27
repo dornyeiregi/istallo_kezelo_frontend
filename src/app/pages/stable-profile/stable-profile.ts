@@ -85,11 +85,14 @@ export class StableProfilePage implements OnInit {
 
     if (this.editMode) {
       this.router.navigate(
-        ['/horses/edit', horse.horseId],
+        ['/horses/edit', horse.id],
         { state: { returnToStable: this.stable?.stableName } }
       );
     } else {
-      this.router.navigate(['/horses', horse.horseId]);
+      this.router.navigate(
+        ['/horses', horse.horseName],
+        { state: { horse } }
+      );
     }
   }
 
@@ -109,9 +112,9 @@ export class StableProfilePage implements OnInit {
   }
 
   performDelete(): void {
-    if (!this.confirmDeleteHorse?.horseId) return;
+    if (!this.confirmDeleteHorse?.id) return;
 
-    this.horseService.delete(this.confirmDeleteHorse.horseId).subscribe({
+    this.horseService.delete(this.confirmDeleteHorse.id).subscribe({
       next: () => {
         this.showToast(`A(z) ${this.confirmDeleteHorse?.horseName} törölve.`);
         this.confirmDeleteHorse = null;
@@ -147,7 +150,7 @@ export class StableProfilePage implements OnInit {
     return [
       {
         label: "Hozzáadás",
-        icon: "add",
+        icon: "fa-plus",
         onClick: () => {
           this.router.navigate(
             ['/horses/new'],
@@ -162,12 +165,12 @@ export class StableProfilePage implements OnInit {
       },
       {
         label: "Szerkesztés",
-        icon: "edit",
+        icon: "fa-pen-to-square",
         onClick: () => this.toggleEditMode()
       },
       {
         label: "Törlés",
-        icon: "delete",
+        icon: "fa-trash",
         onClick: () => this.toggleDeleteMode()
       }
     ];

@@ -29,7 +29,7 @@
   outline: none;
 }
 
-.back-link .material-symbols-rounded {
+.back-link i {
   font-size: 20px;
   vertical-align: middle;
 }
@@ -131,13 +131,11 @@
   .profile-container {
     padding-inline: 1.2rem;
   }
-
   .stat-card .value {
     font-size: 1.4rem;
   }
 }
 
-/* Oltások kártya */
 .shot-list {
   list-style: none;
   padding: 0;
@@ -200,3 +198,104 @@
   font-style: italic;
   color: #777;
 }
+
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup {
+  background: #fff7fa;
+  padding: 24px 26px;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 6px 18px rgba(106, 30, 47, 0.15);
+  animation: popupFadeIn 0.22s ease-out;
+  border: 2px solid #f2b6c0;
+}
+
+@keyframes popupFadeIn {
+  from { transform: translateY(-8px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.popup h2 {
+  margin: 0 0 14px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  color: #6a1e2f;
+}
+
+.popup label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #6a1e2f;
+  display: block;
+}
+
+.popup select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #f2b6c0;
+  font-size: 1rem;
+  color: #533742;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.popup select:focus {
+  border-color: #6a1e2f;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+button.primary,
+button.secondary {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+button.primary {
+  background: #e05d74;
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(224, 93, 116, 0.25);
+  transition: background 0.2s;
+}
+
+button.primary:hover {
+  background: #c64c63;
+}
+
+button.secondary {
+  background: #e6e0e2;
+  color: #333;
+  transition: background 0.2s;
+}
+
+button.secondary:hover {
+  background: #ccc2c5;
+}
+
+.mt { margin-top: 12px; }

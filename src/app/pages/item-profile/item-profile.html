@@ -4,7 +4,7 @@
 
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
-      <span class="material-symbols-rounded"></span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza
     </a>
   </nav>
@@ -213,11 +213,11 @@
 
       <div class="modal-actions">
         <button class="delete-button" (click)="confirmDeleteItem()">
-          <span class="material-symbols-rounded">delete</span>
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
           Törlés
         </button>
         <button class="cancel-button" (click)="closeDeleteItemModal()">
-          <span class="material-symbols-rounded">close</span>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
           Mégse
         </button>
       </div>

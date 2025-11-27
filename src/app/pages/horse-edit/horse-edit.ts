@@ -59,7 +59,7 @@ export class HorseEditPage implements OnInit {
 
   onSubmit(): void {
     const dto: HorseDTO = {
-      horseId: this.horse.horseId,
+      id: this.horse.id,
       horseName: this.horse.horseName,
       dob: this.horse.dob,
       sex: this.horse.sex,
@@ -72,7 +72,7 @@ export class HorseEditPage implements OnInit {
 
     this.loading = true;
 
-    this.horseService.update(this.horse.horseId!, dto).subscribe({
+    this.horseService.update(this.horse.id!, dto).subscribe({
       next: () => {
         this.success = true;
         this.loading = false;

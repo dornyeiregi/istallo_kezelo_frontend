@@ -150,9 +150,9 @@ export class StablesPage implements OnInit {
 
   get crudActions() {
     return [
-      { label: 'Hozzáadás', icon: 'add', onClick: () => this.addStable() },
-      { label: 'Szerkesztés', icon: 'edit', onClick: () => this.toggleEditMode() },
-      { label: 'Törlés', icon: 'delete', onClick: () => this.deleteStable() }
+      { label: 'Hozzáadás', icon: 'fa-plus', onClick: () => this.addStable() },
+      { label: 'Szerkesztés', icon: 'fa-pen-to-square', onClick: () => this.toggleEditMode() },
+      { label: 'Törlés', icon: 'fa-trash', onClick: () => this.deleteStable() }
     ];
   }
 }

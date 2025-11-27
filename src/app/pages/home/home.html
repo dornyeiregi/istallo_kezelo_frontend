@@ -1,9 +1,3 @@
-<!-- FONT IMPORT -->
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
-  rel="stylesheet"
-/>
-
 <div class="layout">
 
     <!-- Kártyák -->
@@ -11,7 +5,7 @@
       @for (tile of tiles; track tile.title) {
         @if (canViewTile(tile)) {
           <div class="card" [routerLink]="tile.link">
-            <span class="material-symbols-rounded icon">{{ tile.icon }}</span>
+            <i class="fa-solid fa-fw icon" [ngClass]="tile.icon" aria-hidden="true"></i>
             <h3>{{ tile.title }}</h3>
             <p>{{ tile.description }}</p>
           </div>

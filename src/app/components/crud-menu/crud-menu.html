@@ -1,23 +1,29 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
-  rel="stylesheet"
-/>
+<div class="hex-crud-menu">
 
-<div class="crud-menu">
-  <!-- Hamburger ikon -->
-  <button class="menu-button" (click)="toggleMenu()">
-    <span class="material-symbols-rounded">menu</span>
+  <button class="hex-button" (click)="toggleMenu()">
+    <div class="hex-shape">
+      <i class="fa-solid fa-bars"></i>
+    </div>
   </button>
 
-  <!-- Legördülő menü -->
-  <ul class="menu-list" *ngIf="menuOpen">
-    <li
-      class="menu-item"
-      *ngFor="let action of actions"
+  <div class="hex-menu-list" *ngIf="menuOpen">
+    <div
+      class="hex-item"
+      *ngFor="let action of actions; let i = index"
+      [style.animationDelay]="i * 70 + 'ms'"
       (click)="execute(action)"
     >
-      <span class="material-symbols-rounded">{{ action.icon }}</span>
-      {{ action.label }}
-    </li>
-  </ul>
+
+      <div class="hex-shape">
+        <i class="fa-solid" [ngClass]="action.icon"></i>
+      </div>
+
+      <div class="connector-line"></div>
+
+      <div class="hex-label">
+        {{ action.label }}
+      </div>
+    </div>
+  </div>
+
 </div>

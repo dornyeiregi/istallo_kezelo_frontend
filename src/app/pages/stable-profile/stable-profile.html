@@ -1,14 +1,9 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
-  rel="stylesheet"
-/>
-
 <app-crud-menu [actions]="crudActions"></app-crud-menu>
 
 <div class="profile-container">
   <nav class="breadcrumb">
     <a routerLink="/stables" class="back-link">
-      <span class="material-symbols-rounded">arrow_back</span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza az istállókhoz
     </a>
   </nav>
@@ -45,7 +40,7 @@
 
       @if (stable.horses && stable.horses.length > 0) {
         <ul class="horse-list">
-          @for (horse of stable.horses; track horse.horseId) {
+          @for (horse of stable.horses; track horse.id) {
             <li 
               class="horse-card"
               [class.edit-mode]="editMode"
@@ -61,14 +56,14 @@
 
               @if (editMode) {
                 <div class="edit-hint">
-                  <span class="material-symbols-rounded">edit</span>
+                  <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                   <span>Kattints a szerkesztéshez</span>
                 </div>
               }
 
               @if (deleteMode) {
                 <div class="delete-hint">
-                  <span class="material-symbols-rounded">delete</span>
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
                   <span>Kattints a törléshez</span>
                 </div>
               }

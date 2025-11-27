@@ -103,6 +103,12 @@ export const routes: Routes = [
     data: { roles: ['ADMIN', 'OWNER'] }
   },
   {
+    path: 'shots/new/:horseId',
+    component: ShotCreatePage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'OWNER'] }
+  },
+  {
     path: 'shots/:shotId',
     component: ShotProfilePage,
     canActivate: [authGuard],

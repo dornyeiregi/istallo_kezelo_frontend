@@ -1,59 +1,116 @@
 # IstalloKezeloFrontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+Az **IstalloKezeloFrontend** egy webes felület, amely regisztrált felhasználóknak lehetővé teszi lovak, istállók és oltások kezelését, valamint a szerepkörökhöz kötött jogosultságokat. A backend külön projektben fut (`istallo_kezelo`), ehhez csatlakozik a kliens.
 
-## Development server
+## Előfeltételek
+|Szoftver|Leírás|
+|---|---|
+|[npm](https://docs.npmjs.com/about-npm)|Csomagkezelő|
+|[nodejs](https://nodejs.org/en/download)|Futtatókörnyezet|
+|[angular](https://angular.dev/installation)|Webes keretrendszer|
+|MySQL kliens/connector|Az API által használt adatbázishoz|
+|Futó backend szolgáltatás|A frontend API-hívásaihoz szükséges|
 
-To start a local development server, run:
+## Telepítés és futtatás
+1. Kövesd a backend telepítési lépéseit, majd indítsd el a szervert.
+2. A frontend könyvtárban futtasd: `npm install`.
+3. Indítsd a frontendet: `ng serve`.
+4. Böngészőben nyisd meg: `http://localhost:4200/`.
+5. Jelentkezz be az előre telepített admin felhasználóval:
+        Felhasználónév: admin
+        Jelszó: admin123
+## Fejlesztői szerver
+
+Helyi szerver indítása:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Futtatás után a böngészőben nyisd meg a `http://localhost:4200/` címet. A forrásfájlok módosítása automatikus újratöltést indít.
 
-## Code scaffolding
+### Kódsablonok
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Új komponens generálása:
 
 ```bash
 ng generate component component-name
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+További sémák listázása (pl. `components`, `directives`, `pipes`):
 
 ```bash
 ng generate --help
 ```
 
-## Building
+### Unit tesztek futtatása
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Unit tesztek futtatása a [Karma](https://karma-runner.github.io) tesztfuttatóval:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+### Dokumentáció
 
-For end-to-end (e2e) testing, run:
+Ha dokumentációt szeretnél generálni (pl. typedoc segítségével), telepítsd a fejlesztői függőséget: `npm install --save-dev typedoc`, majd futtasd: `npx typedoc --entryPointStrategy Expand src`.
+
+---
+
+Az alkalmazás az [Angular CLI](https://github.com/angular/angular-cli) 20.3.6-os verziójával készült.
+
+## Fejlesztői szerver
+
+Helyi szerver indítása:
+
+```bash
+ng serve
+```
+
+Futtatás után a böngészőben nyisd meg a `http://localhost:4200/` címet. A forrásfájlok módosítása automatikus újratöltést indít.
+
+## Kódsablonok
+
+Új komponens generálása:
+
+```bash
+ng generate component component-name
+```
+
+További sémák listázása (pl. `components`, `directives`, `pipes`):
+
+```bash
+ng generate --help
+```
+
+## Build
+
+Build készítése:
+
+```bash
+ng build
+```
+
+A lefordított állományok a `dist/` mappába kerülnek; a gyári beállítások teljesítményre optimalizálnak.
+
+## Unit tesztek
+
+Unit tesztek futtatása a [Karma](https://karma-runner.github.io) tesztfuttatóval:
+
+```bash
+ng test
+```
+
+## E2E tesztek
+
+Végponttól végpontig tesztek futtatása:
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Az Angular CLI alapból nem tartalmaz E2E keretrendszert; válassz olyat, ami megfelel az igényeidnek.
 
-## Additional Resources
+## További források
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Részletes CLI-dokumentáció: [Angular CLI áttekintés és parancsreferencia](https://angular.dev/tools/cli).

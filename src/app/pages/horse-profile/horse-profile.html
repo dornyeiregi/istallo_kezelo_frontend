@@ -1,8 +1,3 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded"
-  rel="stylesheet"
-/>
-
 <!-- Hamburger menü -->
 <app-crud-menu [actions]="crudActions"></app-crud-menu>
 
@@ -10,7 +5,7 @@
 
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
-      <span class="material-symbols-rounded">arrow_back</span>
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza
     </a>
   </nav>
@@ -75,7 +70,7 @@
             <li class="shot-card" (click)="goToShot(shot.shotId!)">
 
               <div class="shot-title">
-                <span class="material-symbols-rounded icon">vaccines</span>
+                <i class="fa-solid fa-syringe icon" aria-hidden="true"></i>
                 <strong>{{ shot.shotName }}</strong>
               </div>
 
@@ -98,3 +93,39 @@
 
   }
 </div>
+
+<!-- Oltás hozzáadási popup -->
+@if (showVaccinationPopup) {
+  <div class="popup-backdrop">
+    <div class="popup">
+
+      <h2>Oltás hozzáadása</h2>
+
+      <label>Opció:</label>
+      <select [(ngModel)]="vaccinationOption">
+        <option value="existing">Létező oltáshoz csatolom</option>
+        <option value="new">Új oltást hozok létre</option>
+      </select>
+
+      @if (vaccinationOption === 'existing') {
+        <div class="mt">
+          <label>Oltás kiválasztása:</label>
+          <select [(ngModel)]="selectedShotId">
+            @for (s of allShots; track s.shotId) {
+              <option [value]="s.shotId">
+                {{ s.shotName }} – {{ s.date }}
+              </option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="btn-row">
+        <button class="primary" (click)="submitVaccination()">OK</button>
+        <button class="secondary" (click)="showVaccinationPopup = false">Mégse</button>
+      </div>
+
+    </div>
+  </div>
+}
+
