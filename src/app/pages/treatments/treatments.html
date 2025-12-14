@@ -1,0 +1,79 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="treatments-container">
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Kezelések</h1>
+    </div>
+
+    <p class="subtitle">A rendszerben rögzített kezelések listája</p>
+  </header>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt kezelésre.
+      </div>
+    }
+
+    <section class="treatment-grid" aria-label="Kezelések listája">
+
+      @for (treatment of treatments; track treatment.treatmentId) {
+        <div
+          class="treatment-card"
+          [class.edit-mode]="editMode"
+          [class.delete-mode]="deleteMode"
+          (click)="onCardClick(treatment)"
+        >
+
+          <div class="treatment-card-header">
+            <h3>{{ treatment.treatmentName }}</h3>
+            <span class="date-label">
+              {{ treatment.date || '-' }}
+            </span>
+          </div>
+
+          <p><strong>Leírás:</strong> {{ treatment.description || '-' }}</p>
+          <p><strong>Azonosító:</strong> {{ treatment.treatmentId ?? '-' }}</p>
+          <p><strong>Érintett lovak száma:</strong> {{ treatment.horseIds?.length || 0 }}</p>
+
+          @if (deleteMode) {
+            <div class="delete-hint">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              <span>Kattints a törléshez</span>
+            </div>
+          }
+
+        </div>
+      }
+
+    </section>
+  }
+</div>
+
+@if (confirmDeleteTreatment) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>
+        A(z) <strong>{{ confirmDeleteTreatment.treatmentName }}</strong> kezelés el fog tűnni.
+      </p>
+
+      <div class="modal-actions">
+        <button class="themed-button" (click)="performDelete()">Törlés</button>
+        <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

@@ -19,6 +19,10 @@ export class HorseFarrierAppService {
     return this.http.get<HorseFarrierAppDTO>(`${this.apiUrl}/${id}`);
   }
 
+  getAllOfHorseById(horseId: number): Observable<HorseFarrierAppDTO[]> {
+    return this.http.get<HorseFarrierAppDTO[]>(`${this.apiUrl}/horse/${horseId}`);
+  }
+
   create(dto: HorseFarrierAppDTO): Observable<HorseFarrierAppDTO> {
     return this.http.post<HorseFarrierAppDTO>(this.apiUrl, dto);
   }

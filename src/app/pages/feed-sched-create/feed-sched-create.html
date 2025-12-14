@@ -1,0 +1,133 @@
+<div class="form-container">
+
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza az etetési ütemtervekhez
+    </a>
+  </nav>
+
+  <h1>Új etetési ütemterv</h1>
+
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
+
+  @if (success) {
+    <div class="success-msg">Ütemterv sikeresen létrehozva!</div>
+  }
+
+  <form (ngSubmit)="onSubmit()" #feedForm="ngForm">
+
+    <div class="form-group">
+      <label>Etetési idő *</label>
+      <select name="feedTime" [(ngModel)]="form.feedTime" required>
+        <option value="" disabled selected>Válassz időpontot</option>
+        @for (time of feedTimes; track time) {
+          <option [ngValue]="time">
+            {{ time === 'MORNING' ? 'Reggel' : time === 'NOON' ? 'Dél' : 'Este' }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Leírás</label>
+      <textarea
+        name="description"
+        rows="4"
+        [(ngModel)]="form.description"
+        placeholder="Rövid leírás az etetésről"></textarea>
+    </div>
+
+    <div class="form-group horse-list">
+      <label>Lovak hozzárendelése</label>
+
+      @if (horses.length === 0) {
+        <p>Nincs elérhető ló.</p>
+      } @else {
+
+        @for (horse of horses; track horse.id) {
+
+          <label class="horse-row" [attr.data-key]="horse.id">
+            <input
+              type="checkbox"
+              [checked]="selectedHorseIds.has(toNumber(horse.id!))"
+              (change)="toggleHorseSelection(toNumber(horse.id!))"
+            />
+            {{ horse.horseName }}
+          </label>
+        }
+      }
+    </div>
+
+    <div class="form-group item-list">
+      <label>Összetevők</label>
+
+      <div class="item-section">
+        <p class="section-title">Széna</p>
+        @if (getItemsByType('HAY').length === 0) {
+          <p class="muted">Nincs széna típusú tétel.</p>
+        } @else {
+          @for (item of getItemsByType('HAY'); track item.itemId) {
+            <label class="item-row">
+              <input
+                type="checkbox"
+                [checked]="selectedItemIds.has(toNumber(item.itemId!))"
+                (change)="toggleItemSelection(toNumber(item.itemId!))"
+              />
+              {{ item.name }}
+            </label>
+          }
+        }
+      </div>
+
+      <div class="item-section">
+        <p class="section-title">Takarmány</p>
+        @if (getItemsByType('FEED').length === 0) {
+          <p class="muted">Nincs takarmány típusú tétel.</p>
+        } @else {
+          @for (item of getItemsByType('FEED'); track item.itemId) {
+            <label class="item-row">
+              <input
+                type="checkbox"
+                [checked]="selectedItemIds.has(toNumber(item.itemId!))"
+                (change)="toggleItemSelection(toNumber(item.itemId!))"
+              />
+              {{ item.name }}
+            </label>
+          }
+        }
+      </div>
+
+      <div class="item-section">
+        <p class="section-title">Kiegészítő</p>
+        @if (getItemsByType('SUPPLEMENT').length === 0) {
+          <p class="muted">Nincs kiegészítő típusú tétel.</p>
+        } @else {
+          @for (item of getItemsByType('SUPPLEMENT'); track item.itemId) {
+            <label class="item-row">
+              <input
+                type="checkbox"
+                [checked]="selectedItemIds.has(toNumber(item.itemId!))"
+                (change)="toggleItemSelection(toNumber(item.itemId!))"
+              />
+              {{ item.name }}
+            </label>
+          }
+        }
+      </div>
+    </div>
+
+    <button type="submit" class="submit-button" [disabled]="loading || !feedForm.form.valid">
+      <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
+      Létrehozás
+    </button>
+
+    @if (loading) {
+      <div class="info">Mentés folyamatban...</div>
+    }
+
+  </form>
+
+</div>

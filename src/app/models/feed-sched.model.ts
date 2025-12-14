@@ -4,4 +4,5 @@ export interface FeedSchedDTO {
   description: string;
   horseIds: number[];
   itemIds: number[];
+  itemNames?: string[];
 }

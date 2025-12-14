@@ -1,0 +1,213 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
+import { FeedSchedService } from '../../services/feed-sched.service';
+import { FeedSchedDTO } from '../../models/feed-sched.model';
+import { HorseService } from '../../services/horse.service';
+import { HorseDTO } from '../../models/horse.model';
+import { ItemService } from '../../services/item.service';
+import { ItemDTO } from '../../models/item.model';
+import { FeedSchedItemService } from '../../services/feed-sched-item.service';
+import { FeedSchedItemDTO } from '../../models/feed-sched-item.model';
+import { forkJoin } from 'rxjs';
+
+@Component({
+  selector: 'app-feed-sched-profile',
+  standalone: true,
+  imports: [CommonModule, RouterLink, CrudMenuComponent],
+  templateUrl: './feed-sched-profile.html',
+  styleUrls: ['./feed-sched-profile.css']
+})
+export class FeedSchedProfilePage implements OnInit {
+  feedSched?: FeedSchedDTO;
+  loading = true;
+  error: string | null = null;
+  horses: HorseDTO[] = [];
+  assignedHorses: HorseDTO[] = [];
+  items: ItemDTO[] = [];
+  assignedItems: ItemDTO[] = [];
+  feedItems: FeedSchedItemDTO[] = [];
+
+  editHorsesMode = false;
+  selectedHorseIds: Set<number> = new Set();
+  selectedItemIds: Set<number> = new Set();
+  saving = false;
+  successMessage = '';
+
+  feedTimeLabels: { [key: string]: string } = {
+    MORNING: 'Reggel',
+    NOON: 'Dél',
+    EVENING: 'Este'
+  };
+
+  constructor(
+    private route: ActivatedRoute,
+    private feedSchedService: FeedSchedService,
+    private horseService: HorseService,
+    private itemService: ItemService,
+    private feedSchedItemService: FeedSchedItemService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('feedSchedId'));
+    if (!id) {
+      this.error = 'Érvénytelen etetési ütemterv azonosító.';
+      this.loading = false;
+      return;
+    }
+
+    this.loadFeedSched(id);
+  }
+
+  loadFeedSched(id: number): void {
+    this.loading = true;
+
+    this.feedSchedService.getById(id).subscribe({
+      next: (data) => {
+        this.feedSched = data;
+
+        forkJoin([
+          this.horseService.getAll(),
+          this.itemService.getAll(),
+          this.feedSchedItemService.getAll()
+        ]).subscribe({
+          next: ([horses, items, feedItems]) => {
+            this.horses = horses;
+            this.items = items;
+            this.feedItems = feedItems.filter(f => f.feedSchedId === id);
+
+            this.selectedHorseIds = new Set(this.feedSched!.horseIds || []);
+            this.selectedItemIds = new Set(this.feedSched!.itemIds || []);
+
+            this.updateAssignedHorses();
+            this.updateAssignedItems();
+
+            this.loading = false;
+          },
+          error: () => {
+            this.error = 'Nem sikerült betölteni az adatokat.';
+            this.loading = false;
+          }
+        });
+      },
+      error: () => {
+        this.error = 'Nem sikerült betölteni az etetési ütemtervet.';
+        this.loading = false;
+      }
+    });
+  }
+
+  private updateAssignedHorses() {
+    this.assignedHorses = this.horses.filter(
+      h => this.selectedHorseIds.has(h.id!)
+    );
+  }
+
+  private updateAssignedItems() {
+    this.assignedItems = this.items.filter(
+      i => i.itemId != null && this.selectedItemIds.has(Number(i.itemId))
+    );
+  }
+
+  goBack(): void {
+    this.router.navigate(['/feed-scheds']);
+  }
+
+  getHorseNameById(id: number): string {
+    const horse = this.horses.find(h => h.id === id);
+    return horse ? horse.horseName : 'Ismeretlen ló';
+  }
+
+  deleteFeedSched(): void {
+    if (!this.feedSched?.feedSchedId) return;
+
+    if (!confirm('Biztosan törlöd ezt az etetési ütemtervet?')) return;
+
+    this.feedSchedService.delete(this.feedSched.feedSchedId).subscribe({
+      next: () => {
+        this.router.navigate(['/feed-scheds']);
+      },
+      error: () => {
+        alert('Nem sikerült törölni az ütemtervet.');
+      }
+    });
+  }
+
+  toggleHorseAssignment(horseId: number) {
+    if (this.selectedHorseIds.has(horseId)) {
+      this.selectedHorseIds.delete(horseId);
+    } else {
+      this.selectedHorseIds.add(horseId);
+    }
+  }
+
+  toggleItemAssignment(itemId: number) {
+    if (this.selectedItemIds.has(itemId)) {
+      this.selectedItemIds.delete(itemId);
+    } else {
+      this.selectedItemIds.add(itemId);
+    }
+  }
+
+  saveHorseAssignments() {
+    if (!this.feedSched?.feedSchedId) return;
+    this.saving = true;
+
+    const dto: Partial<FeedSchedDTO> = {
+      horseIds: Array.from(this.selectedHorseIds),
+      itemIds: Array.from(this.selectedItemIds)
+    };
+
+    this.feedSchedService.update(this.feedSched.feedSchedId, dto as FeedSchedDTO).subscribe({
+      next: () => {
+        this.feedSched!.horseIds = Array.from(this.selectedHorseIds);
+        this.feedSched!.itemIds = Array.from(this.selectedItemIds);
+        this.updateAssignedHorses();
+        this.updateAssignedItems();
+
+        this.successMessage = 'Lovak sikeresen frissítve.';
+        this.saving = false;
+        this.editHorsesMode = false;
+
+        setTimeout(() => this.successMessage = '', 2000);
+      },
+      error: () => {
+        this.error = 'Nem sikerült frissíteni a lovakat.';
+        this.saving = false;
+      }
+    });
+  }
+
+  getFeedTimeLabel(): string {
+    if (!this.feedSched) return '-';
+    return this.feedTimeLabels[this.feedSched.feedTime] || this.feedSched.feedTime;
+  }
+
+  getItemNames(): string[] {
+    return this.assignedItems.map(i => i.name);
+  }
+
+  getItemsByType(type: string): ItemDTO[] {
+    const key = (type || '').toUpperCase();
+    return this.items.filter(i => (i.itemType || '').toUpperCase() === key);
+  }
+
+  get crudActions() {
+    return [
+      {
+        label: 'Csatolt lovak szerkesztése',
+        icon: 'fa-pen-to-square',
+        onClick: () => {
+          this.editHorsesMode = true;
+        }
+      },
+      {
+        label: 'Ütemterv törlése',
+        icon: 'fa-trash',
+        onClick: () => this.deleteFeedSched(),
+      }
+    ];
+  }
+}

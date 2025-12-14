@@ -149,7 +149,7 @@ export class AdminUsersPage implements OnInit, OnDestroy {
       ?? (user as any).user_lname
       ?? '';
 
-    const full = [first, last].filter(Boolean).join(' ').trim();
+    const full = [last, first].filter(Boolean).join(' ').trim();
     return full || user.username || '-';
   }
 }

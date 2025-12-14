@@ -91,6 +91,105 @@
       }
     </section>
 
+    <section class="horse-section">
+      <h2>Kezelések</h2>
+
+      @if (treatments.length === 0) {
+        <p class="no-shots">Nincs rögzített kezelés.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (treatment of (showAllTreatments ? treatments : treatments.slice(0, 3)); track treatment.treatmentId) {
+            <li class="shot-card" (click)="goToTreatment(treatment.treatmentId!)">
+
+              <div class="shot-title">
+                <i class="fa-solid fa-briefcase-medical icon" aria-hidden="true"></i>
+                <strong>{{ treatment.treatmentName }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Dátum:</strong> {{ treatment.date }}</span>
+                <span><strong>Leírás:</strong> {{ treatment.description || '-' }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (treatments.length > 3) {
+          <button class="toggle-button" (click)="showAllTreatments = !showAllTreatments">
+            {{ showAllTreatments ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+
+    <section class="horse-section">
+      <h2>Patkolási időpontok</h2>
+
+      @if (farrierApps.length === 0) {
+        <p class="no-shots">Nincs rögzített patkolási időpont.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (app of (showAllFarrierApps ? farrierApps : farrierApps.slice(0, 3)); track app.farrierAppId) {
+            <li class="shot-card" (click)="goToFarrierApp(app.farrierAppId!)">
+
+              <div class="shot-title">
+                <i class="fa-solid fa-hammer icon" aria-hidden="true"></i>
+                <strong>{{ app.farrierName }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Dátum:</strong> {{ app.appointmentDate }}</span>
+                <span><strong>Patkolás:</strong> {{ app.shoes ? 'Igen' : 'Nem' }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (farrierApps.length > 3) {
+          <button class="toggle-button" (click)="showAllFarrierApps = !showAllFarrierApps">
+            {{ showAllFarrierApps ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+
+    <section class="horse-section">
+      <h2>Etetési ütemtervek</h2>
+
+      @if (feedScheds.length === 0) {
+        <p class="no-shots">Nincs rögzített etetési ütemterv.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (feed of (showAllFeedScheds ? feedScheds : feedScheds.slice(0, 3)); track feed.feedSchedId) {
+            <li class="shot-card" (click)="goToFeedSched(feed.feedSchedId!)">
+
+              <div class="shot-title">
+                <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+                <strong>{{ feed.feedTime }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
+                <span><strong>Lovak:</strong> {{ feed.horseIds?.length || 0 }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (feedScheds.length > 3) {
+          <button class="toggle-button" (click)="showAllFeedScheds = !showAllFeedScheds">
+            {{ showAllFeedScheds ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+
   }
 </div>
 
@@ -129,3 +228,107 @@
   </div>
 }
 
+<!-- Kezelés hozzáadási popup -->
+@if (showTreatmentPopup) {
+  <div class="popup-backdrop">
+    <div class="popup">
+
+      <h2>Kezelés hozzáadása</h2>
+
+      <label>Opció:</label>
+      <select [(ngModel)]="treatmentOption">
+        <option value="existing">Létező kezeléshez csatolom</option>
+        <option value="new">Új kezelést hozok létre</option>
+      </select>
+
+      @if (treatmentOption === 'existing') {
+        <div class="mt">
+          <label>Kezelés kiválasztása:</label>
+          <select [(ngModel)]="selectedTreatmentId">
+            @for (t of allTreatments; track t.treatmentId) {
+              <option [value]="t.treatmentId">
+                {{ t.treatmentName }} – {{ t.date }}
+              </option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="btn-row">
+        <button class="primary" (click)="submitTreatment()">OK</button>
+        <button class="secondary" (click)="showTreatmentPopup = false">Mégse</button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Patkolási időpont popup -->
+@if (showFarrierPopup) {
+  <div class="popup-backdrop">
+    <div class="popup">
+
+      <h2>Patkolási időpont hozzáadása</h2>
+
+      <label>Opció:</label>
+      <select [(ngModel)]="farrierOption">
+        <option value="existing">Létező időponthoz csatolom</option>
+        <option value="new">Új időpontot hozok létre</option>
+      </select>
+
+      @if (farrierOption === 'existing') {
+        <div class="mt">
+          <label>Időpont kiválasztása:</label>
+          <select [(ngModel)]="selectedFarrierAppId">
+            @for (a of allFarrierApps; track a.farrierAppId) {
+              <option [value]="a.farrierAppId">
+                {{ a.farrierName }} – {{ a.appointmentDate }}
+              </option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="btn-row">
+        <button class="primary" (click)="submitFarrierApp()">OK</button>
+        <button class="secondary" (click)="showFarrierPopup = false">Mégse</button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Etetési ütemterv popup -->
+@if (showFeedPopup) {
+  <div class="popup-backdrop">
+    <div class="popup">
+
+      <h2>Etetési ütemterv hozzáadása</h2>
+
+      <label>Opció:</label>
+      <select [(ngModel)]="feedOption">
+        <option value="existing">Létező ütemtervhez csatolom</option>
+        <option value="new">Új ütemtervet hozok létre</option>
+      </select>
+
+      @if (feedOption === 'existing') {
+        <div class="mt">
+          <label>Ütemterv kiválasztása:</label>
+          <select [(ngModel)]="selectedFeedSchedId">
+            @for (f of allFeedScheds; track f.feedSchedId) {
+              <option [value]="f.feedSchedId">
+                {{ f.feedTime }} – {{ f.description || 'Nincs leírás' }}
+              </option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="btn-row">
+        <button class="primary" (click)="submitFeedSched()">OK</button>
+        <button class="secondary" (click)="showFeedPopup = false">Mégse</button>
+      </div>
+
+    </div>
+  </div>
+}

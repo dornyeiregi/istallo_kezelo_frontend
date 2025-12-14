@@ -1,0 +1,144 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="feed-profile-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza
+    </a>
+  </nav>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (feedSched) {
+
+    <h1>{{ getFeedTimeLabel() }}</h1>
+
+    <div class="feed-details">
+      <p><strong>Leírás:</strong> {{ feedSched.description || '-' }}</p>
+      <p><strong>Érintett lovak száma:</strong> {{ feedSched.horseIds?.length || 0 }}</p>
+      <p><strong>Tételek:</strong> {{ assignedItems?.length ? getItemNames().join(', ') : '-' }}</p>
+    </div>
+
+    <hr />
+
+    @if (!editHorsesMode) {
+
+      <h2>Csatolt lovak</h2>
+
+      <ul class="horse-list">
+        @if (!feedSched.horseIds || feedSched.horseIds.length === 0) {
+          <li class="no-horses">Nincs csatolt ló</li>
+        } @else {
+          @for (id of feedSched.horseIds; track id) {
+            <li class="horse-item">
+              {{ getHorseNameById(id) }}
+            </li>
+          }
+        }
+      </ul>
+
+      <h2>Tételek</h2>
+      <ul class="horse-list">
+        @if (!assignedItems || assignedItems.length === 0) {
+          <li class="no-horses">Nincs tétel csatolva</li>
+        } @else {
+          @for (item of assignedItems; track item.itemId) {
+            <li class="horse-item">
+              {{ item.name }} ({{ item.itemType }})
+            </li>
+          }
+        }
+      </ul>
+
+    } @else {
+
+      <h2>Lovak szerkesztése</h2>
+
+      @if (successMessage) {
+        <div class="success-msg">{{ successMessage }}</div>
+      }
+
+      <ul class="edit-horse-list">
+        @for (horse of horses; track horse.id) {
+          <label class="horse-row">
+            <input
+              type="checkbox"
+              [checked]="selectedHorseIds.has(horse.id!)"
+              (change)="toggleHorseAssignment(horse.id!)"
+            />
+            {{ horse.horseName }}
+          </label>
+        }
+      </ul>
+
+      <h2>Tételek szerkesztése</h2>
+
+      <ul class="edit-horse-list">
+        <p class="section-title">Széna</p>
+        @if (getItemsByType('HAY').length === 0) {
+          <li class="no-horses">Nincs széna típusú tétel.</li>
+        } @else {
+          @for (item of getItemsByType('HAY'); track item.itemId) {
+            <label class="horse-row">
+              <input
+                type="checkbox"
+                [checked]="selectedItemIds.has(item.itemId!)"
+                (change)="toggleItemAssignment(item.itemId!)"
+              />
+              {{ item.name }}
+            </label>
+          }
+        }
+      </ul>
+
+      <ul class="edit-horse-list">
+        <p class="section-title">Takarmány</p>
+        @if (getItemsByType('FEED').length === 0) {
+          <li class="no-horses">Nincs takarmány típusú tétel.</li>
+        } @else {
+          @for (item of getItemsByType('FEED'); track item.itemId) {
+            <label class="horse-row">
+              <input
+                type="checkbox"
+                [checked]="selectedItemIds.has(item.itemId!)"
+                (change)="toggleItemAssignment(item.itemId!)"
+              />
+              {{ item.name }}
+            </label>
+          }
+        }
+      </ul>
+
+      <ul class="edit-horse-list">
+        <p class="section-title">Kiegészítő</p>
+        @if (getItemsByType('SUPPLEMENT').length === 0) {
+          <li class="no-horses">Nincs kiegészítő típusú tétel.</li>
+        } @else {
+          @for (item of getItemsByType('SUPPLEMENT'); track item.itemId) {
+            <label class="horse-row">
+              <input
+                type="checkbox"
+                [checked]="selectedItemIds.has(item.itemId!)"
+                (change)="toggleItemAssignment(item.itemId!)"
+              />
+              {{ item.name }}
+            </label>
+          }
+        }
+      </ul>
+
+      <div class="action-row">
+        <button class="save-button" (click)="saveHorseAssignments()" [disabled]="saving">
+          Mentés
+        </button>
+
+        <button class="cancel-button" (click)="editHorsesMode = false">
+          Mégse
+        </button>
+      </div>
+    }
+  }
+</div>

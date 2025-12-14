@@ -1,6 +1,7 @@
 export interface TreatmentDTO {
-  treatmentId: number;
+  treatmentId?: number;
   treatmentName: string;
   description: string;
   date: string;
+  horseIds?: number[];
 }

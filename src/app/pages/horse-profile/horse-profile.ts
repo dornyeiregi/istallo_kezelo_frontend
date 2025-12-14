@@ -8,6 +8,12 @@ import { ShotDTO } from '../../models/shot.model';
 import { ShotService } from '../../services/shot.service';
 import { HorseShotService } from '../../services/horse-shot.service';
 import { FormsModule } from '@angular/forms';
+import { TreatmentDTO } from '../../models/treatment.model';
+import { TreatmentService } from '../../services/treatment.service';
+import { FarrierAppDTO } from '../../models/farrier-app.model';
+import { FarrierAppService } from '../../services/farrier-app.service';
+import { FeedSchedDTO } from '../../models/feed-sched.model';
+import { FeedSchedService } from '../../services/feed-sched.service';
 
 @Component({
   selector: 'app-horse-profile',
@@ -26,6 +32,24 @@ export class HorseProfilePage implements OnInit {
     vaccinationOption: 'existing' | 'new' = 'existing';
     selectedShotId: number | null = null;
     allShots: ShotDTO[] = [];
+    treatments: TreatmentDTO[] = [];
+    showAllTreatments = false;
+    showTreatmentPopup = false;
+    treatmentOption: 'existing' | 'new' = 'existing';
+    selectedTreatmentId: number | null = null;
+    allTreatments: TreatmentDTO[] = [];
+    farrierApps: FarrierAppDTO[] = [];
+    showAllFarrierApps = false;
+    showFarrierPopup = false;
+    farrierOption: 'existing' | 'new' = 'existing';
+    selectedFarrierAppId: number | null = null;
+    allFarrierApps: FarrierAppDTO[] = [];
+    feedScheds: FeedSchedDTO[] = [];
+    showAllFeedScheds = false;
+    showFeedPopup = false;
+    feedOption: 'existing' | 'new' = 'existing';
+    selectedFeedSchedId: number | null = null;
+    allFeedScheds: FeedSchedDTO[] = [];
 
 
     constructor(
@@ -33,7 +57,10 @@ export class HorseProfilePage implements OnInit {
         private router: Router,
         private horseService: HorseService,
         private shotService: ShotService,
-        private horseShotService: HorseShotService
+        private horseShotService: HorseShotService,
+        private treatmentService: TreatmentService,
+        private farrierAppService: FarrierAppService,
+        private feedSchedService: FeedSchedService
     ) {}
 
     ngOnInit(): void {
@@ -66,6 +93,9 @@ export class HorseProfilePage implements OnInit {
           }
 
           this.loadShots(this.horse.id!);
+          this.loadTreatments(this.horse.id!);
+          this.loadFarrierApps(this.horse.id!);
+          this.loadFeedScheds(this.horse.id!);
 
           this.loading = false;
         },
@@ -108,6 +138,45 @@ export class HorseProfilePage implements OnInit {
       });
     }
 
+    loadTreatments(horseId: number): void {
+      this.treatmentService.getAllOfHorseById(horseId).subscribe({
+        next: (data) => {
+          this.treatments = data.sort((a, b) =>
+            new Date(b.date!).getTime() - new Date(a.date!).getTime()
+          );
+        },
+        error: () => {
+          console.error("Nem sikerült betölteni a kezeléseket.");
+        }
+      });
+    }
+
+    loadFarrierApps(horseId: number): void {
+      this.farrierAppService.getAllOfHorseById(horseId).subscribe({
+        next: (data) => {
+          this.farrierApps = data.sort((a, b) =>
+            new Date(b.appointmentDate!).getTime() - new Date(a.appointmentDate!).getTime()
+          );
+        },
+        error: () => {
+          console.error("Nem sikerült betölteni a patkolási időpontokat.");
+        }
+      });
+    }
+
+    loadFeedScheds(horseId: number): void {
+      this.feedSchedService.getAllOfHorseById(horseId).subscribe({
+        next: (data) => {
+          this.feedScheds = data.sort((a, b) =>
+            (b.feedSchedId || 0) - (a.feedSchedId || 0)
+          );
+        },
+        error: () => {
+          console.error("Nem sikerült betölteni az etetési ütemterveket.");
+        }
+      });
+    }
+
     getFrequencyLabel(shot: ShotDTO): string {
       if (!shot.frequencyValue || !shot.frequencyUnit) return '-';
 
@@ -127,6 +196,18 @@ export class HorseProfilePage implements OnInit {
 
     goToShot(id: number): void {
       this.router.navigate(['/shots', id]);
+    }
+
+    goToTreatment(id: number): void {
+      this.router.navigate(['/treatments', id]);
+    }
+
+    goToFarrierApp(id: number): void {
+      this.router.navigate(['/farrier-apps', id]);
+    }
+
+    goToFeedSched(id: number): void {
+      this.router.navigate(['/feed-scheds', id]);
     }
 
     getSexLabel(sex: string | null | undefined): string {
@@ -181,7 +262,33 @@ export class HorseProfilePage implements OnInit {
     }
 
     addTreatment() {
-      console.log("Kezelés hozzáadása");
+      this.treatmentOption = 'existing';
+      this.selectedTreatmentId = null;
+
+      this.treatmentService.getAll().subscribe(treatments => {
+        this.allTreatments = treatments;
+        this.showTreatmentPopup = true;
+      });
+    }
+
+    addFarrierApp() {
+      this.farrierOption = 'existing';
+      this.selectedFarrierAppId = null;
+
+      this.farrierAppService.getAll().subscribe(apps => {
+        this.allFarrierApps = apps;
+        this.showFarrierPopup = true;
+      });
+    }
+
+    addFeedSched() {
+      this.feedOption = 'existing';
+      this.selectedFeedSchedId = null;
+
+      this.feedSchedService.getAll().subscribe(list => {
+        this.allFeedScheds = list;
+        this.showFeedPopup = true;
+      });
     }
 
     get crudActions() {
@@ -210,7 +317,74 @@ export class HorseProfilePage implements OnInit {
           label: "Kezelés hozzáadása",
           icon: "fa-briefcase-medical",
           onClick: () => this.addTreatment()
+        },
+        {
+          label: "Patkolási időpont hozzáadása",
+          icon: "fa-horse-head",
+          onClick: () => this.addFarrierApp()
+        },
+        {
+          label: "Etetési ütemterv hozzáadása",
+          icon: "fa-bowl-rice",
+          onClick: () => this.addFeedSched()
         }
       ];
+    }
+
+    submitTreatment() {
+      if (!this.horse?.id) return;
+
+      if (this.treatmentOption === 'existing') {
+
+        if (!this.selectedTreatmentId) return;
+
+        this.treatmentService.addHorseToTreatment(this.selectedTreatmentId, this.horse.id)
+          .subscribe(() => {
+            this.showTreatmentPopup = false;
+            this.loadTreatments(this.horse!.id!);
+          });
+
+      } else {
+        this.showTreatmentPopup = false;
+        this.router.navigate(['/treatments/new', this.horse!.id]);
+      };
+    }
+
+    submitFarrierApp() {
+      if (!this.horse?.id) return;
+
+      if (this.farrierOption === 'existing') {
+
+        if (!this.selectedFarrierAppId) return;
+
+        this.farrierAppService.addHorseToFarrierApp(this.selectedFarrierAppId, this.horse.id)
+          .subscribe(() => {
+            this.showFarrierPopup = false;
+            this.loadFarrierApps(this.horse!.id!);
+          });
+
+      } else {
+        this.showFarrierPopup = false;
+        this.router.navigate(['/farrier-apps/new', this.horse!.id]);
+      };
+    }
+
+    submitFeedSched() {
+      if (!this.horse?.id) return;
+
+      if (this.feedOption === 'existing') {
+
+        if (!this.selectedFeedSchedId) return;
+
+        this.feedSchedService.addHorseToFeedSched(this.selectedFeedSchedId, this.horse.id)
+          .subscribe(() => {
+            this.showFeedPopup = false;
+            this.loadFeedScheds(this.horse!.id!);
+          });
+
+      } else {
+        this.showFeedPopup = false;
+        this.router.navigate(['/feed-scheds/new', this.horse!.id]);
+      };
     }
 }

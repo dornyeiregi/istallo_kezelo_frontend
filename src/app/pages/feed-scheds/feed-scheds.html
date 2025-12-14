@@ -1,0 +1,78 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="feed-scheds-container">
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Etetési ütemtervek</h1>
+    </div>
+
+    <p class="subtitle">A rendszerben rögzített etetési ütemtervek listája</p>
+  </header>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt ütemtervre.
+      </div>
+    }
+
+    <section class="feed-grid" aria-label="Etetési ütemtervek">
+
+      @for (feed of feedScheds; track feed.feedSchedId) {
+        <div
+          class="feed-card"
+          [class.delete-mode]="deleteMode"
+          (click)="onCardClick(feed)"
+        >
+
+          <div class="feed-card-header">
+            <h3>{{ getFeedTimeLabel(feed) }}</h3>
+            <span class="date-label">
+              {{ feed.feedSchedId || '-' }}
+            </span>
+          </div>
+
+          <p><strong>Leírás:</strong> {{ feed.description || '-' }}</p>
+          <p><strong>Érintett lovak száma:</strong> {{ feed.horseIds?.length || 0 }}</p>
+          <p><strong>Tételek:</strong> {{ feed.itemNames && feed.itemNames.length ? feed.itemNames.join(', ') : '-' }}</p>
+
+          @if (deleteMode) {
+            <div class="delete-hint">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              <span>Kattints a törléshez</span>
+            </div>
+          }
+
+        </div>
+      }
+
+    </section>
+  }
+</div>
+
+@if (confirmDelete) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>
+        Az etetési ütemterv el fog tűnni.
+      </p>
+
+      <div class="modal-actions">
+        <button class="themed-button" (click)="performDelete()">Törlés</button>
+        <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

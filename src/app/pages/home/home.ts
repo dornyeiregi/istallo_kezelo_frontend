@@ -43,6 +43,27 @@ export class HomePage implements OnInit {
       roles: ['ADMIN']
     },
     {
+      icon: 'fa-briefcase-medical',
+      title: 'Kezelések',
+      description: 'Rögzített kezelések áttekintése.',
+      link: '/treatments',
+      roles: ['ADMIN']
+    },
+    {
+      icon: 'fa-hammer',
+      title: 'Patkolási időpontok',
+      description: 'Patkolások és karbantartások listája.',
+      link: '/farrier-apps',
+      roles: ['ADMIN', 'EMPLOYEE']
+    },
+    {
+      icon: 'fa-bowl-rice',
+      title: 'Etetési ütemtervek',
+      description: 'Napi etetési ütemezések kezelése.',
+      link: '/feed-scheds',
+      roles: ['ADMIN', 'EMPLOYEE']
+    },
+    {
       icon: 'fa-calendar-days',
       title: 'Naptár',
       description: 'Ütemezett oltások és kezelések megtekintése.',

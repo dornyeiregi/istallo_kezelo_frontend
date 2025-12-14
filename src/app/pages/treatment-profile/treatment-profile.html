@@ -1,0 +1,72 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="treatment-profile-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza
+    </a>
+  </nav>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (treatment) {
+
+    <h1>{{ treatment.treatmentName }}</h1>
+
+    <div class="treatment-details">
+      <p><strong>Dátum:</strong> {{ treatment.date }}</p>
+      <p><strong>Leírás:</strong> {{ treatment.description || '-' }}</p>
+    </div>
+
+    <hr />
+
+    @if (!editHorsesMode) {
+
+      <h2>Csatolt lovak</h2>
+
+      <ul class="horse-list">
+        @if (!treatment.horseIds || treatment.horseIds.length === 0) {
+          <li class="no-horses">Nincs csatolt ló</li>
+        } @else {
+          @for (id of treatment.horseIds; track id) {
+            <li class="horse-item">
+              {{ getHorseNameById(id) }}
+            </li>
+          }
+        }
+      </ul>
+
+    } @else {
+
+      <h2>Lovak szerkesztése</h2>
+
+      @if (successMessage) {
+        <div class="success-msg">{{ successMessage }}</div>
+      }
+
+      <ul class="edit-horse-list">
+        @for (horse of horses; track horse.id) {
+          <label class="horse-row">
+            <input
+              type="checkbox"
+              [checked]="selectedHorseIds.has(horse.id!)"
+              (change)="toggleHorseAssignment(horse.id!)"
+            />
+            {{ horse.horseName }}
+          </label>
+        }
+      </ul>
+
+      <button class="save-button" (click)="saveHorseAssignments()" [disabled]="saving">
+        Mentés
+      </button>
+
+      <button class="cancel-button" (click)="editHorsesMode = false">
+        Mégse
+      </button>
+    }
+  }
+</div>

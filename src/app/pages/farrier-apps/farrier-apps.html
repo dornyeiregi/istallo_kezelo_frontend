@@ -1,0 +1,78 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="farrier-apps-container">
+  <header class="page-header">
+    <div class="header-left">
+      <h1>Patkolási időpontok</h1>
+    </div>
+
+    <p class="subtitle">A rendszerben rögzített patkolási időpontok listája</p>
+  </header>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+
+    @if (deleteMode) {
+      <div class="delete-warning">
+        Törlés mód aktív — kattints a törölni kívánt időpontra.
+      </div>
+    }
+
+    <section class="farrier-grid" aria-label="Patkolási időpontok">
+
+      @for (app of farrierApps; track app.farrierAppId) {
+        <div
+          class="farrier-card"
+          [class.delete-mode]="deleteMode"
+          (click)="onCardClick(app)"
+        >
+
+          <div class="farrier-card-header">
+            <h3>{{ app.farrierName }}</h3>
+            <span class="date-label">
+              {{ app.appointmentDate || '-' }}
+            </span>
+          </div>
+
+          <p><strong>Telefon:</strong> {{ app.farrierPhone || '-' }}</p>
+          <p><strong>Patkolás:</strong> {{ app.shoes ? 'Igen' : 'Nem' }}</p>
+          <p><strong>Érintett lovak száma:</strong> {{ app.horseIds?.length || 0 }}</p>
+
+          @if (deleteMode) {
+            <div class="delete-hint">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              <span>Kattints a törléshez</span>
+            </div>
+          }
+
+        </div>
+      }
+
+    </section>
+  }
+</div>
+
+@if (confirmDelete) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Biztosan törölni szeretnéd?</h3>
+      <p>
+        A(z) <strong>{{ confirmDelete.farrierName }}</strong> időpont el fog tűnni.
+      </p>
+
+      <div class="modal-actions">
+        <button class="themed-button" (click)="performDelete()">Törlés</button>
+        <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

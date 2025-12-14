@@ -15,12 +15,32 @@ export class TreatmentService {
     return this.http.get<TreatmentDTO[]>(this.apiUrl);
   }
 
+  getById(id: number): Observable<TreatmentDTO> {
+    return this.http.get<TreatmentDTO>(`${this.apiUrl}/${id}`);
+  }
+
+  getAllOfHorseById(horseId: number): Observable<TreatmentDTO[]> {
+    return this.http.get<TreatmentDTO[]>(`${this.apiUrl}/horseId/${horseId}`);
+  }
+
   create(dto: TreatmentDTO): Observable<TreatmentDTO> {
     return this.http.post<TreatmentDTO>(this.apiUrl, dto);
   }
 
-  update(id: number, dto: TreatmentDTO): Observable<TreatmentDTO> {
-    return this.http.patch<TreatmentDTO>(`${this.apiUrl}/${id}`, dto);
+  update(id: number, dto: TreatmentDTO): Observable<string> {
+    return this.http.patch(
+      `${this.apiUrl}/${id}`,
+      dto,
+      { responseType: 'text' }
+    ) as Observable<string>;
+  }
+
+  addHorseToTreatment(treatmentId: number, horseId: number): Observable<string> {
+    return this.http.post(
+      `${this.apiUrl}/${treatmentId}/addHorse/${horseId}`,
+      {},
+      { responseType: 'text' }
+    ) as Observable<string>;
   }
 
   delete(id: number): Observable<void> {
