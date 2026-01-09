@@ -1,0 +1,14 @@
+<div class="calendar-page">
+
+  <!-- Header -->
+  <div class="calendar-header">
+    <h1>Calendar</h1>
+    <span *ngIf="loading" class="loading">Loading…</span>
+  </div>
+
+  <!-- Calendar -->
+  <div class="calendar-wrapper">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+</div>

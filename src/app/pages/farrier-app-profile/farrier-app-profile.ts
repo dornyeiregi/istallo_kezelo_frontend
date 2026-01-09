@@ -78,7 +78,11 @@ export class FarrierAppProfilePage implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/farrier-apps']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/farrier-apps']);
+    }
   }
 
   getHorseNameById(id: number): string {
@@ -114,6 +118,10 @@ export class FarrierAppProfilePage implements OnInit {
     this.saving = true;
 
     const dto: Partial<FarrierAppDTO> = {
+      farrierName: this.farrierApp?.farrierName ?? '',
+      farrierPhone: this.farrierApp?.farrierPhone ?? '',
+      appointmentDate: this.farrierApp?.appointmentDate ?? '',
+      shoes: !!this.farrierApp?.shoes,
       horseIds: Array.from(this.selectedHorseIds)
     };
 

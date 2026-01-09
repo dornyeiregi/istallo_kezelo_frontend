@@ -78,7 +78,11 @@ export class TreatmentProfilePage implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/treatments']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/treatments']);
+    }
   }
 
   getHorseNameById(id: number): string {
@@ -114,6 +118,9 @@ export class TreatmentProfilePage implements OnInit {
     this.saving = true;
 
     const dto: Partial<TreatmentDTO> = {
+      treatmentName: this.treatment?.treatmentName ?? '',
+      description: this.treatment?.description ?? '',
+      date: this.treatment?.date ?? '',
       horseIds: Array.from(this.selectedHorseIds)
     };
 

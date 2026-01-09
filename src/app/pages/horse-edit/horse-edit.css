@@ -13,21 +13,6 @@
   margin-bottom: 16px;
 }
 
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #6a1e2f; 
-  text-decoration: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.back-link:hover {
-  color: #a25565;
-}
-
 
 
 

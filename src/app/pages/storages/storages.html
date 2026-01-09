@@ -6,6 +6,20 @@
       <h1>Tárolók</h1>
       <p class="subtitle">Készletek és felhasználás áttekintése.</p>
     </div>
+
+    @if (isAdmin) {
+      <div class="header-actions">
+        <button
+          type="button"
+          class="sync-button"
+          [disabled]="syncing"
+          (click)="syncStorages()"
+        >
+          <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+          {{ syncing ? 'Szinkronizálás…' : 'Szinkronizálás' }}
+        </button>
+      </div>
+    }
   </header>
 
   @if (loading) {

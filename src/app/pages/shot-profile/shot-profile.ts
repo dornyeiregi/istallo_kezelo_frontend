@@ -98,7 +98,11 @@ export class ShotProfilePage implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/shots']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/shots']);
+    }
   }
 
   goToHorseProfile(horseName: string) {
@@ -137,6 +141,10 @@ export class ShotProfilePage implements OnInit {
     this.saving = true;
 
     const dto: Partial<ShotDTO> = {
+      shotName: this.shot?.shotName ?? '',
+      date: this.shot?.date ?? '',
+      frequencyUnit: this.shot?.frequencyUnit ?? null,
+      frequencyValue: this.shot?.frequencyValue ?? null,
       horseIds: Array.from(this.selectedHorseIds)
     };
 

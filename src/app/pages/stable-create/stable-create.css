@@ -20,23 +20,6 @@ h1 {
   margin-bottom: 1rem;
 }
 
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  background: #fbe3e8;
-  color: #6a1e2f;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.back-link:hover {
-  background: #f2b6c0;
-}
-
 /* Form elemek */
 .form-group {
   display: flex;

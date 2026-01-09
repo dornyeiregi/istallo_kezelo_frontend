@@ -108,6 +108,10 @@ export class FarrierAppCreatePage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/farrier-apps']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/farrier-apps']);
+    }
   }
 }

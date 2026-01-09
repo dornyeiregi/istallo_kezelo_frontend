@@ -138,7 +138,11 @@ export class FeedSchedCreatePage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/feed-scheds']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/feed-scheds']);
+    }
   }
 
   private finishSuccess() {

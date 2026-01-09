@@ -8,21 +8,6 @@
   margin-bottom: 1.2rem;
 }
 
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #8a3a4c;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.back-link:hover {
-  color: #6a1e2f;
-}
-
 .header-section {
   margin-bottom: 1.8rem;
 }

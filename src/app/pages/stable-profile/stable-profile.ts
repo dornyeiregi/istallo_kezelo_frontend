@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
@@ -11,7 +11,7 @@ import { HorseService } from '../../services/horse.service';
 @Component({
   selector: 'app-stable-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, CrudMenuComponent],
+  imports: [CommonModule, CrudMenuComponent],
   templateUrl: './stable-profile.html',
   styleUrls: ['./stable-profile.css']
 })
@@ -59,6 +59,14 @@ export class StableProfilePage implements OnInit {
 
   get estimatedDailyHayKg(): number {
     return this.horseCount * this.averageHayPerHorseKg;
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/stables']);
+    }
   }
 
   private fetchStable(stableName: string): void {

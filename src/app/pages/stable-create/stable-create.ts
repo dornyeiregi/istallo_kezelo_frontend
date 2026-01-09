@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
 
 @Component({
   selector: 'app-stable-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './stable-create.html',
   styleUrls: ['./stable-create.css']
 })
@@ -24,6 +24,14 @@ export class StableCreatePage {
   success = false;
 
   constructor(private stableService: StableService, private router: Router) {}
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/stables']);
+    }
+  }
 
   onSubmit(): void {
     this.error = '';

@@ -9,6 +9,7 @@ import { StorageDTO } from '../../models/storage.model';
 import { StorageService } from '../../services/storage.service';
 import { ItemDTO } from '../../models/item.model';
 import { ItemService } from '../../services/item.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-storages',
@@ -39,6 +40,7 @@ export class StoragesPage implements OnInit {
 
   toastMessage = '';
   toastVisible = false;
+  syncing = false;
 
   itemTypeLabels: { [key: string]: string } = {
     HAY: 'Szálas takarmány',
@@ -55,6 +57,7 @@ export class StoragesPage implements OnInit {
   constructor(
     private storageService: StorageService,
     private itemService: ItemService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -197,6 +200,27 @@ export class StoragesPage implements OnInit {
     this.toastVisible = true;
 
     setTimeout(() => (this.toastVisible = false), 3000);
+  }
+
+  syncStorages(): void {
+    if (this.syncing) return;
+    this.syncing = true;
+
+    this.storageService.sync().subscribe({
+      next: () => {
+        this.showToast('Tárolók szinkronizálva.');
+        this.loadData();
+        this.syncing = false;
+      },
+      error: () => {
+        this.showToast('Nem sikerült szinkronizálni a tárolókat.');
+        this.syncing = false;
+      }
+    });
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   // ======================

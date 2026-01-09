@@ -109,6 +109,10 @@ export class TreatmentCreatePage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/treatments']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/treatments']);
+    }
   }
 }

@@ -26,6 +26,7 @@ import { FarrierAppProfilePage } from './pages/farrier-app-profile/farrier-app-p
 import { FeedSchedsPage } from './pages/feed-scheds/feed-scheds';
 import { FeedSchedCreatePage } from './pages/feed-sched-create/feed-sched-create';
 import { FeedSchedProfilePage } from './pages/feed-sched-profile/feed-sched-profile';
+import { CalendarPage } from './pages/calendar/calendar';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -194,6 +195,11 @@ export const routes: Routes = [
     component: FeedSchedProfilePage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN', 'OWNER'] }
+  },
+  { path: 'calendar',
+    component: CalendarPage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'] }
   },
   { path: '**', redirectTo: '' }
 ];

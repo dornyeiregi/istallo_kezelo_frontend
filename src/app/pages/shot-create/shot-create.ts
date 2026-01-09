@@ -112,7 +112,11 @@ export class ShotCreatePage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/shots']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/shots']);
+    }
   }
 
   frequencyLabels: { [key: string]: string } = {

@@ -112,7 +112,11 @@ export class FeedSchedProfilePage implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/feed-scheds']);
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/feed-scheds']);
+    }
   }
 
   getHorseNameById(id: number): string {

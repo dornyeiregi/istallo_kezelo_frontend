@@ -1,1 +1,102 @@
 /* You can add global styles to this file, and also import other style files */
+
+body .back-link.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: #fbe3e8;
+  color: #6a1e2f;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid #e5b3be;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+body .back-link.back-link:hover,
+body .back-link.back-link:focus-visible {
+  background: #f2d6dc;
+  border-color: #d28a99;
+  outline: none;
+}
+
+body .back-link.back-link i {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+body .fc .fc-daygrid-event {
+  border-radius: 4px;
+  padding: 2px 4px;
+  cursor: pointer;
+  position: relative;
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+body .fc .fc-daygrid-event:hover {
+  filter: brightness(0.92);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+body .fc .fc-daygrid-event[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  background: #2a1b20;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 6px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 20;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+body .fc .fc-daygrid-event[data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: calc(100% + 2px);
+  border-width: 0 4px 4px 4px;
+  border-style: solid;
+  border-color: transparent transparent #2a1b20 transparent;
+  z-index: 21;
+}
+
+body .fc .fc-toolbar-title {
+  color: #6a1e2f;
+  font-weight: 600;
+}
+
+body .fc .fc-button-primary {
+  background: #fbe3e8;
+  border-color: #e5b3be;
+  color: #6a1e2f;
+}
+
+body .fc .fc-button-primary:hover {
+  background: #f2d6dc;
+  border-color: #d28a99;
+  color: #6a1e2f;
+}
+
+body .fc .fc-button-primary:disabled {
+  background: #fbe3e8;
+  border-color: #e5b3be;
+  color: #6a1e2f;
+  opacity: 0.7;
+}
+
+body .fc .fc-button-primary .fc-icon {
+  color: #6a1e2f;
+}
+
+body .fc .fc-button-primary:disabled .fc-icon {
+  color: #6a1e2f;
+}
