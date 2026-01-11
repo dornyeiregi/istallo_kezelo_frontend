@@ -11,18 +11,22 @@ export class HorseFarrierAppService {
 
   constructor(private http: HttpClient) {}
 
+  // Összes link lekérdezése
   getAll(): Observable<HorseFarrierAppDTO[]> {
     return this.http.get<HorseFarrierAppDTO[]>(this.apiUrl);
   }
 
+  // Link lekérdezése id alapján
   getById(id: number): Observable<HorseFarrierAppDTO> {
     return this.http.get<HorseFarrierAppDTO>(`${this.apiUrl}/${id}`);
   }
 
+  // Összes patkolás lekérdezése ló id alapján
   getAllOfHorseById(horseId: number): Observable<HorseFarrierAppDTO[]> {
-    return this.http.get<HorseFarrierAppDTO[]>(`${this.apiUrl}/horse/${horseId}`);
+    return this.http.get<HorseFarrierAppDTO[]>(`${this.apiUrl}/byHorseId/${horseId}`);
   }
 
+  // Link létrehozása ló és patkolás között
   create(dto: HorseFarrierAppDTO): Observable<HorseFarrierAppDTO> {
     return this.http.post<HorseFarrierAppDTO>(this.apiUrl, dto);
   }

@@ -11,10 +11,12 @@ export class HorseTreatmentService {
 
   constructor(private http: HttpClient) {}
 
+  // Összes link lekérdezése
   getAll(): Observable<HorseTreatmentDTO[]> {
     return this.http.get<HorseTreatmentDTO[]>(this.apiUrl);
   }
 
+  // Ló hozzáadása kezeléshez
   create(dto: HorseTreatmentDTO): Observable<HorseTreatmentDTO> {
     return this.http.post<HorseTreatmentDTO>(this.apiUrl, dto);
   }

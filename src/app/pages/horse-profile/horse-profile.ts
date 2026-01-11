@@ -14,6 +14,12 @@ import { FarrierAppDTO } from '../../models/farrier-app.model';
 import { FarrierAppService } from '../../services/farrier-app.service';
 import { FeedSchedDTO } from '../../models/feed-sched.model';
 import { FeedSchedService } from '../../services/feed-sched.service';
+import { HorseFeedSchedService } from '../../services/horse-feed-sched.service';
+import { HorseFeedSchedDTO } from '../../models/horse-feed-sched.model';
+import { HorseFarrierAppService } from '../../services/horse-farrier-app.service';
+import { HorseFarrierAppDTO } from '../../models/horse-farrier-app.model';
+import { HorseTreatmentService } from '../../services/horse-treatment.service';
+import { HorseTreatmentDTO } from '../../models/horse-treatment.model';
 
 @Component({
   selector: 'app-horse-profile',
@@ -60,7 +66,10 @@ export class HorseProfilePage implements OnInit {
         private horseShotService: HorseShotService,
         private treatmentService: TreatmentService,
         private farrierAppService: FarrierAppService,
-        private feedSchedService: FeedSchedService
+        private feedSchedService: FeedSchedService,
+        private horseFeedSchedService: HorseFeedSchedService,
+        private horseFarrierAppService: HorseFarrierAppService,
+        private horseTreatmentService: HorseTreatmentService
     ) {}
 
     ngOnInit(): void {
@@ -299,9 +308,9 @@ export class HorseProfilePage implements OnInit {
           onClick: () => this.editHorse()
         },
         {
-          label: "Etetés szerkesztése",
+          label: "Etetés hozzáadása",
           icon: "fa-utensils",
-          onClick: () => this.editFeeding()
+          onClick: () => this.addFeedSched()
         },
         {
           label: "Oltás hozzáadása",
@@ -311,22 +320,12 @@ export class HorseProfilePage implements OnInit {
         {
           label: "Patkolás hozzáadása",
           icon: "fa-hammer",
-          onClick: () => this.addShoeing()
+          onClick: () => this.addFarrierApp()
         },
         {
           label: "Kezelés hozzáadása",
           icon: "fa-briefcase-medical",
           onClick: () => this.addTreatment()
-        },
-        {
-          label: "Patkolási időpont hozzáadása",
-          icon: "fa-horse-head",
-          onClick: () => this.addFarrierApp()
-        },
-        {
-          label: "Etetési ütemterv hozzáadása",
-          icon: "fa-bowl-rice",
-          onClick: () => this.addFeedSched()
         }
       ];
     }
@@ -338,7 +337,16 @@ export class HorseProfilePage implements OnInit {
 
         if (!this.selectedTreatmentId) return;
 
-        this.treatmentService.addHorseToTreatment(this.selectedTreatmentId, this.horse.id)
+        const selected = this.allTreatments.find(
+          f => f.treatmentId === this.selectedTreatmentId);
+        if (!selected?.treatmentId) return;
+
+        const dto: HorseTreatmentDTO = {
+          horseId: this.horse.id,
+          treatmentId: selected.treatmentId,
+        };
+
+        this.horseTreatmentService.create(dto)
           .subscribe(() => {
             this.showTreatmentPopup = false;
             this.loadTreatments(this.horse!.id!);
@@ -357,7 +365,16 @@ export class HorseProfilePage implements OnInit {
 
         if (!this.selectedFarrierAppId) return;
 
-        this.farrierAppService.addHorseToFarrierApp(this.selectedFarrierAppId, this.horse.id)
+        const selected = this.allFarrierApps.find(
+          f => f.farrierAppId === this.selectedFarrierAppId);
+        if (!selected?.farrierAppId) return;
+
+        const dto: HorseFarrierAppDTO = {
+          horseId: this.horse.id,
+          farrierAppId: selected.farrierAppId,
+        };
+
+        this.horseFarrierAppService.create(dto)
           .subscribe(() => {
             this.showFarrierPopup = false;
             this.loadFarrierApps(this.horse!.id!);
@@ -376,7 +393,16 @@ export class HorseProfilePage implements OnInit {
 
         if (!this.selectedFeedSchedId) return;
 
-        this.feedSchedService.addHorseToFeedSched(this.selectedFeedSchedId, this.horse.id)
+        const selected = this.allFeedScheds.find(
+          f => f.feedSchedId === this.selectedFeedSchedId);
+        if (!selected?.feedSchedId) return;
+
+        const dto: HorseFeedSchedDTO = {
+          horseId: this.horse.id,
+          feedSchedId: selected.feedSchedId,
+        };
+
+        this.horseFeedSchedService.create(dto)
           .subscribe(() => {
             this.showFeedPopup = false;
             this.loadFeedScheds(this.horse!.id!);

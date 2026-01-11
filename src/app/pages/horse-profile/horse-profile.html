@@ -211,7 +211,7 @@
           <label>Oltás kiválasztása:</label>
           <select [(ngModel)]="selectedShotId">
             @for (s of allShots; track s.shotId) {
-              <option [value]="s.shotId">
+              <option [ngValue]="s.shotId">
                 {{ s.shotName }} – {{ s.date }}
               </option>
             }
@@ -246,7 +246,7 @@
           <label>Kezelés kiválasztása:</label>
           <select [(ngModel)]="selectedTreatmentId">
             @for (t of allTreatments; track t.treatmentId) {
-              <option [value]="t.treatmentId">
+              <option [ngValue]="t.treatmentId">
                 {{ t.treatmentName }} – {{ t.date }}
               </option>
             }
@@ -281,7 +281,7 @@
           <label>Időpont kiválasztása:</label>
           <select [(ngModel)]="selectedFarrierAppId">
             @for (a of allFarrierApps; track a.farrierAppId) {
-              <option [value]="a.farrierAppId">
+              <option [ngValue]="a.farrierAppId">
                 {{ a.farrierName }} – {{ a.appointmentDate }}
               </option>
             }
@@ -316,7 +316,7 @@
           <label>Ütemterv kiválasztása:</label>
           <select [(ngModel)]="selectedFeedSchedId">
             @for (f of allFeedScheds; track f.feedSchedId) {
-              <option [value]="f.feedSchedId">
+              <option [ngValue]="f.feedSchedId">
                 {{ f.feedTime }} – {{ f.description || 'Nincs leírás' }}
               </option>
             }
