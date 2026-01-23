@@ -58,10 +58,31 @@ export class TreatmentsPage implements OnInit {
     this.router.navigate(['/treatments/new']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.deleteMode = false;
+      this.confirmDeleteTreatment = null;
+      this.toastVisible = false;
+    }
+  }
+
   onCardClick(treatment: TreatmentDTO): void {
     // Törlés mód
     if (this.deleteMode) {
       this.confirmDelete(treatment);
+      return;
+    }
+
+    if (this.editMode) {
+      if (treatment.treatmentId != null) {
+        this.router.navigate(['/treatments/edit', treatment.treatmentId]);
+      }
+      this.editMode = false;
       return;
     }
 
@@ -130,6 +151,11 @@ export class TreatmentsPage implements OnInit {
           this.confirmDeleteTreatment = null;
           this.addTreatment();
         }
+      },
+      {
+        label: 'Szerkesztés',
+        icon: 'fa-pen-to-square',
+        onClick: () => this.toggleEditMode()
       },
       {
         label: 'Törlés mód',

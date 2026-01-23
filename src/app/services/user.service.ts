@@ -21,6 +21,14 @@ export class UserService {
       .pipe(map(users => users.filter(u => u.userType === 'OWNER')));
   }
 
+  getById(id: number): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.apiUrl}/${id}`);
+  }
+
+  getByUsername(username: string): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.apiUrl}/byUsername/${username}`);
+  }
+
   create(dto: UserDTO): Observable<UserDTO> {
     return this.http.post<UserDTO>(this.apiUrl, dto);
   }

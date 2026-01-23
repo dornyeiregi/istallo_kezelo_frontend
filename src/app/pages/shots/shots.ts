@@ -58,6 +58,18 @@ export class ShotsPage implements OnInit {
     this.router.navigate(['/shots/new']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.deleteMode = false;
+      this.confirmDeleteShot = null;
+      this.toastVisible = false;
+    }
+  }
 
   onCardClick(shot: ShotDTO): void {
     // Törlés mód
@@ -67,12 +79,13 @@ export class ShotsPage implements OnInit {
     }
 
     // Szerkesztés mód
-    // if (this.editMode) {
-    //   if (shot.shotId != null) {
-    //     this.router.navigate(['/shots/edit', shot.shotId]);
-    //   }
-    //   return;
-    // }
+    if (this.editMode) {
+      if (shot.shotId != null) {
+        this.router.navigate(['/shots/edit', shot.shotId]);
+      }
+      this.editMode = false;
+      return;
+    }
 
     // Normál kattintás
     if (shot.shotId != null) {
@@ -138,16 +151,11 @@ export class ShotsPage implements OnInit {
           this.addShot();
         }
       },
-      // {
-      //   label: 'Szerkesztés mód',
-      //   icon: 'edit',
-      //   onClick: () => {
-      //     this.editMode = !this.editMode;
-      //     this.deleteMode = false;
-      //     this.confirmDeleteShot = null;
-      //     this.toastVisible = false;
-      //   }
-      // },
+      {
+        label: 'Szerkesztés',
+        icon: 'fa-pen-to-square',
+        onClick: () => this.toggleEditMode()
+      },
       {
         label: 'Törlés mód',
         icon: 'fa-trash',

@@ -55,6 +55,10 @@ export class StablesPage implements OnInit {
     this.router.navigate(['/stables/new']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
   toggleEditMode(): void {
     this.editMode = !this.editMode;
 

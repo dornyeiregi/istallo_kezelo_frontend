@@ -1,6 +1,13 @@
 <app-crud-menu [actions]="crudActions"></app-crud-menu>
 
 <div class="feed-scheds-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
   <header class="page-header">
     <div class="header-left">
       <h1>Etetési ütemtervek</h1>
@@ -20,12 +27,18 @@
         Törlés mód aktív — kattints a törölni kívánt ütemtervre.
       </div>
     }
+    @if (editMode) {
+      <div class="delete-warning">
+        Szerkesztés mód aktív — kattints a szerkeszteni kívánt ütemtervre.
+      </div>
+    }
 
     <section class="feed-grid" aria-label="Etetési ütemtervek">
 
       @for (feed of feedScheds; track feed.feedSchedId) {
         <div
           class="feed-card"
+          [class.edit-mode]="editMode"
           [class.delete-mode]="deleteMode"
           (click)="onCardClick(feed)"
         >
@@ -40,6 +53,13 @@
           <p><strong>Leírás:</strong> {{ feed.description || '-' }}</p>
           <p><strong>Érintett lovak száma:</strong> {{ feed.horseIds?.length || 0 }}</p>
           <p><strong>Tételek:</strong> {{ feed.itemNames && feed.itemNames.length ? feed.itemNames.join(', ') : '-' }}</p>
+
+          @if (editMode) {
+            <div class="edit-hint">
+              <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+              <span>Kattints a szerkesztéshez</span>
+            </div>
+          }
 
           @if (deleteMode) {
             <div class="delete-hint">

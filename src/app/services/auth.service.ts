@@ -87,6 +87,27 @@ export class AuthService {
     return false;
   }
 
+  updateStoredUser(patch: Partial<AuthUser>): void {
+    const current = this.currentUserSubject.value;
+    if (!current) return;
+
+    const next: AuthUser = {
+      ...current,
+      ...patch
+    };
+
+    this.storeUser(next);
+    this.currentUserSubject.next(next);
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<string> {
+    return this.http.post(
+      `${this.apiBase}/change-password`,
+      { currentPassword, newPassword },
+      { responseType: 'text' }
+    ) as Observable<string>;
+  }
+
   setReturnUrl(url: string): void {
     localStorage.setItem(RETURN_URL_KEY, url);
   }

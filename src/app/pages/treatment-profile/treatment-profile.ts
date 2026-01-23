@@ -78,6 +78,11 @@ export class TreatmentProfilePage implements OnInit {
   }
 
   goBack(): void {
+    if (history.state?.fromEdit) {
+      this.router.navigate(['/treatments']);
+      return;
+    }
+
     if (window.history.length > 1) {
       window.history.back();
     } else {

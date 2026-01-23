@@ -4,6 +4,10 @@
   padding: 20px;
 }
 
+.breadcrumb {
+  margin-bottom: 1rem;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -12,7 +16,7 @@ table {
 
 th, td {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--app-border);
   text-align: left;
 }
 
@@ -40,7 +44,7 @@ select {
 
 .new-user-btn {
   padding: 10px 14px;
-  background: #e05d74;
+  background: var(--app-accent);
   color: white;
   font-weight: 600;
   border: none;
@@ -54,7 +58,7 @@ select {
 }
 
 .delete-btn {
-  background: #e05d74;
+  background: var(--app-accent);
   border: none;
   padding: 6px 10px;
   border-radius: 6px;
@@ -151,7 +155,7 @@ select {
 }
 
 button.primary {
-  background: #e05d74 !important;
+  background: var(--app-accent) !important;
   color: white !important;
   border: none;
   padding: 8px 14px;

@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { AuthUser } from './models/auth.model';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,13 @@ import { AuthUser } from './models/auth.model';
       <div class="nav-right">
         <!-- Felhasználónév + kijelentkezés -->
         <ng-container *ngIf="user$ | async as user; else guest">
-          <span class="user-chip">{{ user.username }}</span>
+          <a
+            class="user-chip"
+            routerLink="/settings"
+            routerLinkActive="active"
+          >
+            {{ user.username }}
+          </a>
           <button
             type="button"
             class="logout-button"
@@ -70,10 +77,15 @@ export class AppComponent {
   user$!: Observable<AuthUser | null>;
   isAuthenticated$!: Observable<boolean>;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private themeService: ThemeService
+  ) {
     // Az AuthService Observable-jeit a konstruktorban állítjuk be
     this.user$ = this.authService.currentUser$;
     this.isAuthenticated$ = this.authService.isAuthenticated$;
+    this.themeService.init();
   }
 
   logout(): void {

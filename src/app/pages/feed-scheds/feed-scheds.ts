@@ -21,6 +21,7 @@ export class FeedSchedsPage implements OnInit {
   feedScheds: FeedSchedDTO[] = [];
   loading = true;
   error = '';
+  editMode = false;
   deleteMode = false;
   confirmDelete: FeedSchedDTO | null = null;
   toastMessage = '';
@@ -83,9 +84,30 @@ export class FeedSchedsPage implements OnInit {
     this.router.navigate(['/feed-scheds/new']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.deleteMode = false;
+      this.confirmDelete = null;
+      this.toastVisible = false;
+    }
+  }
+
   onCardClick(feed: FeedSchedDTO): void {
     if (this.deleteMode) {
       this.confirmDelete = feed;
+      return;
+    }
+
+    if (this.editMode) {
+      if (feed.feedSchedId != null) {
+        this.router.navigate(['/feed-scheds/edit', feed.feedSchedId]);
+      }
+      this.editMode = false;
       return;
     }
 
@@ -140,16 +162,23 @@ export class FeedSchedsPage implements OnInit {
         label: 'Új etetési ütemterv',
         icon: 'fa-circle-plus',
         onClick: () => {
+          this.editMode = false;
           this.deleteMode = false;
           this.confirmDelete = null;
           this.addFeedSched();
         }
       },
       {
+        label: 'Szerkesztés',
+        icon: 'fa-pen-to-square',
+        onClick: () => this.toggleEditMode()
+      },
+      {
         label: 'Törlés mód',
         icon: 'fa-trash',
         onClick: () => {
           this.deleteMode = !this.deleteMode;
+          this.editMode = false;
           this.confirmDelete = null;
           this.toastVisible = false;
         }

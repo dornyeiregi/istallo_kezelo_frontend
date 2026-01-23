@@ -20,7 +20,7 @@
 .hex-button .hex-shape {
   width: 45px;
   height: 40px;
-  background: #d94a64;
+  background: var(--app-accent);
   clip-path: polygon(
     25% 0%, 75% 0%,
     100% 50%,
@@ -36,7 +36,7 @@
 }
 
 .hex-button:hover .hex-shape {
-  background: #b93a4f;
+  background: var(--app-accent-deep);
 }
 
 .hex-menu-list {
@@ -61,7 +61,7 @@
 .hex-item .hex-shape {
   width: 45px;
   height: 40px;
-  background: #f8d4dc;
+  background: var(--app-chip-bg);
   clip-path: polygon(
     25% 0%, 75% 0%,
     100% 50%,
@@ -71,7 +71,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 18px;
   transition: background 0.2s, transform 0.1s;
 }
@@ -79,14 +79,14 @@
 .connector-line {
   width: 4px;
   height: 16px;
-  background: #d94a64;
+  background: var(--app-accent);
   border-radius: 4px;
 
   margin: -1.5px auto 0 auto;
 }
 
 .hex-item:hover .hex-shape {
-  background: #ffd2db;
+  background: var(--app-chip-bg);
   transform: scale(1.06);
 }
 
@@ -95,11 +95,11 @@
   left: 60px;
   top: 50%;
   transform: translateY(-50%);
-  background: #fff1f4;
+  background: var(--app-surface);
   padding: 4px 10px;
   border-radius: 8px;
-  border: 1px solid #e6b6c1;
-  color: #6a1e2f;
+  border: 1px solid var(--app-border);
+  color: var(--app-primary);
   white-space: nowrap;
   font-size: 0.85rem;
   font-weight: 600;

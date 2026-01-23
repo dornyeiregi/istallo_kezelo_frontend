@@ -47,6 +47,10 @@ export class CalendarPage implements OnInit {
     this.reload();
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
   reload(): void {
     this.fetchAllEvents(this.viewStart, this.viewEnd);
   }

@@ -98,6 +98,11 @@ export class ShotProfilePage implements OnInit {
   }
 
   goBack(): void {
+    if (history.state?.fromEdit) {
+      this.router.navigate(['/shots']);
+      return;
+    }
+
     if (window.history.length > 1) {
       window.history.back();
     } else {

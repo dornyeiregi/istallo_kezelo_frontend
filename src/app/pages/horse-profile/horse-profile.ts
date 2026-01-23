@@ -133,6 +133,11 @@ export class HorseProfilePage implements OnInit {
       'EV': 'Év'
     };
 
+    feedTimeLabels: { [key: string]: string } = {
+      MORNING: 'Reggel',
+      NOON: 'Dél',
+      EVENING: 'Este'
+    };
 
     loadShots(horseId: number): void {
       this.shotService.getAllOfHorseById(horseId).subscribe({
@@ -193,6 +198,11 @@ export class HorseProfilePage implements OnInit {
       const unitLabel = this.frequencyLabels[unit] || unit;
 
       return `${shot.frequencyValue} ${unitLabel}`;
+    }
+
+    getFeedTimeLabel(feed: FeedSchedDTO | null | undefined): string {
+      if (!feed?.feedTime) return '-';
+      return this.feedTimeLabels[feed.feedTime] || feed.feedTime;
     }
 
     goBack(): void {

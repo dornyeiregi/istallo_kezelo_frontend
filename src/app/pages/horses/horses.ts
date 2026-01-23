@@ -74,6 +74,10 @@ export class HorsesPage implements OnInit {
     this.router.navigate(['/horses/new']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
   toggleEditMode(): void {
     this.editMode = !this.editMode;
   }

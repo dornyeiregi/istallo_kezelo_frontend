@@ -2,15 +2,15 @@
 .layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f7f7fa;
+  background-color: var(--app-bg);
   font-family: 'Inter', sans-serif;
-  color: #333;
+  color: var(--app-text);
 }
 
 /* ===== Bal oldali ikon sáv ===== */
 .sidebar {
   width: 90px;
-  background-color: #f4d6db;
+  background-color: var(--app-chip-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +21,7 @@
 .hex {
   width: 52px;
   height: 52px;
-  background-color: #e99ba8;
+  background-color: var(--app-accent);
   color: white;
   border-radius: 12px;
   display: flex;
@@ -33,7 +33,7 @@
 }
 
 .hex:hover {
-  background-color: #d37684;
+  background-color: var(--app-accent-strong);
 }
 
 .hex-top {
@@ -50,8 +50,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem 2rem;
-  background-color: #f2b6c0;
-  color: #6a1e2f;
+  background-color: var(--app-border);
+  color: var(--app-primary);
   font-weight: bold;
 }
 
@@ -68,8 +68,8 @@
 
 .signout {
   background: transparent;
-  border: 1px solid #6a1e2f;
-  color: #6a1e2f;
+  border: 1px solid var(--app-primary);
+  color: var(--app-primary);
   border-radius: 6px;
   padding: 0.3rem 0.8rem;
   cursor: pointer;
@@ -77,7 +77,7 @@
 }
 
 .signout:hover {
-  background-color: #6a1e2f;
+  background-color: var(--app-primary);
   color: white;
 }
 
@@ -92,12 +92,12 @@
 }
 
 .card {
-  background-color: white;
+  background-color: var(--app-surface);
   border-radius: 12px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   text-align: center;
-  color: #6a1e2f;
+  color: var(--app-primary);
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -109,7 +109,7 @@
 .icon {
   font-size: 3rem;
   margin-bottom: 0.8rem;
-  color: #e05d74;
+  color: var(--app-accent);
 }
 
 /* ===== Reszponzív ===== */

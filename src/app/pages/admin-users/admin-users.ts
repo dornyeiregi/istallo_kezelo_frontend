@@ -5,6 +5,7 @@ import { UserDTO } from '../../models/user.model';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-users',
@@ -40,7 +41,8 @@ export class AdminUsersPage implements OnInit, OnDestroy {
 
   constructor(
     private adminService: AdminService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +59,10 @@ export class AdminUsersPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 
   loadUsers(): void {

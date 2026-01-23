@@ -170,7 +170,7 @@
 
               <div class="shot-title">
                 <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
-                <strong>{{ feed.feedTime }}</strong>
+                <strong>{{ getFeedTimeLabel(feed) }}</strong>
               </div>
 
               <div class="shot-meta">
@@ -317,7 +317,7 @@
           <select [(ngModel)]="selectedFeedSchedId">
             @for (f of allFeedScheds; track f.feedSchedId) {
               <option [ngValue]="f.feedSchedId">
-                {{ f.feedTime }} – {{ f.description || 'Nincs leírás' }}
+                {{ getFeedTimeLabel(f) }} – {{ f.description || 'Nincs leírás' }}
               </option>
             }
           </select>

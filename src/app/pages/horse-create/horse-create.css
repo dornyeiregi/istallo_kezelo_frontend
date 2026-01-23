@@ -6,12 +6,12 @@
   border-radius: 12px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', sans-serif;
-  color: #3b2a30;
+  color: var(--app-text);
 }
 
 h1 {
   text-align: center;
-  color: #6a1e2f;
+  color: var(--app-primary);
   margin-bottom: 1.5rem;
 }
 
@@ -28,14 +28,14 @@ h1 {
 
 label {
   font-weight: 500;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 input,
 select,
 textarea {
   padding: 0.6rem 0.8rem;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
@@ -45,7 +45,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #a25565;
+  border-color: var(--app-accent-strong);
   outline: none;
 }
 
@@ -55,7 +55,7 @@ textarea:focus {
   justify-content: center;
   gap: 0.4rem;
   padding: 0.7rem 1.5rem;
-  background: #6a1e2f;
+  background: var(--app-primary);
   color: #fff;
   border: none;
   border-radius: 8px;

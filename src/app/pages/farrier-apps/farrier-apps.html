@@ -1,6 +1,13 @@
 <app-crud-menu [actions]="crudActions"></app-crud-menu>
 
 <div class="farrier-apps-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
   <header class="page-header">
     <div class="header-left">
       <h1>Patkolási időpontok</h1>
@@ -20,12 +27,18 @@
         Törlés mód aktív — kattints a törölni kívánt időpontra.
       </div>
     }
+    @if (editMode) {
+      <div class="delete-warning">
+        Szerkesztés mód aktív — kattints a szerkeszteni kívánt időpontra.
+      </div>
+    }
 
     <section class="farrier-grid" aria-label="Patkolási időpontok">
 
       @for (app of farrierApps; track app.farrierAppId) {
         <div
           class="farrier-card"
+          [class.edit-mode]="editMode"
           [class.delete-mode]="deleteMode"
           (click)="onCardClick(app)"
         >
@@ -40,6 +53,13 @@
           <p><strong>Telefon:</strong> {{ app.farrierPhone || '-' }}</p>
           <p><strong>Patkolás:</strong> {{ app.shoes ? 'Igen' : 'Nem' }}</p>
           <p><strong>Érintett lovak száma:</strong> {{ app.horseIds?.length || 0 }}</p>
+
+          @if (editMode) {
+            <div class="edit-hint">
+              <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+              <span>Kattints a szerkesztéshez</span>
+            </div>
+          }
 
           @if (deleteMode) {
             <div class="delete-hint">

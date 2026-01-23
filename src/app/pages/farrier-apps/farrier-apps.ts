@@ -56,9 +56,30 @@ export class FarrierAppsPage implements OnInit {
     this.router.navigate(['/farrier-apps/new']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    if (this.editMode) {
+      this.deleteMode = false;
+      this.confirmDelete = null;
+      this.toastVisible = false;
+    }
+  }
+
   onCardClick(app: FarrierAppDTO): void {
     if (this.deleteMode) {
       this.confirmDelete = app;
+      return;
+    }
+
+    if (this.editMode) {
+      if (app.farrierAppId != null) {
+        this.router.navigate(['/farrier-apps/edit', app.farrierAppId]);
+      }
+      this.editMode = false;
       return;
     }
 
@@ -120,6 +141,11 @@ export class FarrierAppsPage implements OnInit {
           this.confirmDelete = null;
           this.addFarrierApp();
         }
+      },
+      {
+        label: 'Szerkesztés',
+        icon: 'fa-pen-to-square',
+        onClick: () => this.toggleEditMode()
       },
       {
         label: 'Törlés mód',

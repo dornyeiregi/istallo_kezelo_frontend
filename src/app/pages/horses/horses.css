@@ -2,7 +2,11 @@
   padding: 2rem;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: #f7f7fa;
+  background: var(--app-bg);
+}
+
+.breadcrumb {
+  margin-bottom: 1rem;
 }
 
 .horse-grid {
@@ -14,7 +18,7 @@
 
 .horse-card {
   background: #fff;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
   border-radius: 10px;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -35,32 +39,32 @@
 
 .horse-card h3 {
   margin: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 1.2rem;
 }
 
 .sex-label {
-  background: #f8d9df;
+  background: var(--app-chip-bg);
   border-radius: 6px;
   padding: 0.2rem 0.5rem;
   font-size: 0.9rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .edit-hint {
   font-size: 0.85rem;
-  color: #a25565;
+  color: var(--app-accent-strong);
   margin-top: 0.3rem;
 }
 
 .horse-card.edit-mode {
   cursor: pointer;
-  border-color: #e05d74;
-  background: #fef7f9;
+  border-color: var(--app-accent);
+  background: var(--app-chip-bg);
 }
 
 .themed-button {
-  background-color: #e05d74;
+  background-color: var(--app-accent);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;
@@ -75,18 +79,18 @@
 }
 
 .themed-button:hover {
-  background-color: #a25565;
+  background-color: var(--app-accent-strong);
 }
 
 .horse-card.delete-mode {
   cursor: pointer;
-  border-color: #e05d74;
-  background: #fef1f4;
+  border-color: var(--app-accent);
+  background: var(--app-chip-bg);
 }
 
 .delete-hint {
   margin-top: 0.4rem;
-  color: #a25565;
+  color: var(--app-accent-strong);
   font-size: 0.85rem;
   display: flex;
   align-items: center;
@@ -96,10 +100,10 @@
 .delete-warning {
   margin-bottom: 1rem;
   padding: 12px;
-  background: #f8d9df;
-  border-left: 5px solid #e05d74;
+  background: var(--app-chip-bg);
+  border-left: 5px solid var(--app-accent);
   border-radius: 6px;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .modal-backdrop {
@@ -130,7 +134,7 @@
 }
 
 .cancel {
-  background-color: #a25565 !important;
+  background-color: var(--app-accent-strong) !important;
 }
 
 .toast {
@@ -138,8 +142,8 @@
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background: #f2b6c0;
-  color: #6a1e2f;
+  background: var(--app-border);
+  color: var(--app-primary);
   padding: 12px 20px;
   border-radius: 10px;
   font-size: 16px;

@@ -1,6 +1,13 @@
 <app-crud-menu [actions]="crudActions"></app-crud-menu>
 
 <div class="treatments-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
   <header class="page-header">
     <div class="header-left">
       <h1>Kezelések</h1>
@@ -18,6 +25,11 @@
     @if (deleteMode) {
       <div class="delete-warning">
         Törlés mód aktív — kattints a törölni kívánt kezelésre.
+      </div>
+    }
+    @if (editMode) {
+      <div class="delete-warning">
+        Szerkesztés mód aktív — kattints a szerkeszteni kívánt kezelésre.
       </div>
     }
 
@@ -41,6 +53,13 @@
           <p><strong>Leírás:</strong> {{ treatment.description || '-' }}</p>
           <p><strong>Azonosító:</strong> {{ treatment.treatmentId ?? '-' }}</p>
           <p><strong>Érintett lovak száma:</strong> {{ treatment.horseIds?.length || 0 }}</p>
+
+          @if (editMode) {
+            <div class="edit-hint">
+              <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+              <span>Kattints a szerkesztéshez</span>
+            </div>
+          }
 
           @if (deleteMode) {
             <div class="delete-hint">

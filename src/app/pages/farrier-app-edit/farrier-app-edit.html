@@ -1,0 +1,89 @@
+<div class="form-container">
+
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza
+    </a>
+  </nav>
+
+  <h1>Patkolási időpont szerkesztése</h1>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+
+    @if (success) {
+      <div class="success-msg">Időpont sikeresen frissítve!</div>
+    }
+
+    <form (ngSubmit)="onSubmit()" #farrierForm="ngForm">
+
+      <div class="form-group">
+        <label>Patkoló neve *</label>
+        <input type="text"
+               name="farrierName"
+               [(ngModel)]="form.farrierName"
+               required />
+      </div>
+
+      <div class="form-group">
+        <label>Telefon</label>
+        <input type="text"
+               name="farrierPhone"
+               [(ngModel)]="form.farrierPhone" />
+      </div>
+
+      <div class="form-group">
+        <label>Dátum *</label>
+        <input type="date"
+               name="appointmentDate"
+               [(ngModel)]="form.appointmentDate"
+               required />
+      </div>
+
+      <div class="form-group checkbox-row">
+        <label>
+          <input type="checkbox"
+                 name="shoes"
+                 [(ngModel)]="form.shoes" />
+          Patkó
+        </label>
+      </div>
+
+      <div class="form-group horse-list">
+        <label>Lovak hozzárendelése</label>
+
+        @if (horses.length === 0) {
+          <p>Nincs elérhető ló.</p>
+        } @else {
+
+          @for (horse of horses; track horse.id) {
+
+            <label class="horse-row" [attr.data-key]="horse.id">
+              <input
+                type="checkbox"
+                [checked]="selectedHorseIds.has(toNumber(horse.id!))"
+                (change)="toggleHorseSelection(toNumber(horse.id!))"
+              />
+              {{ horse.horseName }}
+            </label>
+          }
+        }
+      </div>
+
+      <button type="submit" class="submit-button" [disabled]="loading || !farrierForm.form.valid">
+        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+        Mentés
+      </button>
+
+      @if (loading) {
+        <div class="info">Mentés folyamatban...</div>
+      }
+
+    </form>
+  }
+
+</div>

@@ -2,7 +2,11 @@
   padding: 2rem;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: #f7f7fa;
+  background: var(--app-bg);
+}
+
+.breadcrumb {
+  margin-bottom: 1rem;
 }
 
 .page-header {
@@ -14,13 +18,13 @@
 
 .page-header h1 {
   margin: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 2rem;
 }
 
 .subtitle {
   margin: 0.35rem 0 0;
-  color: #84606c;
+  color: var(--app-muted);
   font-size: 0.95rem;
 }
 
@@ -33,7 +37,7 @@
 
 .overview-card {
   background: #fff;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 12px;
   padding: 1.25rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -46,18 +50,18 @@
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #a25565;
+  color: var(--app-accent-strong);
 }
 
 .overview-card .value {
   font-size: 2rem;
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .overview-card .hint {
   font-size: 0.85rem;
-  color: #9a7280;
+  color: var(--app-muted);
 }
 
 .info,
@@ -84,7 +88,7 @@
 .stable-card {
   display: block;
   background-color: #fff;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
   border-radius: 10px;
   padding: 1.2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -96,7 +100,7 @@
 .stable-card:hover,
 .stable-card:focus-visible {
   transform: translateY(-3px);
-  border-color: #e05d74;
+  border-color: var(--app-accent);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   outline: none;
 }
@@ -116,15 +120,15 @@
 }
 
 .stable-card h3 {
-  color: #6a1e2f;
+  color: var(--app-primary);
   margin-bottom: 0.5rem;
   margin-top: 0;
 }
 
 .horse-count {
   font-size: 0.9rem;
-  color: #a25565;
-  background: #fbe3e8;
+  color: var(--app-accent-strong);
+  background: var(--app-chip-bg);
   border-radius: 999px;
   padding: 0.2rem 0.6rem;
 }
@@ -137,8 +141,8 @@
 }
 
 .horse-item {
-  background-color: #f8d9df;
-  color: #6a1e2f;
+  background-color: var(--app-chip-bg);
+  color: var(--app-primary);
   border-radius: 6px;
   margin-bottom: 0.3rem;
   padding: 0.3rem 0.6rem;
@@ -147,7 +151,7 @@
 
 .more {
   font-size: 0.85rem;
-  color: #a25565;
+  color: var(--app-accent-strong);
   margin-top: 0.4rem;
 }
 
@@ -160,10 +164,10 @@
 .edit-input {
   width: 100%;
   padding: 0.5rem 0.6rem;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 6px;
   font-size: 1rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
   margin-bottom: 0.5rem;
 }
 
@@ -182,21 +186,21 @@
 }
 
 .save-button {
-  background: #f2b6c0;
-  color: #6a1e2f;
+  background: var(--app-border);
+  color: var(--app-primary);
 }
 
 .save-button:hover {
-  background: #e5929f;
+  background: var(--app-accent);
 }
 
 .cancel-button {
-  background: #ddd;
+  background: var(--app-border);
   color: #333;
 }
 
 .cancel-button:hover {
-  background: #bbb;
+  background: var(--app-accent-strong);
 }
 
 @media (min-width: 1000px) {
@@ -206,14 +210,14 @@
 }
 
 .stable-card.delete-mode {
-  border-color: #e05d74;
-  background: #fef1f4;
+  border-color: var(--app-accent);
+  background: var(--app-chip-bg);
   cursor: pointer;
 }
 
 .delete-hint {
   margin-top: 0.5rem;
-  color: #a25565;
+  color: var(--app-accent-strong);
   font-size: 0.85rem;
   display: flex;
   align-items: center;
@@ -223,10 +227,10 @@
 .delete-warning {
   margin-bottom: 1rem;
   padding: 12px;
-  background: #f8d9df;
-  border-left: 5px solid #e05d74;
+  background: var(--app-chip-bg);
+  border-left: 5px solid var(--app-accent);
   border-radius: 6px;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .modal-backdrop {
@@ -257,7 +261,7 @@
 }
 
 .cancel {
-  background-color: #a25565 !important;
+  background-color: var(--app-accent-strong) !important;
 }
 
 .toast {
@@ -265,8 +269,8 @@
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background: #f2b6c0;
-  color: #6a1e2f;
+  background: var(--app-border);
+  color: var(--app-primary);
   padding: 12px 20px;
   border-radius: 10px;
   font-size: 16px;
@@ -282,7 +286,7 @@
 }
 
 .delete-button {
-  background-color: #e05d74;
+  background-color: var(--app-accent);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;
@@ -297,11 +301,11 @@
 }
 
 .delete-button:hover {
-  background-color: #c94b60;
+  background-color: var(--app-accent-deep);
 }
 
 .cancel-button {
-  background-color: #a25565;
+  background-color: var(--app-accent-strong);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;

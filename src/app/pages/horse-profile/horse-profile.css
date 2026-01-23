@@ -2,8 +2,8 @@
   padding: 2rem clamp(1.5rem, 3vw, 3rem);
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: #f7f7fa;
-  color: #3b2a30;
+  background: var(--app-bg);
+  color: var(--app-text);
 }
 
 .breadcrumb {
@@ -13,7 +13,7 @@
 .profile-header h1 {
   margin: 0 0 1.5rem;
   font-size: clamp(1.8rem, 4vw, 2.5rem);
-  color: #6a1e2f;
+  color: var(--app-primary);
   text-align: center;
 }
 
@@ -26,7 +26,7 @@
 
 .stat-card {
   background: #fff;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
@@ -39,18 +39,18 @@
   font-size: 0.9rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #a25565;
+  color: var(--app-accent-strong);
 }
 
 .stat-card .value {
   font-size: 1.8rem;
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .horse-section h2 {
   margin: 0 0 1rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .horse-list {
@@ -64,7 +64,7 @@
 
 .horse-card {
   background: #fff;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 10px;
   padding: 1.2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -72,7 +72,7 @@
 
 .horse-card h3 {
   margin: 0 0 0.8rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .details {
@@ -83,7 +83,7 @@
 }
 
 .details p strong {
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .info {
@@ -120,7 +120,7 @@
 
 .shot-card {
   background: white;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 0.8rem;
@@ -132,14 +132,14 @@
 .shot-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 10px rgba(0,0,0,0.1);
-  background: #fff7fa;
+  background: var(--app-chip-bg);
 }
 
 .shot-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #6a1e2f;
+  color: var(--app-primary);
   margin-bottom: 4px;
 }
 
@@ -155,7 +155,7 @@
 }
 
 .toggle-button {
-  background-color: #e05d74;
+  background-color: var(--app-accent);
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
@@ -190,14 +190,14 @@
 }
 
 .popup {
-  background: #fff7fa;
+  background: var(--app-chip-bg);
   padding: 24px 26px;
   border-radius: 14px;
   width: 90%;
   max-width: 420px;
   box-shadow: 0 6px 18px rgba(106, 30, 47, 0.15);
   animation: popupFadeIn 0.22s ease-out;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
 }
 
 @keyframes popupFadeIn {
@@ -210,13 +210,13 @@
   font-size: 1.4rem;
   font-weight: 700;
   text-align: center;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .popup label {
   font-weight: 600;
   margin-bottom: 4px;
-  color: #6a1e2f;
+  color: var(--app-primary);
   display: block;
 }
 
@@ -225,7 +225,7 @@
   padding: 10px 12px;
   border-radius: 10px;
   background: #fff;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   font-size: 1rem;
   color: #533742;
   outline: none;
@@ -233,7 +233,7 @@
 }
 
 .popup select:focus {
-  border-color: #6a1e2f;
+  border-color: var(--app-primary);
 }
 
 .btn-row {
@@ -254,7 +254,7 @@ button.secondary {
 }
 
 button.primary {
-  background: #e05d74;
+  background: var(--app-accent);
   color: #fff;
   box-shadow: 0 3px 6px rgba(224, 93, 116, 0.25);
   transition: background 0.2s;

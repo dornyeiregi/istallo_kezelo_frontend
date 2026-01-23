@@ -2,7 +2,11 @@
   padding: 2rem;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: #f7f7fa;
+  background: var(--app-bg);
+}
+
+.breadcrumb {
+  margin-bottom: 1rem;
 }
 
 .page-header {
@@ -14,13 +18,13 @@
 
 .page-header h1 {
   margin: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 2rem;
 }
 
 .subtitle {
   margin: 0.35rem 0 0;
-  color: #84606c;
+  color: var(--app-muted);
   font-size: 0.95rem;
 }
 
@@ -36,9 +40,9 @@
   gap: 0.5rem;
   padding: 0.45rem 0.9rem;
   border-radius: 999px;
-  border: 2px solid #e5b3be;
-  background: #fbe8ec;
-  color: #6a1e2f;
+  border: 2px solid var(--app-border);
+  background: var(--app-chip-bg);
+  color: var(--app-primary);
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -46,8 +50,8 @@
 }
 
 .sync-button:hover:not(:disabled) {
-  background: #f2d6dc;
-  border-color: #d28a99;
+  background: var(--app-chip-bg);
+  border-color: var(--app-accent);
 }
 
 .sync-button:disabled {
@@ -65,8 +69,8 @@
 }
 
 .overview-card {
-  background: #fff;
-  border: 1px solid #f2b6c0;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
   border-radius: 12px;
   padding: 1.25rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -79,13 +83,13 @@
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #a25565;
+  color: var(--app-muted);
 }
 
 .overview-card .value {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 /* INFO / ERROR */
@@ -97,11 +101,11 @@
 }
 
 .info {
-  color: #007bff;
+  color: var(--app-accent);
 }
 
 .error {
-  color: red;
+  color: #b52b27;
 }
 
 /* TÁROLÓ GRID */
@@ -114,8 +118,8 @@
 }
 
 .storage-card {
-  background: #fff;
-  border: 2px solid #f2b6c0;
+  background: var(--app-surface);
+  border: 2px solid var(--app-border);
   border-radius: 10px;
   padding: 1.2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -125,7 +129,7 @@
 
 .storage-card:hover {
   transform: translateY(-2px);
-  border-color: #e05d74;
+  border-color: var(--app-accent);
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
 }
 
@@ -141,7 +145,7 @@
 
 .storage-card h3 {
   margin: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 1.1rem;
 }
 
@@ -153,15 +157,15 @@
 
 .item-category {
   font-size: 0.8rem;
-  color: #a25565;
-  background: #fbe3e8;
+  color: var(--app-accent-strong);
+  background: var(--app-chip-bg);
   border-radius: 999px;
   padding: 0.1rem 0.6rem;
 }
 
 .item-type {
   font-size: 0.85rem;
-  color: #9a7280;
+  color: var(--app-muted);
 }
 
 /* STATISZTIKÁK */
@@ -183,14 +187,14 @@
   display: flex;
   flex-direction: column;
   font-size: 0.9rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .edit-fields input {
   margin-top: 0.2rem;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   font-size: 0.95rem;
 }
 
@@ -212,34 +216,35 @@
 }
 
 .save-button {
-  background: #f2b6c0;
-  color: #6a1e2f;
+  background: var(--app-border);
+  color: var(--app-primary);
 }
 
 .save-button:hover {
-  background: #e5929f;
+  background: var(--app-accent);
 }
 
 .cancel-button {
-  background: #ddd;
-  color: #333;
+  background: var(--app-border);
+  color: var(--app-primary);
 }
 
 .cancel-button:hover {
-  background: #bbb;
+  background: var(--app-accent-strong);
+  color: var(--app-chip-text);
 }
 
 /* DELETE MODE */
 
 .storage-card.delete-mode {
   cursor: pointer;
-  border-color: #e05d74;
-  background: #fef1f4;
+  border-color: var(--app-accent);
+  background: var(--app-chip-bg);
 }
 
 .delete-hint {
   margin-top: 0.5rem;
-  color: #a25565;
+  color: var(--app-accent-strong);
   font-size: 0.85rem;
   display: flex;
   align-items: center;
@@ -251,10 +256,10 @@
 .delete-warning {
   margin-bottom: 1rem;
   padding: 12px;
-  background: #f8d9df;
-  border-left: 5px solid #e05d74;
+  background: var(--app-chip-bg);
+  border-left: 5px solid var(--app-accent);
   border-radius: 6px;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 /* MODAL */
@@ -270,7 +275,7 @@
 }
 
 .modal {
-  background: white;
+  background: var(--app-surface);
   padding: 1.5rem;
   border-radius: 10px;
   width: 90%;
@@ -289,7 +294,7 @@
 /* MODAL GOMBOK */
 
 .delete-button {
-  background-color: #e05d74;
+  background-color: var(--app-accent);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;
@@ -304,11 +309,11 @@
 }
 
 .delete-button:hover {
-  background-color: #c94b60;
+  background-color: var(--app-accent-deep);
 }
 
 .cancel-button {
-  background-color: #a25565;
+  background-color: var(--app-accent-strong);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;
@@ -323,7 +328,7 @@
 }
 
 .cancel-button:hover {
-  background-color: #8a4957;
+  background-color: var(--app-accent-deep);
 }
 
 /* TOAST */
@@ -333,8 +338,8 @@
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background: #f2b6c0;
-  color: #6a1e2f;
+  background: var(--app-border);
+  color: var(--app-primary);
   padding: 12px 20px;
   border-radius: 10px;
   font-size: 16px;
@@ -360,6 +365,6 @@
   padding: 6px 10px;
   font-size: 1rem;
   margin-bottom: 0.5rem;
-  border: 2px solid #e05d74;
+  border: 2px solid var(--app-accent);
   border-radius: 6px;
 }

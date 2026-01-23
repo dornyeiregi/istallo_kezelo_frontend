@@ -20,7 +20,7 @@ h1 {
   margin-bottom: 24px;
   font-size: 26px;
   font-weight: 700;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 
@@ -33,7 +33,7 @@ h1 {
 
 label {
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
   margin-bottom: 6px;
 }
 
@@ -42,7 +42,7 @@ select,
 textarea {
   padding: 10px 12px;
   border-radius: 6px;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   font-size: 15px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -51,7 +51,7 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #6a1e2f;
+  border-color: var(--app-primary);
   box-shadow: 0 0 0 2px rgba(106, 30, 47, 0.2);
 }
 
@@ -64,7 +64,7 @@ textarea {
 
 .submit-button,
 .themed-button {
-  background-color: #6a1e2f;
+  background-color: var(--app-primary);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;
@@ -80,7 +80,7 @@ textarea {
 
 .submit-button:hover,
 .themed-button:hover {
-  background-color: #a25565;
+  background-color: var(--app-accent-strong);
 }
 
 
@@ -88,20 +88,20 @@ textarea {
 
 .info {
   padding: 12px;
-  background: #f8d9df; 
-  border-left: 4px solid #6a1e2f;
+  background: var(--app-chip-bg); 
+  border-left: 4px solid var(--app-primary);
   border-radius: 6px;
-  color: #6a1e2f;
+  color: var(--app-primary);
   margin-bottom: 20px;
 }
 
 .success-msg {
   margin-top: 14px;
-  background: #f8d9df;
-  border-left: 5px solid #6a1e2f;
+  background: var(--app-chip-bg);
+  border-left: 5px solid var(--app-primary);
   padding: 12px;
   border-radius: 6px;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .error {

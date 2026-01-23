@@ -78,6 +78,11 @@ export class FarrierAppProfilePage implements OnInit {
   }
 
   goBack(): void {
+    if (history.state?.fromEdit) {
+      this.router.navigate(['/farrier-apps']);
+      return;
+    }
+
     if (window.history.length > 1) {
       window.history.back();
     } else {

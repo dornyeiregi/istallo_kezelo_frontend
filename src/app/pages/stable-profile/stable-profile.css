@@ -2,8 +2,8 @@
   padding: 2rem clamp(1.5rem, 3vw, 3rem);
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: #f7f7fa;
-  color: #3b2a30;
+  background: var(--app-bg);
+  color: var(--app-text);
 }
 
 .breadcrumb {
@@ -13,7 +13,7 @@
 .profile-header h1 {
   margin: 0 0 1.5rem;
   font-size: clamp(1.8rem, 4vw, 2.5rem);
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .quick-stats {
@@ -25,7 +25,7 @@
 
 .stat-card {
   background: #fff;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
@@ -38,23 +38,23 @@
   font-size: 0.95rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #a25565;
+  color: var(--app-accent-strong);
 }
 
 .stat-card .value {
   font-size: 2.1rem;
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .stat-card .hint {
   font-size: 0.85rem;
-  color: #9a7280;
+  color: var(--app-muted);
 }
 
 .horse-section h2 {
   margin: 0 0 1rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .horse-list {
@@ -68,7 +68,7 @@
 
 .horse-card {
   background: #fff;
-  border: 1px solid #f2b6c0;
+  border: 1px solid var(--app-border);
   border-radius: 10px;
   padding: 1.2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -76,7 +76,7 @@
 
 .horse-card h3 {
   margin: 0 0 0.8rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .details {
@@ -87,7 +87,7 @@
 }
 
 .detail strong {
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .empty {
@@ -113,7 +113,7 @@
 .horse-card {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
   border-radius: 10px;
   padding: 1rem;
   background: #fff;
@@ -122,7 +122,7 @@
 .horse-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-  border-color: #e05d74;
+  border-color: var(--app-accent);
 }
 
 .horse-card:active {
@@ -191,7 +191,7 @@
 
 .modal h3 {
   margin-top: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 1.4rem;
   margin-bottom: 1rem;
 }
@@ -214,7 +214,7 @@
   font-weight: 500;
   cursor: pointer;
   border: none;
-  background: #6a1e2f;
+  background: var(--app-primary);
   color: white;
   transition: background 0.2s ease;
 }
@@ -229,14 +229,14 @@
 }
 
 .themed-button.cancel:hover {
-  background: #bbb;
+  background: var(--app-accent-strong);
 }
 
 .toast {
   position: fixed;
   bottom: 25px;
   right: 25px;
-  background: #6a1e2f;
+  background: var(--app-primary);
   color: white;
   padding: 1rem 1.3rem;
   border-radius: 8px;

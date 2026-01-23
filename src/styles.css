@@ -1,17 +1,62 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+  --app-bg: #f7f7fa;
+  --app-surface: #ffffff;
+  --app-text: #3b2a30;
+  --app-primary: #6a1e2f;
+  --app-accent: #e05d74;
+  --app-accent-rgb: 224, 93, 116;
+  --app-accent-deep: #c5354f;
+  --app-accent-strong: #a25565;
+  --app-border: #f2b6c0;
+  --app-muted: #84606c;
+  --app-chip-bg: #fbe3e8;
+  --app-chip-text: #f8f3f5;
+  --app-nav-start: #401823;
+  --app-nav-end: #732c3e;
+  --app-danger: #b52b27;
+  --app-danger-bg: #fbeaea;
+  --app-danger-border: #d9534f;
+}
+
+:root[data-theme="sage"] {
+  --app-bg: #f4f7f2;
+  --app-surface: #ffffff;
+  --app-text: #2d3b35;
+  --app-primary: #2f4f3b;
+  --app-accent: #5d8a72;
+  --app-accent-rgb: 93, 138, 114;
+  --app-accent-deep: #3f6a54;
+  --app-accent-strong: #3f6a54;
+  --app-border: #cfe0d5;
+  --app-muted: #6b7f74;
+  --app-chip-bg: #e4efe7;
+  --app-chip-text: #f8f9f7;
+  --app-nav-start: #1f3a2c;
+  --app-nav-end: #3a5a45;
+  --app-danger: #9a2a27;
+  --app-danger-bg: #f5eded;
+  --app-danger-border: #c84a46;
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
 body .back-link.back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.5rem 1rem;
   border-radius: 999px;
-  background: #fbe3e8;
-  color: #6a1e2f;
+  background: var(--app-chip-bg);
+  color: var(--app-primary);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
-  border: 2px solid #e5b3be;
+  border: 2px solid var(--app-border);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -19,8 +64,8 @@ body .back-link.back-link {
 
 body .back-link.back-link:hover,
 body .back-link.back-link:focus-visible {
-  background: #f2d6dc;
-  border-color: #d28a99;
+  background: var(--app-chip-bg);
+  border-color: var(--app-accent);
   outline: none;
 }
 
@@ -70,33 +115,33 @@ body .fc .fc-daygrid-event[data-tooltip]:hover::before {
 }
 
 body .fc .fc-toolbar-title {
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-weight: 600;
 }
 
 body .fc .fc-button-primary {
-  background: #fbe3e8;
-  border-color: #e5b3be;
-  color: #6a1e2f;
+  background: var(--app-chip-bg);
+  border-color: var(--app-border);
+  color: var(--app-primary);
 }
 
 body .fc .fc-button-primary:hover {
-  background: #f2d6dc;
-  border-color: #d28a99;
-  color: #6a1e2f;
+  background: var(--app-chip-bg);
+  border-color: var(--app-accent);
+  color: var(--app-primary);
 }
 
 body .fc .fc-button-primary:disabled {
-  background: #fbe3e8;
-  border-color: #e5b3be;
-  color: #6a1e2f;
+  background: var(--app-chip-bg);
+  border-color: var(--app-border);
+  color: var(--app-primary);
   opacity: 0.7;
 }
 
 body .fc .fc-button-primary .fc-icon {
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 body .fc .fc-button-primary:disabled .fc-icon {
-  color: #6a1e2f;
+  color: var(--app-primary);
 }

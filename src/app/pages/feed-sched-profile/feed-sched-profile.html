@@ -47,7 +47,7 @@
         } @else {
           @for (item of assignedItems; track item.itemId) {
             <li class="horse-item">
-              {{ item.name }} ({{ item.itemType }})
+              {{ item.name }} ({{ getItemTypeLabel(item) }})
             </li>
           }
         }

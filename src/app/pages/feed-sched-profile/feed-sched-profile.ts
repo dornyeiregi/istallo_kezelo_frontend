@@ -41,6 +41,13 @@ export class FeedSchedProfilePage implements OnInit {
     EVENING: 'Este'
   };
 
+  itemTypeLabels: { [key: string]: string } = {
+    HAY: 'Szálas takarmány',
+    FEED: 'Abraktakarmány',
+    SUPPLEMENT: 'Táplálékkiegészítő',
+    MACHINE: 'Gép'
+  };
+
   constructor(
     private route: ActivatedRoute,
     private feedSchedService: FeedSchedService,
@@ -112,6 +119,11 @@ export class FeedSchedProfilePage implements OnInit {
   }
 
   goBack(): void {
+    if (history.state?.fromEdit) {
+      this.router.navigate(['/feed-scheds']);
+      return;
+    }
+
     if (window.history.length > 1) {
       window.history.back();
     } else {
@@ -187,6 +199,11 @@ export class FeedSchedProfilePage implements OnInit {
   getFeedTimeLabel(): string {
     if (!this.feedSched) return '-';
     return this.feedTimeLabels[this.feedSched.feedTime] || this.feedSched.feedTime;
+  }
+
+  getItemTypeLabel(item: ItemDTO): string {
+    const key = (item.itemType || '').toUpperCase();
+    return this.itemTypeLabels[key] || item.itemType || '-';
   }
 
   getItemNames(): string[] {

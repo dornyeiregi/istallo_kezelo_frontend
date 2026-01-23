@@ -1,12 +1,17 @@
 <div class="calendar-page">
 
-  <!-- Header -->
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
   <div class="calendar-header">
-    <h1>Calendar</h1>
+    <h1>Naptár</h1>
     <span *ngIf="loading" class="loading">Loading…</span>
   </div>
 
-  <!-- Calendar -->
   <div class="calendar-wrapper">
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>

@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  background: #f7f7fa;
+  background: var(--app-bg);
   font-family: 'Inter', sans-serif;
 }
 
@@ -55,7 +55,7 @@
 
 .form-wrapper h2 {
   margin: 0 0 0.5rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 1.9rem;
 }
 
@@ -79,7 +79,7 @@ form {
 .field-label {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 input[type='text'],
@@ -94,7 +94,7 @@ input[type='password'] {
 input[type='text']:focus,
 input[type='password']:focus {
   outline: none;
-  border-color: #e05d74;
+  border-color: var(--app-accent);
   box-shadow: 0 0 0 3px rgba(224, 93, 116, 0.15);
 }
 
@@ -104,7 +104,7 @@ input[type='password']:focus {
 }
 
 .error {
-  background: #ffe9ed;
+  background: var(--app-chip-bg);
   color: #a1283f;
   border-radius: 10px;
   padding: 0.75rem 1rem;
@@ -130,7 +130,7 @@ button[type='submit'] {
   border: none;
   font-weight: 600;
   font-size: 1rem;
-  background: linear-gradient(135deg, #e05d74, #c5354f);
+  background: linear-gradient(135deg, var(--app-accent), var(--app-accent-deep));
   color: white;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -168,7 +168,7 @@ button[type='submit']:disabled {
 }
 
 .switch-link a {
-  color: #e05d74;
+  color: var(--app-accent);
   font-weight: 600;
   text-decoration: none;
 }

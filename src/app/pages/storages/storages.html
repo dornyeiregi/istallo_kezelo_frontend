@@ -1,6 +1,13 @@
 <app-crud-menu [actions]="crudActions"></app-crud-menu>
 
 <div class="storages-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
   <header class="page-header">
     <div>
       <h1>Tárolók</h1>

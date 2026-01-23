@@ -1,0 +1,153 @@
+<app-crud-menu [actions]="crudActions"></app-crud-menu>
+
+<div class="settings-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
+  <h1>Beállítások</h1>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else if (user) {
+
+    @if (successMessage) {
+      <div class="success-msg">{{ successMessage }}</div>
+    }
+
+    <section class="settings-section">
+      <h2>Profil</h2>
+
+      <div class="profile-card">
+        <div class="profile-row">
+          <span class="label">Felhasználónév</span>
+          <span class="value">{{ user.username }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Név</span>
+          <span class="value">{{ fullName }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Email</span>
+          <span class="value">{{ user.email || '-' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Telefon</span>
+          <span class="value">{{ user.phone || '-' }}</span>
+        </div>
+        <div class="profile-row">
+          <span class="label">Szerepkör</span>
+          <span class="value">{{ user.userType }}</span>
+        </div>
+      </div>
+
+      @if (editMode) {
+        <form class="edit-form" (ngSubmit)="saveProfile()" #userForm="ngForm">
+          <div class="form-group">
+            <label>Vezetéknév</label>
+            <input type="text" name="lastName" [(ngModel)]="form.lastName" />
+          </div>
+
+          <div class="form-group">
+            <label>Keresztnév</label>
+            <input type="text" name="firstName" [(ngModel)]="form.firstName" />
+          </div>
+
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" name="email" [(ngModel)]="form.email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Telefon</label>
+            <input type="text" name="phone" [(ngModel)]="form.phone" />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="themed-button" [disabled]="loading || !userForm.form.valid">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              Mentés
+            </button>
+            <button type="button" class="themed-button cancel" (click)="editMode = false">
+              Mégse
+            </button>
+          </div>
+        </form>
+      }
+
+      @if (passwordMode) {
+        <form class="edit-form" (ngSubmit)="savePassword()" #passwordFormRef="ngForm">
+          <div class="form-group">
+            <label>Jelenlegi jelszó *</label>
+            <input
+              type="password"
+              name="currentPassword"
+              [(ngModel)]="passwordForm.currentPassword"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Új jelszó *</label>
+            <input
+              type="password"
+              name="newPassword"
+              [(ngModel)]="passwordForm.newPassword"
+              required
+              minlength="8"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Új jelszó megerősítése *</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              [(ngModel)]="passwordForm.confirmPassword"
+              required
+              minlength="8"
+            />
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="themed-button"
+              [disabled]="loading || !passwordFormRef.form.valid"
+            >
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              Mentés
+            </button>
+            <button type="button" class="themed-button cancel" (click)="passwordMode = false">
+              Mégse
+            </button>
+          </div>
+        </form>
+      }
+    </section>
+
+    <section class="settings-section">
+      <h2>Téma</h2>
+      <p class="muted">Válaszd ki az alkalmazás színvilágát.</p>
+
+      <div class="theme-grid">
+        @for (theme of themes; track theme.value) {
+          <button
+            type="button"
+            class="theme-card"
+            [class.active]="currentTheme === theme.value"
+            (click)="setTheme(theme.value)"
+          >
+            <span class="theme-title">{{ theme.label }}</span>
+            <span class="theme-desc">{{ theme.description }}</span>
+          </button>
+        }
+      </div>
+    </section>
+  }
+</div>

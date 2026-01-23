@@ -1,4 +1,11 @@
 <div class="admin-users-container">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
   <h1>Felhasználók kezelése</h1>
 
   <button class="new-user-btn" (click)="showCreatePopup = true">

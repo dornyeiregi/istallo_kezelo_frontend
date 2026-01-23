@@ -1,7 +1,7 @@
 .profile-container {
   padding: 2rem 1.6rem;
   font-family: "Inter", sans-serif;
-  color: #4a1e27;
+  color: var(--app-text);
 }
 
 .breadcrumb {
@@ -16,15 +16,15 @@
   margin-bottom: 0.3rem;
   font-size: 1.9rem;
   font-weight: 700;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .badge {
   display: inline-block;
   margin-right: 8px;
   margin-top: 6px;
-  background: #f8d8de;
-  color: #6a1e2f;
+  background: var(--app-chip-bg);
+  color: var(--app-primary);
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -32,7 +32,7 @@
 }
 
 .badge.category {
-  background: #d94a64;
+  background: var(--app-accent);
   color: #fff;
 }
 
@@ -44,11 +44,11 @@
 }
 
 .stat-card {
-  background: #fff;
+  background: var(--app-surface);
   padding: 1.2rem;
   border-radius: 16px;
-  border: 2px solid #f2b6c0;
-  box-shadow: 0 2px 5px rgba(106, 30, 47, 0.08);
+  border: 2px solid var(--app-border);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -58,12 +58,12 @@
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(106, 30, 47, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card .label {
   font-size: 0.8rem;
-  color: #964c5c;
+  color: var(--app-muted);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-weight: 600;
@@ -72,19 +72,19 @@
 .stat-card .value {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .stat-card .hint {
   font-size: 0.78rem;
-  color: #9a7280;
+  color: var(--app-muted);
 }
 
 
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(50, 0, 20, 0.35);
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
@@ -93,7 +93,7 @@
 }
 
 .modal {
-  background: white;
+  background: var(--app-surface);
   padding: 1.8rem;
   border-radius: 14px;
   width: 92%;
@@ -105,12 +105,12 @@
 .modal h3 {
   margin-top: 0.2rem;
   margin-bottom: 0.8rem;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 1.3rem;
 }
 
 .modal p {
-  color: #4a1e27;
+  color: var(--app-text);
   line-height: 1.45;
   margin-bottom: 1rem;
 }
@@ -122,7 +122,7 @@
 .form-group label {
   display: block;
   margin-bottom: 6px;
-  color: #6a1e2f;
+  color: var(--app-primary);
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -131,16 +131,16 @@
 .modal select {
   width: 100%;
   padding: 0.55rem 0.7rem;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--app-surface);
   font-size: 1rem;
   transition: border-color 0.2s;
 }
 
 .modal input:focus,
 .modal select:focus {
-  border-color: #c93a55;
+  border-color: var(--app-accent);
   outline: none;
 }
 
@@ -164,33 +164,33 @@
 }
 
 .save-button {
-  background: #c93a55;
+  background: var(--app-accent);
   color: white;
   border: none;
 }
 
 .save-button:hover {
-  background: #a02c42;
+  background: var(--app-accent-deep);
 }
 
 .cancel-button {
-  background: #f4dce1;
-  color: #6a1e2f;
+  background: var(--app-chip-bg);
+  color: var(--app-primary);
   border: none;
 }
 
 .cancel-button:hover {
-  background: #e9c2cb;
+  background: var(--app-border);
 }
 
 .delete-button {
-  background: #c93636;
+  background: var(--app-danger);
   color: white;
   border: none;
 }
 
 .delete-button:hover {
-  background: #992626;
+  background: var(--app-danger-border);
 }
 
 .toast {
@@ -198,7 +198,7 @@
   bottom: 1.8rem;
   left: 50%;
   transform: translateX(-50%);
-  background: #6a1e2f;
+  background: var(--app-primary);
   color: white;
   padding: 0.7rem 1.4rem;
   border-radius: 14px;

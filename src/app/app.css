@@ -3,9 +3,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 1.75rem;
-  background: linear-gradient(135deg, #401823, #732c3e);
+  background: linear-gradient(135deg, var(--app-nav-start), var(--app-nav-end));
   font-family: 'Inter', sans-serif;
-  color: #f8f3f5;
+  color: var(--app-chip-text);
   gap: 1rem;
 }
 
@@ -47,7 +47,7 @@
 .logout-button {
   border: none;
   background: rgba(255, 255, 255, 0.2);
-  color: #f8f3f5;
+  color: var(--app-chip-text);
   padding: 0.45rem 0.95rem;
   border-radius: 999px;
   font-weight: 600;
@@ -70,5 +70,5 @@
 main {
   padding: 1.5rem;
   min-height: calc(100vh - 70px);
-  background: #f7f7fa;
+  background: var(--app-bg);
 }

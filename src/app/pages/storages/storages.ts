@@ -109,6 +109,10 @@ export class StoragesPage implements OnInit {
     this.router.navigate(['/storages/new-item']);
   }
 
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
   toggleEditMode(): void {
     this.editMode = !this.editMode;
 

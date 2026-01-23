@@ -2,7 +2,7 @@
   padding: 2rem;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: #f7f7fa;
+  background: var(--app-bg);
 }
 
 .breadcrumb {
@@ -11,7 +11,7 @@
 
 h1 {
   margin: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .subtitle {
@@ -24,7 +24,7 @@ h1 {
   background: #fff;
   padding: 1.3rem;
   border-radius: 10px;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
@@ -36,7 +36,7 @@ h1 {
 
 .detail-row .label {
   font-weight: 600;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .detail-row .value {
@@ -48,12 +48,12 @@ h1 {
   background: white;
   padding: 1rem;
   border-radius: 10px;
-  border: 2px solid #f2b6c0;
+  border: 2px solid var(--app-border);
 }
 
 .horse-list h2 {
   margin-top: 0;
-  color: #6a1e2f;
+  color: var(--app-primary);
 }
 
 .horse-list ul {
@@ -68,7 +68,7 @@ h1 {
   gap: 8px;
   padding: 8px 4px;
   cursor: pointer;
-  border-bottom: 1px solid #f3d3d8;
+  border-bottom: 1px solid var(--app-border);
 }
 
 .horse-list li:last-child {
@@ -76,12 +76,12 @@ h1 {
 }
 
 .horse-list li:hover {
-  background: #fef3f5;
+  background: var(--app-chip-bg);
 }
 
 .horse-list i {
   font-size: 20px;
-  color: #a25565;
+  color: var(--app-accent-strong);
 }
 
 .no-horses {
@@ -92,8 +92,8 @@ h1 {
 
 .edit-horse-list {
   margin-top: 1.2rem;
-  background: #fff7fa;
-  border: 2px solid #f2b6c0;
+  background: var(--app-chip-bg);
+  border: 2px solid var(--app-border);
   padding: 1rem;
   border-radius: 10px;
 }
@@ -109,7 +109,7 @@ h1 {
 }
 
 .horse-row:hover {
-  background: #fde7ec;
+  background: var(--app-chip-bg);
 }
 
 .horse-row input[type="checkbox"] {
@@ -120,7 +120,7 @@ h1 {
 .save-button,
 .cancel-button,
 .themed-button {
-  background-color: #e05d74;
+  background-color: var(--app-accent);
   color: white;
   padding: 10px 18px;
   border-radius: 8px;
@@ -138,7 +138,7 @@ h1 {
 }
 
 .cancel-button {
-  background-color: #a25565;
+  background-color: var(--app-accent-strong);
   margin-left: 10px;
 }
 
@@ -169,5 +169,5 @@ h1 {
 hr {
   margin: 1.8rem 0;
   border: none;
-  border-top: 2px solid #f2b6c0;
+  border-top: 2px solid var(--app-border);
 }
