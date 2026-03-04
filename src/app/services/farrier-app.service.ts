@@ -35,14 +35,6 @@ export class FarrierAppService {
     ) as Observable<string>;
   }
 
-  addHorseToFarrierApp(farrierAppId: number, horseId: number): Observable<string> {
-    return this.http.post(
-      `${this.apiUrl}/${farrierAppId}/addHorse/${horseId}`,
-      {},
-      { responseType: 'text' }
-    ) as Observable<string>;
-  }
-
   delete(id: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' }) as Observable<string>;
   }

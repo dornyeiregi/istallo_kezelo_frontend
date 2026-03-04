@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserDTO } from '../models/user.model';
-import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +13,6 @@ export class UserService {
 
   getAll(): Observable<UserDTO[]> {
     return this.http.get<UserDTO[]>(this.apiUrl);
-  }
-
-  getAllOwners(): Observable<UserDTO[]> {
-    return this.http.get<UserDTO[]>(this.apiUrl)
-      .pipe(map(users => users.filter(u => u.userType === 'OWNER')));
   }
 
   getById(id: number): Observable<UserDTO> {

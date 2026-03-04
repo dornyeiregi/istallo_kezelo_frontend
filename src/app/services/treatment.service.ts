@@ -35,14 +35,6 @@ export class TreatmentService {
     ) as Observable<string>;
   }
 
-  addHorseToTreatment(treatmentId: number, horseId: number): Observable<string> {
-    return this.http.post(
-      `${this.apiUrl}/${treatmentId}/addHorse/${horseId}`,
-      {},
-      { responseType: 'text' }
-    ) as Observable<string>;
-  }
-
   delete(id: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/${id}`,
       { responseType: 'text'}

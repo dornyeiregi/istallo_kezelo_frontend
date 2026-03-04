@@ -31,32 +31,6 @@ export class CalendarEventService {
     return this.http.get<CalendarEventDTO[]>(this.apiUrl, { params });
   }
 
-  getHorseEvents(horseId: number, start?: string, end?: string): Observable<CalendarEventDTO[]> {
-    let params = new HttpParams();
-    if (start) {
-      params = params.set('start', start);
-    }
-    if (end) {
-      params = params.set('end', end);
-    }
-
-    return this.http.get<CalendarEventDTO[]>(
-      `${this.apiUrl}/horse/${horseId}`,
-      { params }
-    );
-  }
-
-  getStableEventsInRange(stableId: number, start: string, end: string): Observable<CalendarEventDTO[]> {
-    const params = new HttpParams()
-      .set('start', start)
-      .set('end', end);
-
-    return this.http.get<CalendarEventDTO[]>(
-      `${this.apiUrl}/stable/${stableId}`,
-      { params }
-    );
-  }
-
   update(eventId: number, dto: CalendarEventDTO): Observable<CalendarEventDTO> {
     return this.http.patch<CalendarEventDTO>(`${this.apiUrl}/${eventId}`, dto);
   }
