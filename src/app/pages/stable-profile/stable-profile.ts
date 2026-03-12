@@ -54,11 +54,20 @@ export class StableProfilePage implements OnInit {
   }
 
   get horseCount(): number {
-    return this.stable?.horses ? this.stable.horses.length : 0;
+    return this.activeHorses.length;
   }
 
   get estimatedDailyHayKg(): number {
     return this.horseCount * this.averageHayPerHorseKg;
+  }
+
+  get activeHorses(): HorseDTO[] {
+    if (!this.stable?.horses) return [];
+    return this.stable.horses.filter(horse => horse.isActive !== false);
+  }
+
+  get canDelete(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   goBack(): void {
@@ -119,12 +128,19 @@ export class StableProfilePage implements OnInit {
     this.confirmDeleteHorse = horse;
   }
 
-  performDelete(): void {
+  performDelete(mode: 'delete' | 'deactivate'): void {
     if (!this.confirmDeleteHorse?.id) return;
 
-    this.horseService.delete(this.confirmDeleteHorse.id).subscribe({
+    const action$ = mode === 'deactivate'
+      ? this.horseService.deactivate(this.confirmDeleteHorse.id)
+      : this.horseService.delete(this.confirmDeleteHorse.id);
+
+    action$.subscribe({
       next: () => {
-        this.showToast(`A(z) ${this.confirmDeleteHorse?.horseName} törölve.`);
+        const message = mode === 'deactivate'
+          ? `A(z) ${this.confirmDeleteHorse?.horseName} eltávolítva az istállóból.`
+          : `A(z) ${this.confirmDeleteHorse?.horseName} törölve.`;
+        this.showToast(message);
         this.confirmDeleteHorse = null;
 
         if (this.stable?.stableName) {
@@ -155,7 +171,7 @@ export class StableProfilePage implements OnInit {
   }
 
   get crudActions() {
-    return [
+    const actions = [
       {
         label: "Hozzáadás",
         icon: "fa-plus",
@@ -182,6 +198,12 @@ export class StableProfilePage implements OnInit {
         onClick: () => this.toggleDeleteMode()
       }
     ];
+
+    if (!this.canDelete) {
+      return actions.filter(action => action.label !== 'Törlés');
+    }
+
+    return actions;
   }
 
   getSexLabel(sex: string | undefined): string {

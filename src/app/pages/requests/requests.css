@@ -1,0 +1,107 @@
+.requests-page {
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.breadcrumb {
+  margin-bottom: 1rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.request-block {
+  background: #fff;
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+
+.request-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.request-card {
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  background: var(--app-chip-bg);
+}
+
+.request-actions {
+  display: inline-flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.muted {
+  color: var(--app-muted);
+  font-size: 0.9rem;
+}
+
+.empty {
+  color: var(--app-muted);
+  font-style: italic;
+}
+
+.themed-button {
+  background-color: var(--app-accent);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+.themed-button:hover {
+  background-color: var(--app-accent-strong);
+}
+
+.themed-button.danger {
+  background-color: #c0392b;
+}
+
+.themed-button.danger:hover {
+  background-color: #a93226;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--app-border);
+  color: var(--app-primary);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: toastIn 0.3s ease-out;
+  z-index: 2000;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

@@ -19,6 +19,10 @@ export class HorseService {
     return this.http.get<HorseDTO[]>(`${this.apiUrl}/mine`);
   }
 
+  getInactive(): Observable<HorseDTO[]> {
+    return this.http.get<HorseDTO[]>(`${this.apiUrl}/inactive`);
+  }
+
   getById(id: number): Observable<HorseDTO> {
     return this.http.get<HorseDTO>(`${this.apiUrl}/${id}`);
   }
@@ -38,5 +42,25 @@ export class HorseService {
 
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text'});
+  }
+
+  deactivate(id: number): Observable<HorseDTO> {
+    return this.http.patch<HorseDTO>(`${this.apiUrl}/${id}/deactivate`, {});
+  }
+
+  getRequests(): Observable<HorseDTO[]> {
+    return this.http.get<HorseDTO[]>(`${this.apiUrl}/requests`);
+  }
+
+  getMyRequests(): Observable<HorseDTO[]> {
+    return this.http.get<HorseDTO[]>(`${this.apiUrl}/requests/mine`);
+  }
+
+  approveRequest(id: number): Observable<HorseDTO> {
+    return this.http.patch<HorseDTO>(`${this.apiUrl}/requests/${id}/approve`, {});
+  }
+
+  rejectRequest(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/requests/${id}`, { responseType: 'text' }) as Observable<string>;
   }
 }

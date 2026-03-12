@@ -38,9 +38,9 @@
     <section class="horse-section">
       <h2>Lovak ebben az istállóban</h2>
 
-      @if (stable.horses && stable.horses.length > 0) {
+      @if (activeHorses.length > 0) {
         <ul class="horse-list">
-          @for (horse of stable.horses; track horse.id) {
+          @for (horse of activeHorses; track horse.id) {
             <li 
               class="horse-card"
               [class.edit-mode]="editMode"
@@ -81,10 +81,11 @@
   <div class="modal-backdrop">
     <div class="modal">
       <h3>Biztosan törölni szeretnéd?</h3>
-      <p>A(z) <strong>{{ confirmDeleteHorse.horseName }}</strong> ló törlődni fog.</p>
+      <p>Válaszd ki, hogyan szeretnéd eltávolítani a(z) <strong>{{ confirmDeleteHorse.horseName }}</strong> lovat.</p>
 
       <div class="modal-actions">
-        <button class="themed-button" (click)="performDelete()">Törlés</button>
+        <button class="themed-button" (click)="performDelete('deactivate')">Eltávolítás az istállóból</button>
+        <button class="themed-button danger" (click)="performDelete('delete')">Végleges törlés</button>
         <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
       </div>
     </div>

@@ -1,0 +1,71 @@
+<div class="requests-page">
+  <nav class="breadcrumb">
+    <a (click)="goBack()" class="back-link">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Vissza a főoldalra
+    </a>
+  </nav>
+
+  <header class="page-header">
+    <h1>Kérések</h1>
+    <button class="themed-button" (click)="loadRequests()">Frissítés</button>
+  </header>
+
+  @if (loading) {
+    <div class="info">Betöltés...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+    <section class="request-block">
+      <h2>Ló kérések</h2>
+      @if (horseRequests.length === 0) {
+        <p class="empty">Nincs függőben lévő ló kérés.</p>
+      } @else {
+        <ul class="request-list">
+          @for (horse of horseRequests; track horse.id) {
+            <li class="request-card">
+              <div>
+                <strong>{{ horse.horseName }}</strong>
+                <div class="muted">Tulajdonos: {{ horse.ownerName }}</div>
+                <div class="muted">Istálló: {{ horse.stableName }}</div>
+              </div>
+              <div class="request-actions">
+                <button class="themed-button" (click)="approveHorseRequest(horse)">Jóváhagyás</button>
+                <button class="themed-button danger" (click)="rejectHorseRequest(horse)">Elutasítás</button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="request-block">
+      <h2>Etetési ütemterv módosítások</h2>
+      @if (feedSchedRequests.length === 0) {
+        <p class="empty">Nincs függőben lévő etetési kérés.</p>
+      } @else {
+        <ul class="request-list">
+          @for (req of feedSchedRequests; track req.id) {
+            <li class="request-card">
+              <div>
+                <strong>Ütemterv #{{ req.feedSchedId }}</strong>
+                <div class="muted">Kérés: {{ req.requestedByName || '-' }}</div>
+                <div class="muted">Lovak: {{ req.horseIds?.length || 0 }} | Tételek: {{ req.itemIds?.length || 0 }}</div>
+              </div>
+              <div class="request-actions">
+                <button class="themed-button" (click)="approveFeedSchedRequest(req)">Jóváhagyás</button>
+                <button class="themed-button danger" (click)="rejectFeedSchedRequest(req)">Elutasítás</button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</div>
+
+@if (toastVisible) {
+  <div class="toast">
+    {{ toastMessage }}
+  </div>
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FeedSchedDTO } from '../models/feed-sched.model';
+import { FeedSchedChangeRequestDTO } from '../models/feed-sched-change-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,21 @@ export class FeedSchedService {
 
   delete(id: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' }) as Observable<string>;
+  }
+
+  getChangeRequests(): Observable<FeedSchedChangeRequestDTO[]> {
+    return this.http.get<FeedSchedChangeRequestDTO[]>(`${this.apiUrl}/requests`);
+  }
+
+  approveChangeRequest(id: number): Observable<string> {
+    return this.http.patch(
+      `${this.apiUrl}/requests/${id}/approve`,
+      {},
+      { responseType: 'text' }
+    ) as Observable<string>;
+  }
+
+  rejectChangeRequest(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/requests/${id}`, { responseType: 'text' }) as Observable<string>;
   }
 }

@@ -11,6 +11,7 @@ import { ItemDTO } from '../../models/item.model';
 import { FeedSchedItemService } from '../../services/feed-sched-item.service';
 import { FeedSchedItemDTO } from '../../models/feed-sched-item.model';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-feed-sched-profile',
@@ -54,7 +55,8 @@ export class FeedSchedProfilePage implements OnInit {
     private horseService: HorseService,
     private itemService: ItemService,
     private feedSchedItemService: FeedSchedItemService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -178,12 +180,16 @@ export class FeedSchedProfilePage implements OnInit {
 
     this.feedSchedService.update(this.feedSched.feedSchedId, dto as FeedSchedDTO).subscribe({
       next: () => {
-        this.feedSched!.horseIds = Array.from(this.selectedHorseIds);
-        this.feedSched!.itemIds = Array.from(this.selectedItemIds);
-        this.updateAssignedHorses();
-        this.updateAssignedItems();
-
-        this.successMessage = 'Lovak sikeresen frissítve.';
+        if (this.isAdmin) {
+          this.feedSched!.horseIds = Array.from(this.selectedHorseIds);
+          this.feedSched!.itemIds = Array.from(this.selectedItemIds);
+          this.updateAssignedHorses();
+          this.updateAssignedItems();
+          this.successMessage = 'Lovak sikeresen frissítve.';
+        } else {
+          this.successMessage = 'Kérés elküldve. Jóváhagyás után lép életbe.';
+          this.loadFeedSched(this.feedSched!.feedSchedId!);
+        }
         this.saving = false;
         this.editHorsesMode = false;
 
@@ -194,6 +200,10 @@ export class FeedSchedProfilePage implements OnInit {
         this.saving = false;
       }
     });
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   getFeedTimeLabel(): string {

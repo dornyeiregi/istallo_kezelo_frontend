@@ -20,6 +20,8 @@ import { HorseFarrierAppService } from '../../services/horse-farrier-app.service
 import { HorseFarrierAppDTO } from '../../models/horse-farrier-app.model';
 import { HorseTreatmentService } from '../../services/horse-treatment.service';
 import { HorseTreatmentDTO } from '../../models/horse-treatment.model';
+import { AuthService } from '../../services/auth.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-horse-profile',
@@ -69,7 +71,8 @@ export class HorseProfilePage implements OnInit {
         private feedSchedService: FeedSchedService,
         private horseFeedSchedService: HorseFeedSchedService,
         private horseFarrierAppService: HorseFarrierAppService,
-        private horseTreatmentService: HorseTreatmentService
+        private horseTreatmentService: HorseTreatmentService,
+        private authService: AuthService
     ) {}
 
     ngOnInit(): void {
@@ -91,28 +94,58 @@ export class HorseProfilePage implements OnInit {
     }
 
     private fetchHorse(horsename: string): void {
-      this.horseService.getAll().subscribe({
-        next: (horses) => {
-          this.horse = horses.find((horse) => horse.horseName === horsename);
+      const isOwner = this.authService.hasAnyRole(['OWNER', 'ROLE_OWNER']);
+      if (isOwner) {
+        forkJoin([
+          this.horseService.getAll(),
+          this.horseService.getMyRequests()
+        ]).subscribe({
+          next: ([horses, pending]) => {
+            const merged = [...horses, ...pending];
+            this.horse = merged.find((horse) => horse.horseName === horsename);
 
-          if (!this.horse) {
-            this.error = 'Nem található ló ezzel a névvel.';
+            if (!this.horse) {
+              this.error = 'Nem található ló ezzel a névvel.';
+              this.loading = false;
+              return;
+            }
+
+            this.loadShots(this.horse.id!);
+            this.loadTreatments(this.horse.id!);
+            this.loadFarrierApps(this.horse.id!);
+            this.loadFeedScheds(this.horse.id!);
+
             this.loading = false;
-            return;
+          },
+          error: () => {
+            this.error = 'Nem sikerült betölteni a ló adatait.';
+            this.loading = false;
           }
+        });
+      } else {
+        this.horseService.getAll().subscribe({
+          next: (horses) => {
+            this.horse = horses.find((horse) => horse.horseName === horsename);
 
-          this.loadShots(this.horse.id!);
-          this.loadTreatments(this.horse.id!);
-          this.loadFarrierApps(this.horse.id!);
-          this.loadFeedScheds(this.horse.id!);
+            if (!this.horse) {
+              this.error = 'Nem található ló ezzel a névvel.';
+              this.loading = false;
+              return;
+            }
 
-          this.loading = false;
-        },
-        error: () => {
-          this.error = 'Nem sikerült betölteni a ló adatait.';
-          this.loading = false;
-        }
-      });
+            this.loadShots(this.horse.id!);
+            this.loadTreatments(this.horse.id!);
+            this.loadFarrierApps(this.horse.id!);
+            this.loadFeedScheds(this.horse.id!);
+
+            this.loading = false;
+          },
+          error: () => {
+            this.error = 'Nem sikerült betölteni a ló adatait.';
+            this.loading = false;
+          }
+        });
+      }
     }
 
 

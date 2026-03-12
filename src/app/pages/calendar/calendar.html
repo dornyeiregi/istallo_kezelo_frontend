@@ -9,7 +9,24 @@
 
   <div class="calendar-header">
     <h1>Naptár</h1>
-    <span *ngIf="loading" class="loading">Loading…</span>
+    <div class="header-actions">
+      @if (loading) {
+        <span class="loading">Loading…</span>
+      }
+      @if (canCreateAppointments) {
+        <button class="themed-button" (click)="toggleAddMenu()">
+          Új időpont
+        </button>
+        @if (showAddMenu) {
+          <div class="add-menu">
+            <button class="menu-button" (click)="createAppointment('treatment')">Kezelés</button>
+            <button class="menu-button" (click)="createAppointment('shot')">Oltás</button>
+            <button class="menu-button" (click)="createAppointment('farrier')">Patkolás</button>
+            <button class="menu-button" (click)="createAppointment('feed')">Etetési rend</button>
+          </div>
+        }
+      }
+    </div>
   </div>
 
   <div class="calendar-wrapper">

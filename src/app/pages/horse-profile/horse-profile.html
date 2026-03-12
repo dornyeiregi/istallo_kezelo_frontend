@@ -18,6 +18,9 @@
 
     <section class="profile-header">
       <h1>{{ horse.horseName }}</h1>
+      @if (horse.isActive === false) {
+        <div class="pending-badge">Függőben</div>
+      }
 
       <div class="quick-stats">
         <article class="stat-card">

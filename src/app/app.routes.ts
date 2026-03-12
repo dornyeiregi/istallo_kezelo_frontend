@@ -32,6 +32,7 @@ import { FeedSchedProfilePage } from './pages/feed-sched-profile/feed-sched-prof
 import { FeedSchedEditPage } from './pages/feed-sched-edit/feed-sched-edit';
 import { CalendarPage } from './pages/calendar/calendar';
 import { SettingsPage } from './pages/settings/settings';
+import { RequestsPage } from './pages/requests/requests';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -66,7 +67,7 @@ export const routes: Routes = [
     path: 'horses/new',
     component: HorseCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN']}
+    data: { roles: ['ADMIN', 'OWNER']}
   },
   {
     path: 'horses/edit/:id',
@@ -239,6 +240,12 @@ export const routes: Routes = [
     component: CalendarPage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'] }
+  },
+  {
+    path: 'requests',
+    component: RequestsPage,
+    canActivate: [authGuard],
+    data: { roles: ['ADMIN'] }
   },
   { path: '**', redirectTo: '' }
 ];

@@ -84,29 +84,31 @@
       }
     </div>
 
-    <!-- Tulajdonos kiválasztása -->
-    <div class="form-group">
-      <label for="owner">Tulajdonos *</label>
-      <select
-        id="owner"
-        name="ownerId"
-        [(ngModel)]="horse.ownerId"
-        required
-        #owner="ngModel"
-      >
-        <option [ngValue]="null" disabled selected>Válassz tulajdonost...</option>
+    @if (isAdmin) {
+      <!-- Tulajdonos kiválasztása -->
+      <div class="form-group">
+        <label for="owner">Tulajdonos *</label>
+        <select
+          id="owner"
+          name="ownerId"
+          [(ngModel)]="horse.ownerId"
+          required
+          #owner="ngModel"
+        >
+          <option [ngValue]="null" disabled selected>Válassz tulajdonost...</option>
 
-        @for (user of users; track user.username) {
-          <option [ngValue]="user.userId">
-            {{ user.userLname }} {{ user.userFname }}
-          </option>
+          @for (user of users; track user.username) {
+            <option [ngValue]="user.userId">
+              {{ user.userLname }} {{ user.userFname }}
+            </option>
+          }
+        </select>
+
+        @if (owner.invalid && owner.touched) {
+          <div class="error-msg">A tulajdonos kiválasztása kötelező.</div>
         }
-      </select>
-
-      @if (owner.invalid && owner.touched) {
-        <div class="error-msg">A tulajdonos kiválasztása kötelező.</div>
-      }
-    </div>
+      </div>
+    }
 
     <!-- Útlevélszám -->
     <div class="form-group">
@@ -158,7 +160,9 @@
     }
 
     @if (success) {
-      <div class="success-msg">Ló sikeresen hozzáadva!</div>
+      <div class="success-msg">
+        {{ isAdmin ? 'Ló sikeresen hozzáadva!' : 'Kérés elküldve, admin jóváhagyás után jelenik meg.' }}
+      </div>
     }
   </form>
 </div>

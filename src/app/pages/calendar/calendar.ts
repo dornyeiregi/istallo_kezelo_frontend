@@ -13,6 +13,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { Router } from '@angular/router';
 import { CalendarEventDTO } from '../../models/calendar-event.model';
 import { CalendarEventService } from '../../services/calendar-event.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-calendar',
@@ -23,6 +24,7 @@ import { CalendarEventService } from '../../services/calendar-event.service';
 })
 export class CalendarPage implements OnInit {
   loading = false;
+  showAddMenu = false;
 
   private viewStart: string | null = null;
   private viewEnd: string | null = null;
@@ -40,7 +42,8 @@ export class CalendarPage implements OnInit {
 
   constructor(
     private calendarEventService: CalendarEventService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +52,34 @@ export class CalendarPage implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/']);
+  }
+
+  get canCreateAppointments(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'OWNER', 'ROLE_ADMIN', 'ROLE_OWNER']);
+  }
+
+  toggleAddMenu(): void {
+    this.showAddMenu = !this.showAddMenu;
+  }
+
+  createAppointment(type: 'shot' | 'treatment' | 'farrier' | 'feed'): void {
+    this.showAddMenu = false;
+    switch (type) {
+      case 'shot':
+        this.router.navigate(['/shots/new']);
+        break;
+      case 'treatment':
+        this.router.navigate(['/treatments/new']);
+        break;
+      case 'farrier':
+        this.router.navigate(['/farrier-apps/new']);
+        break;
+      case 'feed':
+        this.router.navigate(['/feed-scheds/new']);
+        break;
+      default:
+        break;
+    }
   }
 
   reload(): void {

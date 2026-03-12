@@ -8,6 +8,9 @@
             <i class="fa-solid fa-fw icon" [ngClass]="tile.icon" aria-hidden="true"></i>
             <h3>{{ tile.title }}</h3>
             <p>{{ tile.description }}</p>
+            @if (tile.link === '/requests' && requestBadge > 0) {
+              <span class="badge-dot" aria-hidden="true"></span>
+            }
           </div>
         }
       }

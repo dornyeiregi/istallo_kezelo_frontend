@@ -20,11 +20,14 @@ export class HorsesPage implements OnInit {
   error = '';
   editMode = false;
   showAll = false;
+  showInactive = false;
   deleteMode = false;
   deleteSuccess = '';
   confirmDeleteHorse: HorseDTO | null = null;
   toastMessage: string = '';
   toastVisible: boolean = false;
+  pendingRequests: HorseDTO[] = [];
+  pendingCount = 0;
 
   constructor(private horseService: HorseService,
               private router: Router,
@@ -32,17 +35,28 @@ export class HorsesPage implements OnInit {
 
   ngOnInit(): void {
     this.loadHorses();
+
+    if (this.canToggleView) {
+      this.refreshPendingCount();
+    }
+
+    if (history.state && history.state['requestSent']) {
+      this.showToast('Kérés elküldve, jóváhagyás után jelenik meg.');
+    }
   }
 
   loadHorses(): void {
     this.loading = true;
-    const source$ = this.showAll
-      ? this.horseService.getAll()
-      : this.horseService.getMine();
+    const source$ = this.showInactive
+      ? this.horseService.getInactive()
+      : (this.showAll ? this.horseService.getAll() : this.horseService.getMine());
 
     source$.subscribe({
       next: (data) => {
         this.horses = data;
+        if (!this.showInactive) {
+          this.loadPendingForOwner();
+        }
         this.loading = false;
       },
       error: () => {
@@ -52,12 +66,49 @@ export class HorsesPage implements OnInit {
     });
   }
 
+  private loadPendingForOwner(): void {
+    if (!this.authService.hasAnyRole(['OWNER', 'ROLE_OWNER'])) return;
+    this.horseService.getMyRequests().subscribe({
+      next: (requests) => {
+        const existingIds = new Set(this.horses.map(h => h.id));
+        const merged = [...this.horses];
+        for (const req of requests) {
+          if (req.id && !existingIds.has(req.id)) {
+            merged.push(req);
+          }
+        }
+        this.horses = merged;
+      }
+    });
+  }
+
+  private refreshPendingCount(): void {
+    this.horseService.getRequests().subscribe({
+      next: (requests) => {
+        this.pendingRequests = requests;
+        this.pendingCount = requests.length;
+      }
+    });
+  }
+
   get canToggleView(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
+  }
+
+  get canDelete(): boolean {
     return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   toggleView(): void {
     this.showAll = !this.showAll;
+    if (this.showInactive) {
+      this.showInactive = false;
+    }
+    this.loadHorses();
+  }
+
+  toggleInactive(): void {
+    this.showInactive = !this.showInactive;
     this.loadHorses();
   }
 
@@ -109,12 +160,19 @@ export class HorsesPage implements OnInit {
     this.confirmDeleteHorse = horse;
   }
 
-  performDelete() {
+  performDelete(mode: 'delete' | 'deactivate') {
     if (!this.confirmDeleteHorse) return;
 
-    this.horseService.delete(this.confirmDeleteHorse.id!).subscribe({
+    const action$ = mode === 'deactivate'
+      ? this.horseService.deactivate(this.confirmDeleteHorse.id!)
+      : this.horseService.delete(this.confirmDeleteHorse.id!);
+
+    action$.subscribe({
       next: () => {
-        this.showToast(`A(z) ${this.confirmDeleteHorse!.horseName} sikeresen törölve.`);
+        const message = mode === 'deactivate'
+          ? `A(z) ${this.confirmDeleteHorse!.horseName} eltávolítva az istállóból.`
+          : `A(z) ${this.confirmDeleteHorse!.horseName} sikeresen törölve.`;
+        this.showToast(message);
 
         this.loadHorses();
 
@@ -136,7 +194,7 @@ export class HorsesPage implements OnInit {
   }
 
   get crudActions() {
-    return [
+    const actions = [
       {
         label: 'Új ló hozzáadása',
         icon: 'fa-circle-plus',
@@ -157,6 +215,12 @@ export class HorsesPage implements OnInit {
         }
       }
     ];
+
+    if (!this.canDelete) {
+      return actions.filter(action => action.label !== 'Törlés');
+    }
+
+    return actions;
   }
 
   getSexLabel(sex: string): string {

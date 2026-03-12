@@ -13,4 +13,5 @@ export interface HorseDTO {
   microchipNum: string;
   passportNum: string;
   additional: string;
+  isActive?: boolean;
 }

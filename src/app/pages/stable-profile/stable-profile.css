@@ -223,6 +223,14 @@
   background: #8a2e43;
 }
 
+.themed-button.danger {
+  background: #c0392b;
+}
+
+.themed-button.danger:hover {
+  background: #a93226;
+}
+
 .themed-button.cancel {
   background: #ccc;
   color: #333;

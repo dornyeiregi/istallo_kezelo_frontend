@@ -51,6 +51,17 @@
   color: var(--app-primary);
 }
 
+.pending-badge {
+  display: inline-block;
+  margin: 0.4rem 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #ffe4b5;
+  color: #8a5a00;
+}
+
 .edit-hint {
   font-size: 0.85rem;
   color: var(--app-accent-strong);
@@ -80,6 +91,19 @@
 
 .themed-button:hover {
   background-color: var(--app-accent-strong);
+}
+
+.themed-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.themed-button.danger {
+  background-color: #c0392b;
+}
+
+.themed-button.danger:hover {
+  background-color: #a93226;
 }
 
 .horse-card.delete-mode {

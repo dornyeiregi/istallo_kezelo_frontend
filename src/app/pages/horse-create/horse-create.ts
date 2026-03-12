@@ -42,6 +42,7 @@ export class HorseCreatePage implements OnInit {
     private horseService: HorseService,
     private stableService: StableService,
     private userService: UserService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -58,10 +59,16 @@ export class HorseCreatePage implements OnInit {
       error: () => (this.error = 'Nem sikerült betölteni az istállókat.')
     });
 
-    this.userService.getAll().subscribe({
-      next: (data) => (this.users = data),
-      error: () => (this.error = 'Nem sikerült betölteni a felhasználókat.')
-    });
+    if (this.isAdmin) {
+      this.userService.getAll().subscribe({
+        next: (data) => (this.users = data),
+        error: () => (this.error = 'Nem sikerült betölteni a felhasználókat.')
+      });
+    }
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   goBack(): void {
@@ -83,14 +90,7 @@ export class HorseCreatePage implements OnInit {
         this.loading = false;
 
         setTimeout(() => {
-          if (this.preselectStableName) {
-            const stable = this.stables.find(s => s.stableName === this.preselectStableName);
-            if (stable) {
-              this.router.navigate(['/stables', stable.stableName]);
-              return;
-            }
-          }
-          this.router.navigate(['/horses']);
+          this.router.navigate(['/horses'], { state: { requestSent: true } });
         }, 1200);
       },
       error: (err) => {

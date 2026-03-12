@@ -7,6 +7,7 @@ import { HorseDTO } from '../../models/horse.model';
 import { StableService } from '../../services/stable.service';
 import { StableDTO } from '../../models/stable.model';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-horse-edit',
@@ -39,7 +40,8 @@ export class HorseEditPage implements OnInit {
     private router: Router,
     private horseService: HorseService,
     private stableService: StableService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +56,13 @@ export class HorseEditPage implements OnInit {
     });
 
     this.stableService.getAll().subscribe(st => (this.stables = st));
-    this.userService.getAll().subscribe(o => (this.owners = o));
+    if (this.isAdmin) {
+      this.userService.getAll().subscribe(o => (this.owners = o));
+    }
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   onSubmit(): void {
@@ -63,7 +71,7 @@ export class HorseEditPage implements OnInit {
       horseName: this.horse.horseName,
       dob: this.horse.dob,
       sex: this.horse.sex,
-      ownerId: this.horse.ownerId,
+      ownerId: this.isAdmin ? this.horse.ownerId : undefined,
       stableId: this.horse.stableId,
       microchipNum: this.horse.microchipNum,
       passportNum: this.horse.passportNum,
