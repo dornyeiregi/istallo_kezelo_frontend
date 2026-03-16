@@ -86,3 +86,8 @@ textarea:focus {
   margin-top: 0.5rem;
   text-align: center;
 }
+
+.info-text {
+  font-size: 0.9rem;
+  color: var(--app-muted);
+}

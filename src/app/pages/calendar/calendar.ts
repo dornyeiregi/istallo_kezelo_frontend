@@ -62,7 +62,7 @@ export class CalendarPage implements OnInit {
     this.showAddMenu = !this.showAddMenu;
   }
 
-  createAppointment(type: 'shot' | 'treatment' | 'farrier' | 'feed'): void {
+  createAppointment(type: 'shot' | 'treatment' | 'farrier'): void {
     this.showAddMenu = false;
     switch (type) {
       case 'shot':
@@ -73,9 +73,6 @@ export class CalendarPage implements OnInit {
         break;
       case 'farrier':
         this.router.navigate(['/farrier-apps/new']);
-        break;
-      case 'feed':
-        this.router.navigate(['/feed-scheds/new']);
         break;
       default:
         break;

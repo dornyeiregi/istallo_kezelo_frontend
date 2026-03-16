@@ -28,11 +28,11 @@ export class FeedSchedEditPage implements OnInit {
   items: ItemDTO[] = [];
   selectedItemIds: Set<number> = new Set();
 
-  feedTimes = ['MORNING', 'NOON', 'EVENING'];
-
   form: FeedSchedDTO = {
     feedSchedId: undefined,
-    feedTime: '',
+    feedMorning: false,
+    feedNoon: false,
+    feedEvening: false,
     description: '',
     horseIds: [],
     itemIds: []
@@ -64,7 +64,9 @@ export class FeedSchedEditPage implements OnInit {
       next: ({ feedSched, horses, items }) => {
         this.form = {
           feedSchedId: feedSched.feedSchedId,
-          feedTime: feedSched.feedTime,
+          feedMorning: !!feedSched.feedMorning,
+          feedNoon: !!feedSched.feedNoon,
+          feedEvening: !!feedSched.feedEvening,
           description: feedSched.description || '',
           horseIds: feedSched.horseIds || [],
           itemIds: feedSched.itemIds || []
@@ -115,7 +117,11 @@ export class FeedSchedEditPage implements OnInit {
   onSubmit() {
     this.error = null;
 
-    if (!this.form.feedTime || !this.feedSchedId) {
+    if (!this.feedSchedId) {
+      this.error = 'Érvénytelen etetési ütemterv azonosító.';
+      return;
+    }
+    if (!this.form.feedMorning && !this.form.feedNoon && !this.form.feedEvening) {
       this.error = 'Az etetési időpont megadása kötelező.';
       return;
     }
@@ -127,7 +133,9 @@ export class FeedSchedEditPage implements OnInit {
 
     const dto: FeedSchedDTO = {
       feedSchedId: this.feedSchedId,
-      feedTime: this.form.feedTime,
+      feedMorning: this.form.feedMorning,
+      feedNoon: this.form.feedNoon,
+      feedEvening: this.form.feedEvening,
       description: this.form.description || '',
       horseIds,
       itemIds
@@ -140,7 +148,7 @@ export class FeedSchedEditPage implements OnInit {
 
         setTimeout(() => {
           this.router.navigate(
-            ['/feed-scheds', this.feedSchedId],
+            ['/horses'],
             { state: { fromEdit: true } }
           );
         }, 800);
@@ -153,6 +161,6 @@ export class FeedSchedEditPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/feed-scheds']);
+    this.router.navigate(['/horses']);
   }
 }

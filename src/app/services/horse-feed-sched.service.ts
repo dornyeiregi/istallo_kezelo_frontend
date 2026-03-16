@@ -30,4 +30,9 @@ export class HorseFeedSchedService {
   create(dto: HorseFeedSchedDTO): Observable<HorseFeedSchedDTO> {
     return this.http.post<HorseFeedSchedDTO>(this.apiUrl, dto);
   }
+
+  // Ló összes etetési naplójának törlése
+  deleteAllForHorse(horseId: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/horseId/${horseId}`, { responseType: 'text' }) as Observable<string>;
+  }
 }

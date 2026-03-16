@@ -27,7 +27,27 @@
               <div>
                 <strong>{{ horse.horseName }}</strong>
                 <div class="muted">Tulajdonos: {{ horse.ownerName }}</div>
-                <div class="muted">Istálló: {{ horse.stableName }}</div>
+                <div class="muted">Istálló: {{ horse.stableName || '-' }}</div>
+                <div class="request-field">
+                  <label>Istálló *</label>
+                  <select [(ngModel)]="selectedStableByHorse[horse.id!]">
+                    <option [ngValue]="null">Válassz istállót...</option>
+                    @for (stable of stables; track stable.stableId) {
+                      <option [ngValue]="stable.stableId">{{ stable.stableName }}</option>
+                    }
+                  </select>
+                </div>
+                <div class="request-field">
+                  <label>Etetési ütemterv (opcionális)</label>
+                  <select [(ngModel)]="selectedFeedSchedByHorse[horse.id!]">
+                    <option [ngValue]="null">Nincs hozzárendelve</option>
+                    @for (fs of feedScheds; track fs.feedSchedId) {
+                      <option [ngValue]="fs.feedSchedId">
+                        {{ getFeedSchedSelectLabel(fs) }}
+                      </option>
+                    }
+                  </select>
+                </div>
               </div>
               <div class="request-actions">
                 <button class="themed-button" (click)="approveHorseRequest(horse)">Jóváhagyás</button>

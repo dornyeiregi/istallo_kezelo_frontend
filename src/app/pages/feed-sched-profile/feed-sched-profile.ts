@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
 import { FeedSchedService } from '../../services/feed-sched.service';
@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-feed-sched-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, CrudMenuComponent],
+  imports: [CommonModule, CrudMenuComponent],
   templateUrl: './feed-sched-profile.html',
   styleUrls: ['./feed-sched-profile.css']
 })
@@ -29,18 +29,13 @@ export class FeedSchedProfilePage implements OnInit {
   items: ItemDTO[] = [];
   assignedItems: ItemDTO[] = [];
   feedItems: FeedSchedItemDTO[] = [];
+  private amountByItemId = new Map<number, number>();
 
   editHorsesMode = false;
   selectedHorseIds: Set<number> = new Set();
   selectedItemIds: Set<number> = new Set();
   saving = false;
   successMessage = '';
-
-  feedTimeLabels: { [key: string]: string } = {
-    MORNING: 'Reggel',
-    NOON: 'Dél',
-    EVENING: 'Este'
-  };
 
   itemTypeLabels: { [key: string]: string } = {
     HAY: 'Szálas takarmány',
@@ -86,6 +81,11 @@ export class FeedSchedProfilePage implements OnInit {
             this.horses = horses;
             this.items = items;
             this.feedItems = feedItems.filter(f => f.feedSchedId === id);
+            this.amountByItemId = new Map(
+              this.feedItems
+                .filter(f => f.itemId != null && f.amount != null)
+                .map(f => [Number(f.itemId), Number(f.amount)])
+            );
 
             this.selectedHorseIds = new Set(this.feedSched!.horseIds || []);
             this.selectedItemIds = new Set(this.feedSched!.itemIds || []);
@@ -122,14 +122,14 @@ export class FeedSchedProfilePage implements OnInit {
 
   goBack(): void {
     if (history.state?.fromEdit) {
-      this.router.navigate(['/feed-scheds']);
+      this.router.navigate(['/horses']);
       return;
     }
 
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      this.router.navigate(['/feed-scheds']);
+      this.router.navigate(['/horses']);
     }
   }
 
@@ -145,7 +145,7 @@ export class FeedSchedProfilePage implements OnInit {
 
     this.feedSchedService.delete(this.feedSched.feedSchedId).subscribe({
       next: () => {
-        this.router.navigate(['/feed-scheds']);
+        this.router.navigate(['/horses']);
       },
       error: () => {
         alert('Nem sikerült törölni az ütemtervet.');
@@ -208,7 +208,15 @@ export class FeedSchedProfilePage implements OnInit {
 
   getFeedTimeLabel(): string {
     if (!this.feedSched) return '-';
-    return this.feedTimeLabels[this.feedSched.feedTime] || this.feedSched.feedTime;
+    return this.getFeedTimesLabel(this.feedSched);
+  }
+
+  private getFeedTimesLabel(feed: FeedSchedDTO): string {
+    const parts: string[] = [];
+    if (feed.feedMorning) parts.push('Reggel');
+    if (feed.feedNoon) parts.push('Dél');
+    if (feed.feedEvening) parts.push('Este');
+    return parts.length ? parts.join(' + ') : '-';
   }
 
   getItemTypeLabel(item: ItemDTO): string {
@@ -217,7 +225,15 @@ export class FeedSchedProfilePage implements OnInit {
   }
 
   getItemNames(): string[] {
-    return this.assignedItems.map(i => i.name);
+    return this.assignedItems.map(i => this.getItemLabel(i));
+  }
+
+  getItemLabel(item: ItemDTO): string {
+    const amount = this.amountByItemId.get(Number(item.itemId));
+    if (amount == null || Number.isNaN(amount)) {
+      return item.name;
+    }
+    return `${item.name} (${amount})`;
   }
 
   getItemsByType(type: string): ItemDTO[] {

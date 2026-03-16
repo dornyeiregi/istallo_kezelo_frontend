@@ -26,10 +26,7 @@ import { FarrierAppsPage } from './pages/farrier-apps/farrier-apps';
 import { FarrierAppCreatePage } from './pages/farrier-app-create/farrier-app-create';
 import { FarrierAppProfilePage } from './pages/farrier-app-profile/farrier-app-profile';
 import { FarrierAppEditPage } from './pages/farrier-app-edit/farrier-app-edit';
-import { FeedSchedsPage } from './pages/feed-scheds/feed-scheds';
 import { FeedSchedCreatePage } from './pages/feed-sched-create/feed-sched-create';
-import { FeedSchedProfilePage } from './pages/feed-sched-profile/feed-sched-profile';
-import { FeedSchedEditPage } from './pages/feed-sched-edit/feed-sched-edit';
 import { CalendarPage } from './pages/calendar/calendar';
 import { SettingsPage } from './pages/settings/settings';
 import { RequestsPage } from './pages/requests/requests';
@@ -120,7 +117,7 @@ export const routes: Routes = [
     path: 'shots',
     component: ShotsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ADMIN', 'OWNER'] }
   },
   {
     path: 'shots/new',
@@ -150,7 +147,7 @@ export const routes: Routes = [
     path: 'treatments',
     component: TreatmentsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ADMIN', 'OWNER'] }
   },
   {
     path: 'treatments/new',
@@ -180,7 +177,7 @@ export const routes: Routes = [
     path: 'farrier-apps',
     component: FarrierAppsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE'] }
+    data: { roles: ['ADMIN', 'EMPLOYEE', 'OWNER'] }
   },
   {
     path: 'farrier-apps/new',
@@ -207,12 +204,6 @@ export const routes: Routes = [
     data: { roles: ['ADMIN', 'OWNER'] }
   },
   {
-    path: 'feed-scheds',
-    component: FeedSchedsPage,
-    canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE'] }
-  },
-  {
     path: 'feed-scheds/new',
     component: FeedSchedCreatePage,
     canActivate: [authGuard],
@@ -221,18 +212,6 @@ export const routes: Routes = [
   {
     path: 'feed-scheds/new/:horseId',
     component: FeedSchedCreatePage,
-    canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
-  },
-  {
-    path: 'feed-scheds/edit/:feedSchedId',
-    component: FeedSchedEditPage,
-    canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
-  },
-  {
-    path: 'feed-scheds/:feedSchedId',
-    component: FeedSchedProfilePage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN', 'OWNER'] }
   },

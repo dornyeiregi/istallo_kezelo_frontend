@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { ShotService } from '../../services/shot.service';
@@ -11,7 +11,7 @@ import { HorseDTO } from '../../models/horse.model';
 @Component({
   selector: 'app-shot-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, CrudMenuComponent],
+  imports: [CommonModule, CrudMenuComponent],
   templateUrl: './shot-profile.html',
   styleUrls: ['./shot-profile.css']
 })

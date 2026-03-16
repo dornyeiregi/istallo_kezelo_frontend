@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ItemService } from '../../services/item.service';
 import { StorageService } from '../../services/storage.service';
 import { ItemDTO } from '../../models/item.model';
@@ -10,7 +10,7 @@ import { StorageDTO } from '../../models/storage.model';
 @Component({
   selector: 'app-storage-item-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './storage-item-create.html',
   styleUrls: ['./storage-item-create.css']
 })

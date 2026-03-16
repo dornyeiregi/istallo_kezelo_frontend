@@ -34,6 +34,9 @@ export class HorsesPage implements OnInit {
               private authService: AuthService) {}
 
   ngOnInit(): void {
+    if (this.canToggleView) {
+      this.showAll = true;
+    }
     this.loadHorses();
 
     if (this.canToggleView) {

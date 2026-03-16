@@ -167,29 +167,275 @@
         <p class="no-shots">Nincs rögzített etetési ütemterv.</p>
       } @else {
 
-        <ul class="shot-list">
-          @for (feed of (showAllFeedScheds ? feedScheds : feedScheds.slice(0, 3)); track feed.feedSchedId) {
-            <li class="shot-card" (click)="goToFeedSched(feed.feedSchedId!)">
+        <div class="feed-sched-grid">
+          <div class="feed-sched-column">
+            <h3>Reggel</h3>
+            @if (getFeedSchedsForTime('morning').length === 0) {
+              <p class="no-shots">Nincs reggeli etetés.</p>
+            } @else {
+              @for (feed of getFeedSchedsForTime('morning'); track feed.feedSchedId) {
+                <div class="feed-sched-card">
+                  <div class="feed-sched-title">
+                    <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+                    <strong>{{ getFeedSchedDisplayName(feed) }}</strong>
+                  </div>
+                  <div class="feed-sched-meta">
+                    <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
+                    <span><strong>Tételek:</strong>
+                      @if (getFeedItemDetails(feed).length === 0) {
+                        -
+                      } @else {
+                        {{ getFeedItemDetails(feed).join(', ') }}
+                      }
+                    </span>
+                  </div>
+                </div>
+              }
+            }
+          </div>
 
-              <div class="shot-title">
-                <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
-                <strong>{{ getFeedTimeLabel(feed) }}</strong>
+          <div class="feed-sched-column">
+            <h3>Dél</h3>
+            @if (getFeedSchedsForTime('noon').length === 0) {
+              <p class="no-shots">Nincs déli etetés.</p>
+            } @else {
+              @for (feed of getFeedSchedsForTime('noon'); track feed.feedSchedId) {
+                <div class="feed-sched-card">
+                  <div class="feed-sched-title">
+                    <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+                    <strong>{{ getFeedSchedDisplayName(feed) }}</strong>
+                  </div>
+                  <div class="feed-sched-meta">
+                    <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
+                    <span><strong>Tételek:</strong>
+                      @if (getFeedItemDetails(feed).length === 0) {
+                        -
+                      } @else {
+                        {{ getFeedItemDetails(feed).join(', ') }}
+                      }
+                    </span>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+
+          <div class="feed-sched-column">
+            <h3>Este</h3>
+            @if (getFeedSchedsForTime('evening').length === 0) {
+              <p class="no-shots">Nincs esti etetés.</p>
+            } @else {
+              @for (feed of getFeedSchedsForTime('evening'); track feed.feedSchedId) {
+                <div class="feed-sched-card">
+                  <div class="feed-sched-title">
+                    <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+                    <strong>{{ getFeedSchedDisplayName(feed) }}</strong>
+                  </div>
+                  <div class="feed-sched-meta">
+                    <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
+                    <span><strong>Tételek:</strong>
+                      @if (getFeedItemDetails(feed).length === 0) {
+                        -
+                      } @else {
+                        {{ getFeedItemDetails(feed).join(', ') }}
+                      }
+                    </span>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      @if (showFeedEditor) {
+        <div class="feed-editor">
+          <p class="feed-note">Ha egy időpontot sem jelölsz be, az összes etetés törlődik erről a lóról.</p>
+          <div class="feed-columns">
+            <!-- Reggel -->
+            <div class="feed-column">
+              <h3>Reggel</h3>
+              <label class="inline">
+                <input type="checkbox" [(ngModel)]="feedEditor.morning.enabled" />
+                Van etetés
+              </label>
+
+              <div class="item-list" [class.disabled]="!feedEditor.morning.enabled">
+                @for (item of items; track item.itemId) {
+                  <div class="item-row">
+                    <label>
+                      <input
+                        type="checkbox"
+                        [disabled]="!feedEditor.morning.enabled"
+                        [checked]="isFeedItemSelected('morning', item.itemId!)"
+                        (change)="toggleFeedItem('morning', item.itemId!)"
+                      />
+                      {{ item.name }}
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Mennyiség"
+                      [disabled]="!feedEditor.morning.enabled || !isFeedItemSelected('morning', item.itemId!)"
+                      [value]="feedEditor.morning.itemAmounts[item.itemId!]"
+                      (input)="updateFeedItemAmount('morning', item.itemId!, $any($event.target).value)"
+                    />
+                  </div>
+                }
               </div>
 
-              <div class="shot-meta">
-                <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
-                <span><strong>Lovak:</strong> {{ feed.horseIds?.length || 0 }}</span>
+              <label class="inline">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="feedEditor.morning.includeOtherHorses"
+                  (change)="onToggleOtherHorses('morning')"
+                  [disabled]="!feedEditor.morning.enabled"
+                />
+                Más lovak csatolása
+              </label>
+
+              @if (feedEditor.morning.includeOtherHorses) {
+                <div class="horse-select">
+                  @for (h of otherHorsesForFeed; track h.id) {
+                    <label>
+                      <input
+                        type="checkbox"
+                        [checked]="feedEditor.morning.horseIds.includes(h.id!)"
+                        (change)="toggleHorseSelection('morning', h.id!)"
+                      />
+                      {{ h.horseName }}
+                    </label>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Dél -->
+            <div class="feed-column">
+              <h3>Dél</h3>
+              <label class="inline">
+                <input type="checkbox" [(ngModel)]="feedEditor.noon.enabled" />
+                Van etetés
+              </label>
+
+              <div class="item-list" [class.disabled]="!feedEditor.noon.enabled">
+                @for (item of items; track item.itemId) {
+                  <div class="item-row">
+                    <label>
+                      <input
+                        type="checkbox"
+                        [disabled]="!feedEditor.noon.enabled"
+                        [checked]="isFeedItemSelected('noon', item.itemId!)"
+                        (change)="toggleFeedItem('noon', item.itemId!)"
+                      />
+                      {{ item.name }}
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Mennyiség"
+                      [disabled]="!feedEditor.noon.enabled || !isFeedItemSelected('noon', item.itemId!)"
+                      [value]="feedEditor.noon.itemAmounts[item.itemId!]"
+                      (input)="updateFeedItemAmount('noon', item.itemId!, $any($event.target).value)"
+                    />
+                  </div>
+                }
               </div>
 
-            </li>
+              <label class="inline">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="feedEditor.noon.includeOtherHorses"
+                  (change)="onToggleOtherHorses('noon')"
+                  [disabled]="!feedEditor.noon.enabled"
+                />
+                Más lovak csatolása
+              </label>
+
+              @if (feedEditor.noon.includeOtherHorses) {
+                <div class="horse-select">
+                  @for (h of otherHorsesForFeed; track h.id) {
+                    <label>
+                      <input
+                        type="checkbox"
+                        [checked]="feedEditor.noon.horseIds.includes(h.id!)"
+                        (change)="toggleHorseSelection('noon', h.id!)"
+                      />
+                      {{ h.horseName }}
+                    </label>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Este -->
+            <div class="feed-column">
+              <h3>Este</h3>
+              <label class="inline">
+                <input type="checkbox" [(ngModel)]="feedEditor.evening.enabled" />
+                Van etetés
+              </label>
+
+              <div class="item-list" [class.disabled]="!feedEditor.evening.enabled">
+                @for (item of items; track item.itemId) {
+                  <div class="item-row">
+                    <label>
+                      <input
+                        type="checkbox"
+                        [disabled]="!feedEditor.evening.enabled"
+                        [checked]="isFeedItemSelected('evening', item.itemId!)"
+                        (change)="toggleFeedItem('evening', item.itemId!)"
+                      />
+                      {{ item.name }}
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="Mennyiség"
+                      [disabled]="!feedEditor.evening.enabled || !isFeedItemSelected('evening', item.itemId!)"
+                      [value]="feedEditor.evening.itemAmounts[item.itemId!]"
+                      (input)="updateFeedItemAmount('evening', item.itemId!, $any($event.target).value)"
+                    />
+                  </div>
+                }
+              </div>
+
+              <label class="inline">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="feedEditor.evening.includeOtherHorses"
+                  (change)="onToggleOtherHorses('evening')"
+                  [disabled]="!feedEditor.evening.enabled"
+                />
+                Más lovak csatolása
+              </label>
+
+              @if (feedEditor.evening.includeOtherHorses) {
+                <div class="horse-select">
+                  @for (h of otherHorsesForFeed; track h.id) {
+                    <label>
+                      <input
+                        type="checkbox"
+                        [checked]="feedEditor.evening.horseIds.includes(h.id!)"
+                        (change)="toggleHorseSelection('evening', h.id!)"
+                      />
+                      {{ h.horseName }}
+                    </label>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          @if (feedEditorError) {
+            <div class="error-msg">{{ feedEditorError }}</div>
           }
-        </ul>
 
-        @if (feedScheds.length > 3) {
-          <button class="toggle-button" (click)="showAllFeedScheds = !showAllFeedScheds">
-            {{ showAllFeedScheds ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
-          </button>
-        }
+          <div class="btn-row">
+            <button class="primary" (click)="submitFeedEditor()">Mentés</button>
+            <button class="secondary" (click)="cancelFeedEditor()">Mégse</button>
+          </div>
+        </div>
       }
     </section>
 
@@ -295,41 +541,6 @@
       <div class="btn-row">
         <button class="primary" (click)="submitFarrierApp()">OK</button>
         <button class="secondary" (click)="showFarrierPopup = false">Mégse</button>
-      </div>
-
-    </div>
-  </div>
-}
-
-<!-- Etetési ütemterv popup -->
-@if (showFeedPopup) {
-  <div class="popup-backdrop">
-    <div class="popup">
-
-      <h2>Etetési ütemterv hozzáadása</h2>
-
-      <label>Opció:</label>
-      <select [(ngModel)]="feedOption">
-        <option value="existing">Létező ütemtervhez csatolom</option>
-        <option value="new">Új ütemtervet hozok létre</option>
-      </select>
-
-      @if (feedOption === 'existing') {
-        <div class="mt">
-          <label>Ütemterv kiválasztása:</label>
-          <select [(ngModel)]="selectedFeedSchedId">
-            @for (f of allFeedScheds; track f.feedSchedId) {
-              <option [ngValue]="f.feedSchedId">
-                {{ getFeedTimeLabel(f) }} – {{ f.description || 'Nincs leírás' }}
-              </option>
-            }
-          </select>
-        </div>
-      }
-
-      <div class="btn-row">
-        <button class="primary" (click)="submitFeedSched()">OK</button>
-        <button class="secondary" (click)="showFeedPopup = false">Mégse</button>
       </div>
 
     </div>

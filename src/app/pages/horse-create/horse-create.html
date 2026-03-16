@@ -60,29 +60,31 @@
       }
     </div>
 
-    <!-- Istálló kiválasztása -->
-    <div class="form-group">
-      <label for="stable">Istálló *</label>
-      <select
-        id="stable"
-        name="stableName"
-        [(ngModel)]="horse.stableName"
-        required
-        #stable="ngModel"
-      >
-        <option [ngValue]="null" disabled selected>Válassz istállót...</option>
+    @if (isAdmin) {
+      <!-- Istálló kiválasztása -->
+      <div class="form-group">
+        <label for="stable">Istálló *</label>
+        <select
+          id="stable"
+          name="stableName"
+          [(ngModel)]="horse.stableName"
+          required
+          #stable="ngModel"
+        >
+          <option [ngValue]="null" disabled selected>Válassz istállót...</option>
 
-        @for (stable of stables; track stable.stableName) {
-          <option [ngValue]="stable.stableName">
-            {{ stable.stableName }}
-          </option>
+          @for (stable of stables; track stable.stableName) {
+            <option [ngValue]="stable.stableName">
+              {{ stable.stableName }}
+            </option>
+          }
+        </select>
+
+        @if (stable.invalid && stable.touched) {
+          <div class="error-msg">Az istálló kiválasztása kötelező.</div>
         }
-      </select>
-
-      @if (stable.invalid && stable.touched) {
-        <div class="error-msg">Az istálló kiválasztása kötelező.</div>
-      }
-    </div>
+      </div>
+    }
 
     @if (isAdmin) {
       <!-- Tulajdonos kiválasztása -->
@@ -166,3 +168,20 @@
     }
   </form>
 </div>
+    @if (isAdmin) {
+      <div class="form-group">
+        <label for="feedSchedId">Etetési ütemterv (opcionális)</label>
+        <select
+          id="feedSchedId"
+          name="feedSchedId"
+          [(ngModel)]="horse.feedSchedId"
+        >
+          <option [ngValue]="null">Nincs hozzárendelve</option>
+          @for (fs of feedScheds; track fs.feedSchedId) {
+            <option [ngValue]="fs.feedSchedId">
+              {{ getFeedSchedSelectLabel(fs) }}
+            </option>
+          }
+        </select>
+      </div>
+    }

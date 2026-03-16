@@ -56,8 +56,8 @@ export class HorseService {
     return this.http.get<HorseDTO[]>(`${this.apiUrl}/requests/mine`);
   }
 
-  approveRequest(id: number): Observable<HorseDTO> {
-    return this.http.patch<HorseDTO>(`${this.apiUrl}/requests/${id}/approve`, {});
+  approveRequest(id: number, payload: { stableId: number; feedSchedId?: number | null }): Observable<HorseDTO> {
+    return this.http.patch<HorseDTO>(`${this.apiUrl}/requests/${id}/approve`, payload);
   }
 
   rejectRequest(id: number): Observable<string> {

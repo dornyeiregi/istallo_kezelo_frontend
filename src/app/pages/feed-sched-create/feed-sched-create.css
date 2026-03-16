@@ -101,6 +101,24 @@ textarea {
   border-radius: 6px;
 }
 
+.time-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-option {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+}
+
+.amount-input {
+  width: 110px;
+  margin-left: auto;
+  padding: 0.4rem 0.6rem;
+}
+
 .muted {
   color: #777;
   margin: 0;

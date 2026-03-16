@@ -86,6 +86,124 @@
   color: var(--app-primary);
 }
 
+.feed-editor {
+  margin-top: 1.5rem;
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.feed-note {
+  margin: 0 0 0.8rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.feed-sched-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.feed-sched-column {
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  padding: 0.8rem;
+  background: #fff;
+}
+
+.feed-sched-column h3 {
+  margin: 0 0 0.6rem;
+  color: var(--app-primary);
+}
+
+.feed-sched-card {
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: var(--app-chip-bg);
+  margin-bottom: 0.6rem;
+}
+
+.feed-sched-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.feed-sched-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+}
+
+.feed-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.feed-column {
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 0.8rem;
+  background: var(--app-chip-bg);
+}
+
+.feed-column h3 {
+  margin-top: 0;
+  color: var(--app-primary);
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+
+.item-list.disabled {
+  opacity: 0.6;
+}
+
+.item-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.item-row input[type="number"] {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--app-border);
+  border-radius: 6px;
+}
+
+.horse-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.error-msg {
+  margin-top: 0.6rem;
+  color: #d14763;
+  font-weight: 600;
+}
+
 .details {
   display: flex;
   flex-direction: column;
@@ -163,6 +281,27 @@
   flex-direction: column;
   gap: 4px;
   color: #444;
+}
+
+.feed-card {
+  position: relative;
+}
+
+.feed-profile {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--app-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: #533742;
+}
+
+.feed-profile-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 0.6rem;
+  align-items: start;
 }
 
 .toggle-button {

@@ -21,14 +21,32 @@
 
     <div class="form-group">
       <label>Etetési idő *</label>
-      <select name="feedTime" [(ngModel)]="form.feedTime" required>
-        <option value="" disabled selected>Válassz időpontot</option>
-        @for (time of feedTimes; track time) {
-          <option [ngValue]="time">
-            {{ time === 'MORNING' ? 'Reggel' : time === 'NOON' ? 'Dél' : 'Este' }}
-          </option>
-        }
-      </select>
+      <div class="time-options">
+        <label class="time-option">
+          <input
+            type="checkbox"
+            name="feedMorning"
+            [(ngModel)]="form.feedMorning"
+            (change)="onFeedTimeChange()" />
+          Reggel
+        </label>
+        <label class="time-option">
+          <input
+            type="checkbox"
+            name="feedNoon"
+            [(ngModel)]="form.feedNoon"
+            (change)="onFeedTimeChange()" />
+          Dél
+        </label>
+        <label class="time-option">
+          <input
+            type="checkbox"
+            name="feedEvening"
+            [(ngModel)]="form.feedEvening"
+            (change)="onFeedTimeChange()" />
+          Este
+        </label>
+      </div>
     </div>
 
     <div class="form-group">
@@ -77,6 +95,17 @@
                 (change)="toggleItemSelection(toNumber(item.itemId!))"
               />
               {{ item.name }}
+              <input
+                type="number"
+                min="0.01"
+                step="0.1"
+                class="amount-input"
+                name="amount-{{ item.itemId }}"
+                [(ngModel)]="itemAmounts[item.itemId!]"
+                [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
+                [required]="selectedItemIds.has(toNumber(item.itemId!))"
+                placeholder="Mennyiség"
+              />
             </label>
           }
         }
@@ -95,6 +124,17 @@
                 (change)="toggleItemSelection(toNumber(item.itemId!))"
               />
               {{ item.name }}
+              <input
+                type="number"
+                min="0.01"
+                step="0.1"
+                class="amount-input"
+                name="amount-{{ item.itemId }}"
+                [(ngModel)]="itemAmounts[item.itemId!]"
+                [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
+                [required]="selectedItemIds.has(toNumber(item.itemId!))"
+                placeholder="Mennyiség"
+              />
             </label>
           }
         }
@@ -113,6 +153,17 @@
                 (change)="toggleItemSelection(toNumber(item.itemId!))"
               />
               {{ item.name }}
+              <input
+                type="number"
+                min="0.01"
+                step="0.1"
+                class="amount-input"
+                name="amount-{{ item.itemId }}"
+                [(ngModel)]="itemAmounts[item.itemId!]"
+                [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
+                [required]="selectedItemIds.has(toNumber(item.itemId!))"
+                placeholder="Mennyiség"
+              />
             </label>
           }
         }

@@ -1,7 +1,9 @@
 export interface FeedSchedChangeRequestDTO {
   id: number;
   feedSchedId: number;
-  feedTime?: string;
+  requestedMorning?: boolean;
+  requestedNoon?: boolean;
+  requestedEvening?: boolean;
   description?: string;
   requestedByName?: string;
   requestedAt?: string;

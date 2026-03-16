@@ -56,9 +56,9 @@
               <div class="pending-badge">Függőben</div>
             }
 
-            <p><strong>Tulajdonos:</strong> {{ horse.ownerName }}</p>
-            <p><strong>Istálló:</strong> {{ horse.stableName }}</p>
-            <p><strong>Mikrochip:</strong> {{ horse.microchipNum || '-' }}</p>
+          <p><strong>Tulajdonos:</strong> {{ horse.ownerName }}</p>
+          <p><strong>Istálló:</strong> {{ horse.stableName || '-' }}</p>
+          <p><strong>Mikrochip:</strong> {{ horse.microchipNum || '-' }}</p>
 
           @if (editMode) {
             <div class="edit-hint">

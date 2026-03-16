@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
 import { FarrierAppService } from '../../services/farrier-app.service';
@@ -10,7 +10,7 @@ import { HorseDTO } from '../../models/horse.model';
 @Component({
   selector: 'app-farrier-app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, CrudMenuComponent],
+  imports: [CommonModule, CrudMenuComponent],
   templateUrl: './farrier-app-profile.html',
   styleUrls: ['./farrier-app-profile.css']
 })

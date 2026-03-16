@@ -9,6 +9,10 @@ import { HorseDTO } from '../../models/horse.model';
 import { StableDTO } from '../../models/stable.model';
 import { UserDTO } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
+import { FeedSchedService } from '../../services/feed-sched.service';
+import { FeedSchedDTO } from '../../models/feed-sched.model';
+import { FeedSchedItemService } from '../../services/feed-sched-item.service';
+import { FeedSchedItemDTO } from '../../models/feed-sched-item.model';
 
 @Component({
   selector: 'app-horse-create',
@@ -27,11 +31,14 @@ export class HorseCreatePage implements OnInit {
     microchipNum: '',
     additional: '',
     stableName: '',
-    ownerId: undefined
+    ownerId: undefined,
+    feedSchedId: undefined
   };
 
   stables: StableDTO[] = [];
   users: UserDTO[] = [];
+  feedScheds: FeedSchedDTO[] = [];
+  private feedSchedItemsById = new Map<number, string[]>();
   loading = false;
   error = '';
   success = false;
@@ -43,6 +50,8 @@ export class HorseCreatePage implements OnInit {
     private stableService: StableService,
     private userService: UserService,
     private authService: AuthService,
+    private feedSchedService: FeedSchedService,
+    private feedSchedItemService: FeedSchedItemService,
     private router: Router
   ) {}
 
@@ -54,10 +63,26 @@ export class HorseCreatePage implements OnInit {
       this.horse.stableName = this.preselectStableName;
     }
 
-    this.stableService.getAll().subscribe({
-      next: (data) => (this.stables = data),
-      error: () => (this.error = 'Nem sikerült betölteni az istállókat.')
-    });
+    if (this.isAdmin) {
+      this.stableService.getAll().subscribe({
+        next: (data) => (this.stables = data),
+        error: () => (this.error = 'Nem sikerült betölteni az istállókat.')
+      });
+
+      this.feedSchedService.getAll().subscribe({
+        next: (data) => (this.feedScheds = data),
+        error: () => (this.error = 'Nem sikerült betölteni az etetési ütemterveket.')
+      });
+
+      this.feedSchedItemService.getAll().subscribe({
+        next: (items) => {
+          this.feedSchedItemsById = this.groupItemsByFeed(items);
+        },
+        error: () => {
+          this.feedSchedItemsById = new Map();
+        }
+      });
+    }
 
     if (this.isAdmin) {
       this.userService.getAll().subscribe({
@@ -99,5 +124,44 @@ export class HorseCreatePage implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  getFeedSchedDisplayName(feed: FeedSchedDTO): string {
+    const timeLabel = this.getFeedTimesLabel(feed);
+    const idPart = feed.feedSchedId != null ? `_${feed.feedSchedId}` : '';
+    return `${timeLabel}${idPart}`;
+  }
+
+  private getFeedTimesLabel(feed: FeedSchedDTO): string {
+    const parts: string[] = [];
+    if (feed.feedMorning) parts.push('REGGEL');
+    if (feed.feedNoon) parts.push('DÉL');
+    if (feed.feedEvening) parts.push('ESTE');
+    return parts.length ? parts.join('+') : '-';
+  }
+
+  getFeedSchedSelectLabel(feed: FeedSchedDTO): string {
+    const base = this.getFeedSchedDisplayName(feed);
+    const items = this.feedSchedItemsById.get(feed.feedSchedId || -1) || [];
+    if (!items.length) return base;
+    return `${base} — ${items.join(', ')}`;
+  }
+
+  private groupItemsByFeed(feedItems: FeedSchedItemDTO[]): Map<number, string[]> {
+    const map = new Map<number, string[]>();
+    feedItems.forEach(fi => {
+      const list = map.get(fi.feedSchedId) || [];
+      list.push(this.formatItemLabel(fi));
+      map.set(fi.feedSchedId, list);
+    });
+    return map;
+  }
+
+  private formatItemLabel(item: FeedSchedItemDTO): string {
+    const amount = item.amount;
+    if (amount == null || !Number.isFinite(amount)) {
+      return item.itemName;
+    }
+    return `${item.itemName} (${amount})`;
   }
 }

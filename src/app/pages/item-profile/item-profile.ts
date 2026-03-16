@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -12,7 +12,7 @@ import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
 @Component({
   selector: 'app-item-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, CrudMenuComponent, FormsModule],
+  imports: [CommonModule, CrudMenuComponent, FormsModule],
   templateUrl: './item-profile.html',
   styleUrls: ['./item-profile.css'],
 })

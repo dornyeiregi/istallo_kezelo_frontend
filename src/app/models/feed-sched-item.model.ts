@@ -3,4 +3,5 @@ export interface FeedSchedItemDTO {
   itemId: number;
   itemName: string;
   feedDescription: string;
+  amount?: number | null;
 }

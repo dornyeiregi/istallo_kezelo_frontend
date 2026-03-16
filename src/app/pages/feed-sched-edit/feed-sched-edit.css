@@ -22,7 +22,7 @@ label {
   display: block;
 }
 
-input, select, textarea {
+input:not([type="checkbox"]), select, textarea {
   width: 100%;
   padding: 0.6rem;
   border: 2px solid var(--app-border);
@@ -31,6 +31,18 @@ input, select, textarea {
 
 textarea {
   resize: vertical;
+}
+
+.time-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-option {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
 }
 
 .submit-button {

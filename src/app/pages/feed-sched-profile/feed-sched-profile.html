@@ -18,8 +18,8 @@
 
     <div class="feed-details">
       <p><strong>Leírás:</strong> {{ feedSched.description || '-' }}</p>
-      <p><strong>Érintett lovak száma:</strong> {{ feedSched.horseIds?.length || 0 }}</p>
-      <p><strong>Tételek:</strong> {{ assignedItems?.length ? getItemNames().join(', ') : '-' }}</p>
+      <p><strong>Érintett lovak száma:</strong> {{ feedSched.horseIds.length || 0 }}</p>
+      <p><strong>Tételek:</strong> {{ assignedItems.length ? getItemNames().join(', ') : '-' }}</p>
     </div>
 
     <hr />
@@ -47,7 +47,7 @@
         } @else {
           @for (item of assignedItems; track item.itemId) {
             <li class="horse-item">
-              {{ item.name }} ({{ getItemTypeLabel(item) }})
+              {{ getItemLabel(item) }} ({{ getItemTypeLabel(item) }})
             </li>
           }
         }
