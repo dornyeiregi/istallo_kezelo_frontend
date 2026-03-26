@@ -11,6 +11,14 @@
             @if (tile.link === '/requests' && requestBadge > 0) {
               <span class="badge-dot" aria-hidden="true"></span>
             }
+            @if (tile.link === '/storages' && storageWarningCount > 0) {
+              <span
+                class="badge-dot"
+                [class.badge-yellow]="storageWarningLevel === 'YELLOW'"
+                [class.badge-red]="storageWarningLevel === 'RED'"
+                aria-hidden="true"
+              ></span>
+            }
           </div>
         }
       }

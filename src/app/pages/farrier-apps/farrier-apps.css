@@ -53,6 +53,39 @@
   color: var(--app-primary);
 }
 
+.horse-list-block {
+  margin-top: 0.4rem;
+}
+
+.horse-name-list {
+  margin: 0.35rem 0 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+  color: var(--app-text);
+}
+
+.horse-name-list li {
+  margin: 0.2rem 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.horse-shoe-count {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+  margin-left: 6px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--app-muted);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
 .farrier-card.delete-mode {
   cursor: pointer;
   border-color: var(--app-accent);

@@ -72,7 +72,7 @@ export class FeedSchedCreatePage implements OnInit {
   loadItems() {
     this.itemService.getAll().subscribe({
       next: (items) => {
-        this.items = items;
+        this.items = items.filter(i => (i.itemType || '').toUpperCase() !== 'BEDDING');
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a tételeket.';

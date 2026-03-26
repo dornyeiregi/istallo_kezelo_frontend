@@ -45,6 +45,20 @@ body {
   color: var(--app-text);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
 body .back-link.back-link {
   display: inline-flex;
   align-items: center;
@@ -114,6 +128,17 @@ body .fc .fc-daygrid-event[data-tooltip]:hover::before {
   z-index: 21;
 }
 
+.load-error {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: var(--app-danger-bg);
+  color: var(--app-danger);
+  border: 1px solid var(--app-danger-border);
+  font-weight: 600;
+  box-shadow: 0 6px 12px rgba(181, 43, 39, 0.08);
+}
+
 body .fc .fc-toolbar-title {
   color: var(--app-primary);
   font-weight: 600;
@@ -144,4 +169,18 @@ body .fc .fc-button-primary .fc-icon {
 
 body .fc .fc-button-primary:disabled .fc-icon {
   color: var(--app-primary);
+}
+
+@media (max-width: 720px) {
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  th,
+  td {
+    white-space: nowrap;
+  }
 }

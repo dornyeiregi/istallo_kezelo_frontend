@@ -46,7 +46,9 @@ export class StoragesPage implements OnInit {
     HAY: 'Szálas takarmány',
     FEED: 'Abraktakarmány',
     SUPPLEMENT: 'Táplálékkiegészítő',
-    MACHINE: 'Gép'
+    MACHINE: 'Gép',
+    ACCESSORY: 'Kellék',
+    BEDDING: 'Alom'
   };
 
   itemCategoryLabels: { [key: string]: string } = {

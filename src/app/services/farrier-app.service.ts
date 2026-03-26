@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FarrierAppDTO } from '../models/farrier-app.model';
+import { API_BASE_URL } from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FarrierAppService {
-  private apiUrl = 'http://localhost:8080/api/farrierApps';
+  private apiUrl = `${API_BASE_URL}/api/farrierApps`;
 
   constructor(private http: HttpClient) {}
 

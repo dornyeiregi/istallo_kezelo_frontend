@@ -80,6 +80,7 @@
 
       <div class="form-group item-list">
         <label>Összetevők</label>
+        <p class="muted">Mértékegység: kg/adag.</p>
 
         <div class="item-section">
           <p class="section-title">Széna</p>
@@ -94,6 +95,17 @@
                   (change)="toggleItemSelection(toNumber(item.itemId!))"
                 />
                 {{ item.name }}
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.1"
+                  class="amount-input"
+                  name="amount-{{ item.itemId }}"
+                  [(ngModel)]="itemAmounts[item.itemId!]"
+                  [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
+                  [required]="selectedItemIds.has(toNumber(item.itemId!))"
+                  placeholder="Mennyiség (kg/adag)"
+                />
               </label>
             }
           }
@@ -112,6 +124,17 @@
                   (change)="toggleItemSelection(toNumber(item.itemId!))"
                 />
                 {{ item.name }}
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.1"
+                  class="amount-input"
+                  name="amount-{{ item.itemId }}"
+                  [(ngModel)]="itemAmounts[item.itemId!]"
+                  [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
+                  [required]="selectedItemIds.has(toNumber(item.itemId!))"
+                  placeholder="Mennyiség (kg/adag)"
+                />
               </label>
             }
           }
@@ -130,6 +153,17 @@
                   (change)="toggleItemSelection(toNumber(item.itemId!))"
                 />
                 {{ item.name }}
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.1"
+                  class="amount-input"
+                  name="amount-{{ item.itemId }}"
+                  [(ngModel)]="itemAmounts[item.itemId!]"
+                  [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
+                  [required]="selectedItemIds.has(toNumber(item.itemId!))"
+                  placeholder="Mennyiség (kg/adag)"
+                />
               </label>
             }
           }

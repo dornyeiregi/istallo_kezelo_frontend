@@ -19,7 +19,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
 
     @if (deleteMode) {
@@ -52,7 +52,6 @@
 
           <p><strong>Leírás:</strong> {{ treatment.description || '-' }}</p>
           <p><strong>Azonosító:</strong> {{ treatment.treatmentId ?? '-' }}</p>
-          <p><strong>Érintett lovak száma:</strong> {{ treatment.horseIds?.length || 0 }}</p>
 
           @if (editMode) {
             <div class="edit-hint">

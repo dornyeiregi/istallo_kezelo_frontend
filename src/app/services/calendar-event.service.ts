@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CalendarEventDTO } from '../models/calendar-event.model';
+import { API_BASE_URL } from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarEventService {
-  private apiUrl = 'http://localhost:8080/api/calendar-events';
+  private apiUrl = `${API_BASE_URL}/api/calendar-events`;
 
   constructor(private http: HttpClient) {}
 

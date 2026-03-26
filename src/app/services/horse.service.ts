@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HorseDTO } from '../models/horse.model';
+import { API_BASE_URL } from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HorseService {
-  private apiUrl = 'http://localhost:8080/api/horses';
+  private apiUrl = `${API_BASE_URL}/api/horses`;
 
   constructor(private http: HttpClient) {}
 
@@ -27,9 +28,9 @@ export class HorseService {
     return this.http.get<HorseDTO>(`${this.apiUrl}/${id}`);
   }
 
-  // getByName(horseName: string): Observable<HorseDTO> {
-  //   return this.http.get<HorseDTO>(`${this.apiUrl}/byName/${encodeURIComponent(horseName)}`);
-  // }
+  getByName(horseName: string): Observable<HorseDTO> {
+    return this.http.get<HorseDTO>(`${this.apiUrl}/byName/${encodeURIComponent(horseName)}`);
+  }
 
 
   create(dto: HorseDTO): Observable<HorseDTO> {
@@ -46,6 +47,10 @@ export class HorseService {
 
   deactivate(id: number): Observable<HorseDTO> {
     return this.http.patch<HorseDTO>(`${this.apiUrl}/${id}/deactivate`, {});
+  }
+
+  activate(id: number): Observable<HorseDTO> {
+    return this.http.patch<HorseDTO>(`${this.apiUrl}/${id}/activate`, {});
   }
 
   getRequests(): Observable<HorseDTO[]> {

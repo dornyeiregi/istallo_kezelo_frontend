@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ShotDTO } from '../models/shot.model';
+import { API_BASE_URL } from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShotService {
-  private apiUrl = 'http://localhost:8080/api/shots';
+  private apiUrl = `${API_BASE_URL}/api/shots`;
 
   constructor(private http: HttpClient) {}
 

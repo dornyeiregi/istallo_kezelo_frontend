@@ -20,7 +20,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
 
     @if (deleteMode) {
@@ -36,9 +36,27 @@
       </article>
 
       <article class="overview-card">
-        <span class="label">Napi széna felhasználás</span>
-        <span class="value">{{ totalDailyHayKg | number: '1.0-0' }} kg</span>
-        <span class="hint">Becsült érték ({{ averageHayPerHorseKg }} kg / ló)</span>
+        <span class="label">Napi takarmány összesítő</span>
+        @if (dailyFeedLoading) {
+          <span class="hint">Betöltés...</span>
+        } @else if (dailyFeedTotals.length === 0) {
+          <span class="hint">Nincs aktív ló az istállókban.</span>
+        } @else {
+          <ul class="daily-feed-list">
+            @for (item of dailyFeedTotals; track item.itemId) {
+              <li>
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-amount">{{ item.amount | number: '1.0-2' }} kg</span>
+              </li>
+            }
+          </ul>
+        }
+      </article>
+
+      <article class="overview-card">
+        <span class="label">Napi alom felhasználás</span>
+        <span class="value">{{ totalStrawUsageKg | number: '1.0-0' }} kg</span>
+        <span class="hint">Istállónként beállított értékek összege.</span>
       </article>
     </section>
 
@@ -83,6 +101,15 @@
               [(ngModel)]="editedNames[stable.stableName]"
               class="edit-input"
               type="text"
+              placeholder="Istálló neve"
+            />
+            <input
+              [(ngModel)]="editedStrawUsage[stable.stableName]"
+              class="edit-input"
+              type="number"
+              min="0"
+              step="0.1"
+              placeholder="Napi alom (kg)"
             />
             <div class="edit-buttons">
               <button (click)="saveName(stable)" class="save-button">Mentés</button>

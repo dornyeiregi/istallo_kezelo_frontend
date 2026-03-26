@@ -128,6 +128,12 @@ textarea {
   width: auto;
 }
 
+.amount-input {
+  width: 110px;
+  margin-left: auto;
+  padding: 0.4rem 0.6rem;
+}
+
 .item-row:hover {
   background: var(--app-chip-bg);
   border-radius: 6px;

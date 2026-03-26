@@ -30,11 +30,14 @@ export class ItemProfilePage implements OnInit {
   showDeleteItemModal = false;
 
   stockChangeAmount = 0;
+  addStockServings = 0;
+  addStockServingKg: number | null = null;
   modalError: string | null = null;
 
   editItemName = '';
   editItemType: string = '';
   editItemCategory: string = '';
+  editFeedUnitAmount: number | null = null;
 
   toastMessage = '';
   toastVisible = false;
@@ -44,6 +47,8 @@ export class ItemProfilePage implements OnInit {
     FEED: 'Abraktakarmány',
     SUPPLEMENT: 'Táplálékkiegészítő',
     MACHINE: 'Gép',
+    ACCESSORY: 'Kellék',
+    BEDDING: 'Alom',
   };
 
   itemCategoryLabels: { [key: string]: string } = {
@@ -53,6 +58,7 @@ export class ItemProfilePage implements OnInit {
 
   itemTypeKeys: string[] = [];
   itemCategoryKeys: string[] = [];
+  filteredItemTypeKeys: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -150,6 +156,8 @@ export class ItemProfilePage implements OnInit {
       return;
     }
     this.stockChangeAmount = 0;
+    this.addStockServings = 0;
+    this.addStockServingKg = this.item?.feedUnitAmount ?? null;
     this.modalError = null;
     this.showAddStockModal = true;
   }
@@ -160,7 +168,16 @@ export class ItemProfilePage implements OnInit {
   }
 
   confirmAddStock(): void {
-    if (!this.storage || this.stockChangeAmount <= 0) {
+    if (!this.storage) {
+      this.modalError = 'A mennyiségnek pozitívnak kell lennie.';
+      return;
+    }
+    if (this.addStockServings <= 0 || !this.addStockServingKg || this.addStockServingKg <= 0) {
+      this.modalError = 'Add meg az adagok számát és az adag tömegét.';
+      return;
+    }
+    this.stockChangeAmount = this.addStockServings * this.addStockServingKg;
+    if (this.stockChangeAmount <= 0) {
       this.modalError = 'A mennyiségnek pozitívnak kell lennie.';
       return;
     }
@@ -183,6 +200,7 @@ export class ItemProfilePage implements OnInit {
       }
     });
   }
+
 
   // ========================
   //   Készlet levonása
@@ -244,6 +262,8 @@ export class ItemProfilePage implements OnInit {
     this.editItemName = this.item.name;
     this.editItemType = this.item.itemType;
     this.editItemCategory = this.item.itemCategory;
+    this.editFeedUnitAmount = this.item.feedUnitAmount ?? null;
+    this.updateFilteredItemTypes();
     this.modalError = null;
     this.showEditItemModal = true;
   }
@@ -266,11 +286,22 @@ export class ItemProfilePage implements OnInit {
       return;
     }
 
+    if (this.editFeedUnitAmount != null && this.editFeedUnitAmount <= 0) {
+      this.modalError = 'Az etetési adag mennyiségnek pozitívnak kell lennie.';
+      return;
+    }
+
+    if (!this.isItemTypeAllowed(this.editItemCategory, this.editItemType)) {
+      this.modalError = 'A kiválasztott típus nem engedélyezett ehhez a kategóriához.';
+      return;
+    }
+
     const dto: ItemDTO = {
       itemId: this.item.itemId,
       name: this.editItemName.trim(),
       itemType: this.editItemType as any,
       itemCategory: this.editItemCategory as any,
+      feedUnitAmount: this.editFeedUnitAmount ?? null,
     };
 
     this.itemService.update(this.item.itemId, dto).subscribe({
@@ -280,6 +311,7 @@ export class ItemProfilePage implements OnInit {
           name: dto.name,
           itemType: dto.itemType,
           itemCategory: dto.itemCategory,
+          feedUnitAmount: dto.feedUnitAmount ?? null,
         };
         this.showToast('Tétel adatai sikeresen módosítva.');
         this.closeEditItemModal();
@@ -288,6 +320,35 @@ export class ItemProfilePage implements OnInit {
         this.modalError = 'Nem sikerült módosítani a tételt.';
       },
     });
+  }
+
+  onEditCategoryChange(): void {
+    this.updateFilteredItemTypes();
+    if (this.editItemType && !this.isItemTypeAllowed(this.editItemCategory, this.editItemType)) {
+      this.editItemType = '';
+    }
+  }
+
+  private updateFilteredItemTypes(): void {
+    if (this.editItemCategory === 'CONSUMABLE') {
+      this.filteredItemTypeKeys = ['HAY', 'FEED', 'SUPPLEMENT'];
+      return;
+    }
+    if (this.editItemCategory === 'OBJECT') {
+      this.filteredItemTypeKeys = ['MACHINE', 'ACCESSORY', 'BEDDING'];
+      return;
+    }
+    this.filteredItemTypeKeys = [];
+  }
+
+  private isItemTypeAllowed(category: string, type: string): boolean {
+    if (category === 'CONSUMABLE') {
+      return type === 'HAY' || type === 'FEED' || type === 'SUPPLEMENT';
+    }
+    if (category === 'OBJECT') {
+      return type === 'MACHINE' || type === 'ACCESSORY' || type === 'BEDDING';
+    }
+    return false;
   }
 
   // ========================

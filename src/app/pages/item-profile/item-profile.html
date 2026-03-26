@@ -28,22 +28,22 @@
     <section class="stats">
       <div class="stat-card">
         <span class="label">Raktáron</span>
-        <span class="value">{{ storage.amountStored | number:'1.0-1' }}</span>
+        <span class="value">{{ storage.amountStored | number:'1.0-1' }} kg</span>
       </div>
 
       <div class="stat-card">
         <span class="label">Használatban</span>
-        <span class="value">{{ storage.amountInUse | number:'1.0-1' }}</span>
+        <span class="value">{{ storage.amountInUse | number:'1.0-1' }} kg</span>
       </div>
 
       <div class="stat-card">
         <span class="label">Elérhető</span>
-        <span class="value">{{ available | number:'1.0-1' }}</span>
+        <span class="value">{{ available | number:'1.0-1' }} kg</span>
       </div>
 
       <div class="stat-card">
         <span class="label">Napi becsült fogyás</span>
-        <span class="value">{{ estimatedDailyUse | number:'1.0-1' }}</span>
+        <span class="value">{{ estimatedDailyUse | number:'1.0-1' }} kg</span>
         <span class="hint">/ nap</span>
       </div>
 
@@ -55,6 +55,13 @@
           } @else {
             {{ remainingDays | number:'1.0-0' }} nap
           }
+        </span>
+      </div>
+
+      <div class="stat-card">
+        <span class="label">Etetési adag</span>
+        <span class="value">
+          {{ item.feedUnitAmount || '-' }} kg
         </span>
       </div>
     </section>
@@ -75,12 +82,22 @@
       </p>
 
       <div class="form-group">
-        <label>Mennyiség</label>
+        <label>Adagok száma</label>
         <input
           type="number"
-          step="0.1"
+          step="1"
           min="0"
-          [(ngModel)]="stockChangeAmount"
+          [(ngModel)]="addStockServings"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Kg / adag</label>
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          [(ngModel)]="addStockServingKg"
         />
       </div>
 
@@ -117,7 +134,7 @@
       </p>
 
       <div class="form-group">
-        <label>Mennyiség</label>
+        <label>Mennyiség (kg)</label>
         <input
           type="number"
           step="0.1"
@@ -160,19 +177,36 @@
       </div>
 
       <div class="form-group">
-        <label>Típus</label>
-        <select [(ngModel)]="editItemType">
-          @for (key of itemTypeKeys; track key) {
-            <option [ngValue]="key">{{ itemTypeLabels[key] }}</option>
+        <label>Kategória</label>
+        <select [(ngModel)]="editItemCategory" (change)="onEditCategoryChange()">
+          @for (key of itemCategoryKeys; track key) {
+            <option [ngValue]="key">{{ itemCategoryLabels[key] }}</option>
           }
         </select>
       </div>
 
       <div class="form-group">
-        <label>Kategória</label>
-        <select [(ngModel)]="editItemCategory">
-          @for (key of itemCategoryKeys; track key) {
-            <option [ngValue]="key">{{ itemCategoryLabels[key] }}</option>
+        <label>
+          Etetési adag (kg)
+          <span
+            class="hint-icon"
+            data-tooltip="Egy etetéshez felhasznált mennyiség. Pl. 1 kg/adag."
+            aria-label="Etetési adag súgó"
+          >?</span>
+        </label>
+        <input
+          type="number"
+          min="0.01"
+          step="0.01"
+          [(ngModel)]="editFeedUnitAmount"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Típus</label>
+        <select [(ngModel)]="editItemType">
+          @for (key of filteredItemTypeKeys; track key) {
+            <option [ngValue]="key">{{ itemTypeLabels[key] }}</option>
           }
         </select>
       </div>

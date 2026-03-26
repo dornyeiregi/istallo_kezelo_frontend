@@ -82,6 +82,7 @@ export class HorseCreatePage implements OnInit {
           this.feedSchedItemsById = new Map();
         }
       });
+
     }
 
     if (this.isAdmin) {

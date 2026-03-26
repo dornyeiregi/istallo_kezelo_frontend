@@ -7,6 +7,7 @@ import { ShotService } from '../../services/shot.service';
 import { ShotDTO } from '../../models/shot.model';
 import { HorseService } from '../../services/horse.service';
 import { HorseDTO } from '../../models/horse.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-shot-edit',
@@ -46,7 +47,8 @@ export class ShotEditPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private shotService: ShotService,
-    private horseService: HorseService
+    private horseService: HorseService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -59,9 +61,13 @@ export class ShotEditPage implements OnInit {
     this.shotId = id;
     this.loading = true;
 
+    const horses$ = this.authService.hasAnyRole(['OWNER', 'ROLE_OWNER'])
+      ? this.horseService.getMine()
+      : this.horseService.getAll();
+
     forkJoin({
       shot: this.shotService.getById(id),
-      horses: this.horseService.getAll()
+      horses: horses$
     }).subscribe({
       next: ({ shot, horses }) => {
         this.form = {

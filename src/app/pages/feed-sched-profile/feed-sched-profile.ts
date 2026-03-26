@@ -41,7 +41,9 @@ export class FeedSchedProfilePage implements OnInit {
     HAY: 'Szálas takarmány',
     FEED: 'Abraktakarmány',
     SUPPLEMENT: 'Táplálékkiegészítő',
-    MACHINE: 'Gép'
+    MACHINE: 'Gép',
+    ACCESSORY: 'Kellék',
+    BEDDING: 'Alom'
   };
 
   constructor(
@@ -133,9 +135,15 @@ export class FeedSchedProfilePage implements OnInit {
     }
   }
 
-  getHorseNameById(id: number): string {
+  getHorseNameById(id: number): string | null {
     const horse = this.horses.find(h => h.id === id);
-    return horse ? horse.horseName : 'Ismeretlen ló';
+    return horse ? horse.horseName : null;
+  }
+
+  getKnownHorseIds(ids?: number[] | null): number[] {
+    if (!ids || ids.length === 0) return [];
+    const known = new Set(this.horses.map(h => h.id));
+    return ids.filter(id => known.has(id));
   }
 
   deleteFeedSched(): void {

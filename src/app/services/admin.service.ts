@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserDTO } from '../models/user.model';
+import { API_BASE_URL } from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private readonly baseUrl = 'http://localhost:8080/api/admin';
+  private readonly baseUrl = `${API_BASE_URL}/api/admin`;
 
   constructor(private http: HttpClient) {}
 

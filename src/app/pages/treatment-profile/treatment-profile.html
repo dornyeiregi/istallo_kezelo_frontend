@@ -18,8 +18,47 @@
 
     <div class="treatment-details">
       <p><strong>Dátum:</strong> {{ treatment.date }}</p>
+      @if (plannedDueDate) {
+        <p><strong>Tervezett időpont:</strong> {{ plannedDueDate }}</p>
+      }
       <p><strong>Leírás:</strong> {{ treatment.description || '-' }}</p>
+      <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel() }}</p>
     </div>
+
+    @if (nextPlannedDates.length > 0) {
+      <div class="planned-dates">
+        <h2>Tervezett kezelések</h2>
+        <ul class="horse-list">
+          @for (date of nextPlannedDates; track date) {
+            <li class="horse-item">{{ date }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (plannedDueDate) {
+      <div class="due-panel">
+        <h2>Esedékes kezelés</h2>
+        @if (successMessage) {
+          <div class="success-msg">{{ successMessage }}</div>
+        }
+        <label class="inline">
+          <input type="checkbox" [(ngModel)]="markDueCompleted" />
+          Megtörtént a kezelés
+        </label>
+        <div class="mt">
+          <label>Kezelés dátuma:</label>
+          <input
+            type="date"
+            [(ngModel)]="completedDate"
+            [disabled]="!markDueCompleted"
+          />
+        </div>
+        <button class="save-button" (click)="confirmDueTreatment()" [disabled]="saving || !markDueCompleted">
+          Mentés
+        </button>
+      </div>
+    }
 
     <hr />
 
@@ -28,10 +67,10 @@
       <h2>Csatolt lovak</h2>
 
       <ul class="horse-list">
-        @if (!treatment.horseIds || treatment.horseIds.length === 0) {
+        @if (getKnownHorseIds(treatment.horseIds).length === 0) {
           <li class="no-horses">Nincs csatolt ló</li>
         } @else {
-          @for (id of treatment.horseIds; track id) {
+          @for (id of getKnownHorseIds(treatment.horseIds); track id) {
             <li class="horse-item">
               {{ getHorseNameById(id) }}
             </li>

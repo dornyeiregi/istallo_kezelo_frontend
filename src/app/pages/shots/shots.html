@@ -19,7 +19,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
 
     @if (deleteMode) {
@@ -51,7 +51,6 @@
           </div>
 
           <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel(shot) }}</p>
-          <p><strong>Érintett lovak száma:</strong> {{ shot.horseIds?.length || 0 }}</p>
 
           @if (editMode) {
             <div class="edit-hint">

@@ -52,6 +52,32 @@
   color: var(--app-muted);
 }
 
+.daily-feed-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.daily-feed-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--app-text);
+}
+
+.daily-feed-list .item-name {
+  font-weight: 600;
+}
+
+.daily-feed-list .item-amount {
+  color: var(--app-primary);
+  white-space: nowrap;
+}
+
 .horse-section h2 {
   margin: 0 0 1rem;
   color: var(--app-primary);
@@ -131,8 +157,8 @@
 }
 
 .horse-card.edit-mode {
-  border: 2px dashed #ff9800;
-  background-color: #fff3e0;
+  border: 2px dashed var(--app-border);
+  background-color: #f7f9fc;
   cursor: pointer;
 }
 
@@ -141,7 +167,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #ff9800;
+  color: var(--app-primary);
   font-size: 0.9rem;
 }
 
@@ -166,6 +192,95 @@
   color: white;
   margin-bottom: 12px;
   border-radius: 6px;
+}
+
+.stable-edit-card {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--app-border);
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.stable-edit-card h2 {
+  margin: 0 0 0.8rem;
+  color: var(--app-primary);
+}
+
+.form-row {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.edit-hint-text {
+  margin: 0 0 0.8rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.bedding-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.bedding-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  background: var(--app-chip-bg);
+}
+
+.bedding-select {
+  max-width: 100%;
+  height: 36px;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background: #fff;
+}
+
+.bedding-select option {
+  padding: 0.2rem 0.4rem;
+}
+
+.bedding-row input[type="number"] {
+  height: 36px;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background: #fff;
+}
+
+.link-button {
+  background: transparent;
+  border: none;
+  color: #d32f2f;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.bedding-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+
+.bedding-total {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--app-primary);
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .modal-backdrop {

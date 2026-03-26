@@ -32,7 +32,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
 
     @if (deleteMode) {
@@ -45,12 +45,12 @@
     <section class="overview">
       <article class="overview-card">
         <span class="label">Tárolt összes mennyiség</span>
-        <span class="value">{{ totalStored | number:'1.0-1' }}</span>
+        <span class="value">{{ totalStored | number:'1.0-1' }} kg</span>
       </article>
 
       <article class="overview-card">
         <span class="label">Használatban</span>
-        <span class="value">{{ totalInUse | number:'1.0-1' }}</span>
+        <span class="value">{{ totalInUse | number:'1.0-1' }} kg</span>
       </article>
 
       <article class="overview-card">
@@ -125,10 +125,21 @@
     </div>
 
     <div class="storage-stats">
-      <p><strong>Raktáron:</strong> {{ storage.amountStored | number:'1.0-1' }}</p>
-      <p><strong>Használatban:</strong> {{ storage.amountInUse | number:'1.0-1' }}</p>
-      <p><strong>Elérhető:</strong> {{ (storage.amountStored - storage.amountInUse) | number:'1.0-1' }}</p>
+      <p><strong>Raktáron:</strong> {{ storage.amountStored | number:'1.0-1' }} kg</p>
+      <p><strong>Használatban:</strong> {{ storage.amountInUse | number:'1.0-1' }} kg</p>
+      <p><strong>Elérhető:</strong> {{ (storage.amountStored - storage.amountInUse) | number:'1.0-1' }} kg</p>
     </div>
+
+    @if (storage.warningLevel && storage.warningLevel !== 'NONE') {
+      <div class="stock-warning" [class.red]="storage.warningLevel === 'RED'" [class.yellow]="storage.warningLevel === 'YELLOW'">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        @if (storage.daysRemaining !== null && storage.daysRemaining !== undefined) {
+          {{ storage.daysRemaining }} napra elegendő készlet
+        } @else {
+          Alacsony készlet
+        }
+      </div>
+    }
 
     @if (deleteMode) {
       <div class="delete-hint">

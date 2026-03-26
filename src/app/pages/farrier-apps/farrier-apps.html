@@ -19,7 +19,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
 
     @if (deleteMode) {
@@ -51,8 +51,28 @@
           </div>
 
           <p><strong>Telefon:</strong> {{ app.farrierPhone || '-' }}</p>
-          <p><strong>Patkolás:</strong> {{ app.shoes ? 'Igen' : 'Nem' }}</p>
-        <p><strong>Érintett lovak száma:</strong> {{ app.horseIds.length || 0 }}</p>
+          <div class="horse-list-block">
+            <strong>Patkolt lovak:</strong>
+            @if (app.horseDetails?.length) {
+              <ul class="horse-name-list">
+                @for (horse of (app.horseDetails || []).slice(0, 3); track horse.horseId) {
+                  <li>
+                    {{ horse.horseName || ('Ló #' + horse.horseId) }}
+                    <span class="horse-shoe-count">
+                      ({{ horse.shoeCount === 4 ? '4 patkó' : horse.shoeCount === 2 ? '2 patkó' : 'Nincs patkó' }})
+                    </span>
+                  </li>
+                }
+              </ul>
+              @if (app.horseDetails && app.horseDetails.length > 3) {
+                <div class="muted">
+                  {{ app.horseDetails.length - 3 }} további ló...
+                </div>
+              }
+            } @else {
+              <div class="muted">Nincs csatolt ló.</div>
+            }
+          </div>
 
           @if (editMode) {
             <div class="edit-hint">

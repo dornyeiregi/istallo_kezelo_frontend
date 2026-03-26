@@ -28,6 +28,62 @@ h1 {
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
+.planned-dates,
+.due-shot-panel {
+  margin-top: 1.5rem;
+  background: #fff;
+  padding: 1.2rem 1.3rem;
+  border-radius: 12px;
+  border: 2px solid var(--app-border);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.06);
+}
+
+.planned-dates h2,
+.due-shot-panel h2 {
+  margin: 0 0 0.75rem;
+  color: var(--app-primary);
+}
+
+.planned-dates .horse-list {
+  margin-top: 0.75rem;
+}
+
+.planned-dates .horse-item {
+  padding: 10px 6px;
+}
+
+.due-shot-panel {
+  border-left: 6px solid #ff8f00;
+  background: linear-gradient(135deg, rgba(255, 143, 0, 0.08), rgba(255, 255, 255, 0.9));
+}
+
+.due-shot-panel .save-button {
+  background-color: #ff8f00;
+}
+
+.due-shot-panel .save-button:hover {
+  background-color: #e57f00;
+}
+
+.due-shot-panel input[type="date"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  margin-top: 6px;
+}
+
+.due-shot-panel label.inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.due-shot-panel .mt {
+  margin-top: 12px;
+}
+
 .detail-row {
   display: flex;
   justify-content: space-between;

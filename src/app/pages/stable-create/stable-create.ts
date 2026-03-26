@@ -16,6 +16,7 @@ import { StableDTO } from '../../models/stable.model';
 export class StableCreatePage {
   stable: StableDTO = {
     stableName: '',
+    strawUsageKg: null,
     horses: []
   } as StableDTO;
 

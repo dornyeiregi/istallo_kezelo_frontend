@@ -28,8 +28,18 @@ export class TreatmentEditPage implements OnInit {
     treatmentId: undefined,
     treatmentName: '',
     description: '',
+    frequencyUnit: '',
+    frequencyValue: undefined,
     date: '',
     horseIds: []
+  };
+
+  frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
+  frequencyLabels: { [key: string]: string } = {
+    DAYS: 'Nap',
+    WEEKS: 'Hét',
+    MONTHS: 'Hónap',
+    YEARS: 'Év'
   };
 
   constructor(
@@ -58,6 +68,8 @@ export class TreatmentEditPage implements OnInit {
           treatmentId: treatment.treatmentId,
           treatmentName: treatment.treatmentName,
           description: treatment.description || '',
+          frequencyUnit: treatment.frequencyUnit ?? '',
+          frequencyValue: treatment.frequencyValue ?? undefined,
           date: treatment.date,
           horseIds: treatment.horseIds || []
         };
@@ -101,6 +113,8 @@ export class TreatmentEditPage implements OnInit {
       treatmentId: this.treatmentId,
       treatmentName: this.form.treatmentName,
       description: this.form.description || '',
+      frequencyUnit: this.form.frequencyUnit || null,
+      frequencyValue: this.form.frequencyValue || null,
       date: this.form.date,
       horseIds: Array.from(this.selectedHorseIds)
     };

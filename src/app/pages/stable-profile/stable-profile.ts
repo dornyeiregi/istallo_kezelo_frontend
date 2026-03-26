@@ -2,16 +2,22 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StableService } from '../../services/stable.service';
-import { StableDTO } from '../../models/stable.model';
+import { StableDTO, StableItemDTO } from '../../models/stable.model';
 import { CrudMenuComponent } from '../../components/crud-menu/crud-menu';
 import { AuthService } from '../../services/auth.service';
 import { HorseDTO } from '../../models/horse.model';
 import { HorseService } from '../../services/horse.service';
+import { FeedSchedService } from '../../services/feed-sched.service';
+import { FeedSchedDTO } from '../../models/feed-sched.model';
+import { ItemService } from '../../services/item.service';
+import { ItemDTO } from '../../models/item.model';
+import { forkJoin, of } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-stable-profile',
   standalone: true,
-  imports: [CommonModule, CrudMenuComponent],
+  imports: [CommonModule, CrudMenuComponent, FormsModule],
   templateUrl: './stable-profile.html',
   styleUrls: ['./stable-profile.css']
 })
@@ -19,9 +25,14 @@ export class StableProfilePage implements OnInit {
   stable?: StableDTO;
   loading = true;
   error = '';
-  readonly averageHayPerHorseKg = 10;
+  dailyFeedTotals: Array<{ itemId: number; name: string; amount: number }> = [];
+  dailyFeedLoading = false;
   editMode = false;
   deleteMode = false;
+  items: ItemDTO[] = [];
+  beddingItems: ItemDTO[] = [];
+  stableEditItems: Array<{ itemId: number | null; usageKg: number | null }> = [];
+  stableEditError = '';
 
   confirmDeleteHorse: HorseDTO | null = null;
   toastMessage = '';
@@ -32,7 +43,9 @@ export class StableProfilePage implements OnInit {
     private router: Router,
     private stableService: StableService,
     private horseService: HorseService,
-    private authService: AuthService
+    private authService: AuthService,
+    private feedSchedService: FeedSchedService,
+    private itemService: ItemService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +53,8 @@ export class StableProfilePage implements OnInit {
     if (navStable) {
       this.stable = navStable;
       this.loading = false;
+      this.loadDailyFeedTotals();
+      this.prepareStableEdit();
       return;
     }
 
@@ -51,14 +66,11 @@ export class StableProfilePage implements OnInit {
     }
 
     this.fetchStable(stableName);
+    this.loadItems();
   }
 
   get horseCount(): number {
     return this.activeHorses.length;
-  }
-
-  get estimatedDailyHayKg(): number {
-    return this.horseCount * this.averageHayPerHorseKg;
   }
 
   get activeHorses(): HorseDTO[] {
@@ -84,12 +96,28 @@ export class StableProfilePage implements OnInit {
         this.stable = stables.find((stable) => stable.stableName === stableName);
         if (!this.stable) {
           this.error = 'Nem található ilyen nevű istálló.';
+        } else {
+          this.loadDailyFeedTotals();
+          this.prepareStableEdit();
         }
         this.loading = false;
       },
       error: () => {
         this.error = 'Nem sikerült betölteni az istálló adatait.';
         this.loading = false;
+      }
+    });
+  }
+
+  private loadItems(): void {
+    this.itemService.getAll().subscribe({
+      next: (items) => {
+        this.items = items;
+        this.beddingItems = items.filter(i => (i.itemType || '').toUpperCase() === 'BEDDING');
+      },
+      error: () => {
+        this.items = [];
+        this.beddingItems = [];
       }
     });
   }
@@ -113,9 +141,97 @@ export class StableProfilePage implements OnInit {
     }
   }
 
+  private loadDailyFeedTotals(): void {
+    const horses = this.activeHorses;
+    if (!horses.length) {
+      this.dailyFeedTotals = [];
+      return;
+    }
+
+    this.dailyFeedLoading = true;
+    const feedRequests = horses.map(h => this.feedSchedService.getAllOfHorseById(h.id!));
+
+    forkJoin({
+      items: this.itemService.getAll(),
+      feeds: feedRequests.length ? forkJoin(feedRequests) : of([])
+    }).subscribe({
+      next: ({ items, feeds }) => {
+        const totals = this.buildDailyTotals(items, feeds as FeedSchedDTO[][], horses);
+        this.dailyFeedTotals = totals;
+        this.dailyFeedLoading = false;
+      },
+      error: () => {
+        this.dailyFeedTotals = [];
+        this.dailyFeedLoading = false;
+      }
+    });
+  }
+
+  private buildDailyTotals(items: ItemDTO[], feedsByHorse: FeedSchedDTO[][], horses: HorseDTO[]) {
+    const itemNameById = new Map<number, string>();
+    items.forEach(item => {
+      if (item.itemId != null) itemNameById.set(item.itemId, item.name);
+    });
+
+    const totals = new Map<number, number>();
+
+    const pickLatest = (feeds: FeedSchedDTO[], predicate: (f: FeedSchedDTO) => boolean) => {
+      const matches = feeds.filter(predicate);
+      if (matches.length === 0) return null;
+      return matches.reduce((latest, current) => {
+        const latestId = latest.feedSchedId ?? -1;
+        const currentId = current.feedSchedId ?? -1;
+        return currentId > latestId ? current : latest;
+      });
+    };
+
+    const addFeed = (feed: FeedSchedDTO | null) => {
+      if (!feed) return;
+      if (feed.items && feed.items.length > 0) {
+        feed.items.forEach(item => {
+          const id = item.itemId;
+          if (id == null) return;
+          const amount = Number.isFinite(item.amount) ? item.amount : 0;
+          totals.set(id, (totals.get(id) || 0) + amount);
+        });
+        return;
+      }
+      if (feed.itemIds && feed.itemIds.length > 0) {
+        feed.itemIds.forEach(id => {
+          totals.set(id, (totals.get(id) || 0) + 1);
+        });
+      }
+    };
+
+    feedsByHorse.forEach((feeds) => {
+      const morning = pickLatest(feeds, f => !!f.feedMorning);
+      const noon = pickLatest(feeds, f => !!f.feedNoon);
+      const evening = pickLatest(feeds, f => !!f.feedEvening);
+      addFeed(morning);
+      addFeed(noon);
+      addFeed(evening);
+    });
+
+    return Array.from(totals.entries())
+      .map(([itemId, amount]) => ({
+        itemId,
+        name: itemNameById.get(itemId) || `Tétel #${itemId}`,
+        amount
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   toggleEditMode(): void {
     this.editMode = !this.editMode;
     this.deleteMode = false;
+    if (this.editMode) {
+      this.prepareStableEdit();
+      if (this.beddingItems.length === 0) {
+        this.loadItems();
+      }
+    } else {
+      this.stableEditError = '';
+    }
   }
 
   toggleDeleteMode(): void {
@@ -168,6 +284,72 @@ export class StableProfilePage implements OnInit {
     setTimeout(() => {
       this.toastVisible = false;
     }, 3000);
+  }
+
+  private prepareStableEdit(): void {
+    if (!this.stable) return;
+    const items = this.stable.stableItems || [];
+    this.stableEditItems = items.length
+      ? items.map(link => ({ itemId: link.itemId, usageKg: link.usageKg }))
+      : [];
+  }
+
+  addStableBeddingRow(): void {
+    this.stableEditItems = [...this.stableEditItems, { itemId: null, usageKg: null }];
+  }
+
+  removeStableBeddingRow(index: number): void {
+    this.stableEditItems = this.stableEditItems.filter((_, i) => i !== index);
+  }
+
+  saveStableEdits(): void {
+    if (!this.stable?.stableId) return;
+    this.stableEditError = '';
+
+    const seenItemIds = new Set<number>();
+    const stableItems: StableItemDTO[] = [];
+    for (const row of this.stableEditItems) {
+      if (row.itemId == null) continue;
+      if (seenItemIds.has(row.itemId)) {
+        this.stableEditError = 'Ugyanaz az alom tétel csak egyszer szerepelhet.';
+        return;
+      }
+      seenItemIds.add(row.itemId);
+      const usage = Number.isFinite(row.usageKg as number) ? (row.usageKg as number) : 0;
+      if (usage <= 0) {
+        this.stableEditError = 'Minden kiválasztott alom tételhez adj meg pozitív napi mennyiséget.';
+        return;
+      }
+      stableItems.push({
+        itemId: row.itemId as number,
+        usageKg: usage
+      });
+    }
+
+    const dto: Partial<StableDTO> = {
+      strawUsageKg: this.totalBeddingUsage,
+      stableItems
+    };
+
+    this.stableService.update(this.stable.stableId, dto).subscribe({
+      next: (updated) => {
+        this.stable = updated;
+        this.showToast('Istálló adatok frissítve.');
+        this.prepareStableEdit();
+        this.loadDailyFeedTotals();
+        this.editMode = false;
+      },
+      error: () => {
+        this.stableEditError = 'Nem sikerült menteni az istálló adatokat.';
+      }
+    });
+  }
+
+  get totalBeddingUsage(): number {
+    return this.stableEditItems.reduce((sum, row) => {
+      const value = Number.isFinite(row.usageKg as number) ? (row.usageKg as number) : 0;
+      return sum + value;
+    }, 0);
   }
 
   get crudActions() {

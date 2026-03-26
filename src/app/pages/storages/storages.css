@@ -92,20 +92,12 @@
   color: var(--app-primary);
 }
 
-/* INFO / ERROR */
-
-.info,
-.error {
-  font-size: 1rem;
-  margin-top: 1rem;
-}
+/* INFO */
 
 .info {
+  font-size: 1rem;
+  margin-top: 1rem;
   color: var(--app-accent);
-}
-
-.error {
-  color: #b52b27;
 }
 
 /* TÁROLÓ GRID */
@@ -173,6 +165,30 @@
 .storage-stats p {
   margin: 0.15rem 0;
   font-size: 0.95rem;
+}
+
+.stock-warning {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.stock-warning.yellow {
+  background: #fff6d8;
+  color: #9a6a00;
+  border-color: #f1c40f;
+}
+
+.stock-warning.red {
+  background: var(--app-danger-bg);
+  color: var(--app-danger);
+  border-color: var(--app-danger-border);
 }
 
 /* SZERKESZTŐ MEZŐK */

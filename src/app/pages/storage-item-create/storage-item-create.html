@@ -65,16 +65,57 @@
 
 
     <div class="form-group">
-      <label for="amountStored">Kezdeti tárolt mennyiség *</label>
+      <label for="feedUnitAmount">
+        Etetési adag (kg) *
+        <span
+          class="hint-icon"
+          data-tooltip="Egy etetéshez felhasznált mennyiség. Pl. 1 kg/adag."
+          aria-label="Etetési adag súgó"
+        >?</span>
+      </label>
       <input
-        id="amountStored"
-        name="amountStored"
+        id="feedUnitAmount"
+        name="feedUnitAmount"
         type="number"
-        min="0"
-        step="0.1"
-        [(ngModel)]="form.amountStored"
+        min="0.01"
+        step="0.01"
+        [(ngModel)]="form.feedUnitAmount"
         required
       />
+    </div>
+
+    <div class="form-group">
+      <label>
+        Tároló mennyiség *
+        <span
+          class="hint-icon"
+          data-tooltip="Add meg a darabszámot és az egy egység (zsák) súlyát. Összesen = darab × zsák (kg)."
+          aria-label="Tároló mennyiség súgó"
+        >?</span>
+      </label>
+      <div class="inline-group">
+        <input
+          id="packageCount"
+          name="packageCount"
+          type="number"
+          min="0"
+          step="1"
+          placeholder="Darab"
+          [(ngModel)]="form.packageCount"
+          required
+        />
+        <input
+          id="packageSize"
+          name="packageSize"
+          type="number"
+          min="0"
+          step="0.1"
+          placeholder="Egy zsák (kg)"
+          [(ngModel)]="form.packageSize"
+          required
+        />
+      </div>
+      <div class="hint">Összesen: {{ totalStored | number:'1.0-2' }} kg</div>
     </div>
 
     <button

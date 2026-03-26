@@ -13,7 +13,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else if (user) {
 
     @if (successMessage) {
@@ -149,5 +149,44 @@
         }
       </div>
     </section>
+
+    @if (isAdmin) {
+      <section class="settings-section">
+        <h2>Alkalmazotti hozzáférések</h2>
+        <p class="muted">Állítsd be, hogy az alkalmazottak mely modulokat láthatják.</p>
+
+        @if (accessError) {
+          <div class="load-error">{{ accessError }}</div>
+        }
+
+        @if (accessMessage) {
+          <div class="success-msg">{{ accessMessage }}</div>
+        }
+
+        <div class="access-grid">
+          <label class="access-row">
+            <input type="checkbox" [(ngModel)]="employeeAccess.viewShots" />
+            Oltások megtekintése
+          </label>
+          <label class="access-row">
+            <input type="checkbox" [(ngModel)]="employeeAccess.viewTreatments" />
+            Kezelések megtekintése
+          </label>
+          <label class="access-row">
+            <input type="checkbox" [(ngModel)]="employeeAccess.viewFarrierApps" />
+            Patkolások megtekintése
+          </label>
+        </div>
+
+        <button
+          type="button"
+          class="themed-button"
+          (click)="saveEmployeeAccess()"
+          [disabled]="accessLoading"
+        >
+          Mentés
+        </button>
+      </section>
+    }
   }
 </div>

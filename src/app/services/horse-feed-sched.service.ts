@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HorseFeedSchedDTO } from '../models/horse-feed-sched.model';
+import { API_BASE_URL } from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HorseFeedSchedService {
-  private apiUrl = 'http://localhost:8080/api/horseFeedScheds';
+  private apiUrl = `${API_BASE_URL}/api/horseFeedScheds`;
 
   constructor(private http: HttpClient) {}
 

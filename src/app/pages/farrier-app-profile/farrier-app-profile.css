@@ -23,6 +23,62 @@ h1 {
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
+.planned-dates,
+.due-panel {
+  margin-top: 1.5rem;
+  background: #fff;
+  padding: 1.2rem 1.3rem;
+  border-radius: 12px;
+  border: 2px solid var(--app-border);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.06);
+}
+
+.planned-dates h2,
+.due-panel h2 {
+  margin: 0 0 0.75rem;
+  color: var(--app-primary);
+}
+
+.planned-dates .horse-list {
+  margin-top: 0.75rem;
+}
+
+.planned-dates .horse-item {
+  padding: 10px 6px;
+}
+
+.due-panel {
+  border-left: 6px solid #ff8f00;
+  background: linear-gradient(135deg, rgba(255, 143, 0, 0.08), rgba(255, 255, 255, 0.9));
+}
+
+.due-panel .save-button {
+  background-color: #ff8f00;
+}
+
+.due-panel .save-button:hover {
+  background-color: #e57f00;
+}
+
+.due-panel input[type="date"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  margin-top: 6px;
+}
+
+.due-panel label.inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.due-panel .mt {
+  margin-top: 12px;
+}
+
 .farrier-details p {
   margin: 0.4rem 0;
   color: #444;
@@ -39,8 +95,8 @@ h1 {
 
 .horse-item {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
   padding: 8px 4px;
   border-bottom: 1px solid var(--app-border);
 }
@@ -51,6 +107,32 @@ h1 {
 
 .horse-item:hover {
   background: var(--app-chip-bg);
+}
+
+.horse-item-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.horse-name {
+  font-weight: 600;
+}
+
+.horse-shoes {
+  font-size: 0.85rem;
+  color: var(--app-primary);
+  background: var(--app-chip-bg);
+  border: 1px solid var(--app-border);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.horse-note {
+  font-size: 0.85rem;
+  color: var(--app-muted);
 }
 
 .no-horses {
@@ -73,8 +155,8 @@ h1 {
   align-items: center;
   gap: 10px;
   padding: 6px 4px;
-  cursor: pointer;
   width: 100%;
+  flex-wrap: wrap;
   transition: background-color 0.2s ease;
 }
 
@@ -82,9 +164,34 @@ h1 {
   background: var(--app-chip-bg);
 }
 
+.horse-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .horse-row input[type="checkbox"] {
-  transform: scale(1.25);
-  margin-right: 6px;
+  transform: scale(1.1);
+}
+
+.horse-details {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex: 1 1 100%;
+}
+
+.horse-details select {
+  max-width: 140px;
+}
+
+.horse-details input[type="text"] {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
 }
 
 .save-button,

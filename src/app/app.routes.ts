@@ -117,7 +117,7 @@ export const routes: Routes = [
     path: 'shots',
     component: ShotsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewShots' }
   },
   {
     path: 'shots/new',
@@ -141,13 +141,13 @@ export const routes: Routes = [
     path: 'shots/:shotId',
     component: ShotProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewShots' }
   },
   {
     path: 'treatments',
     component: TreatmentsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewTreatments' }
   },
   {
     path: 'treatments/new',
@@ -171,13 +171,13 @@ export const routes: Routes = [
     path: 'treatments/:treatmentId',
     component: TreatmentProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewTreatments' }
   },
   {
     path: 'farrier-apps',
     component: FarrierAppsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE', 'OWNER'] }
+    data: { roles: ['ADMIN', 'EMPLOYEE', 'OWNER'], employeeAccessSetting: 'viewFarrierApps' }
   },
   {
     path: 'farrier-apps/new',
@@ -201,7 +201,7 @@ export const routes: Routes = [
     path: 'farrier-apps/:farrierAppId',
     component: FarrierAppProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewFarrierApps' }
   },
   {
     path: 'feed-scheds/new',

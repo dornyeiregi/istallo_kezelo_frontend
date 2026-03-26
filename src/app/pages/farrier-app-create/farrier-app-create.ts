@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FarrierAppService } from '../../services/farrier-app.service';
-import { FarrierAppDTO } from '../../models/farrier-app.model';
+import { FarrierAppDTO, FarrierHorseDetailDTO } from '../../models/farrier-app.model';
 import { HorseService } from '../../services/horse.service';
 import { HorseDTO } from '../../models/horse.model';
 
@@ -20,13 +20,23 @@ export class FarrierAppCreatePage implements OnInit {
   success = false;
   horses: HorseDTO[] = [];
   selectedHorseIds: Set<number> = new Set();
+  horseDetails = new Map<number, FarrierHorseDetailDTO>();
 
   form: FarrierAppDTO = {
     farrierName: '',
     farrierPhone: '',
     appointmentDate: '',
-    shoes: false,
+    frequencyUnit: '',
+    frequencyValue: undefined,
     horseIds: []
+  };
+
+  frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
+  frequencyLabels: { [key: string]: string } = {
+    DAYS: 'Nap',
+    WEEKS: 'Hét',
+    MONTHS: 'Hónap',
+    YEARS: 'Év'
   };
 
   constructor(
@@ -42,6 +52,7 @@ export class FarrierAppCreatePage implements OnInit {
       const id = Number(horseIdParam);
       if (!Number.isNaN(id)) {
         this.selectedHorseIds.add(id);
+        this.horseDetails.set(id, { horseId: id, shoeCount: 4, note: '' });
       }
     }
 
@@ -68,9 +79,24 @@ export class FarrierAppCreatePage implements OnInit {
 
     if (this.selectedHorseIds.has(horseId)) {
       this.selectedHorseIds.delete(horseId);
+      this.horseDetails.delete(horseId);
     } else {
       this.selectedHorseIds.add(horseId);
+      if (!this.horseDetails.has(horseId)) {
+        this.horseDetails.set(horseId, {
+          horseId,
+          shoeCount: 4,
+          note: ''
+        });
+      }
     }
+  }
+
+  getHorseDetail(horseId: number): FarrierHorseDetailDTO {
+    if (!this.horseDetails.has(horseId)) {
+      this.horseDetails.set(horseId, { horseId, shoeCount: 4, note: '' });
+    }
+    return this.horseDetails.get(horseId)!;
   }
 
   onSubmit() {
@@ -87,8 +113,18 @@ export class FarrierAppCreatePage implements OnInit {
       farrierName: this.form.farrierName,
       farrierPhone: this.form.farrierPhone,
       appointmentDate: this.form.appointmentDate,
-      shoes: !!this.form.shoes,
-      horseIds: Array.from(this.selectedHorseIds)
+      frequencyUnit: this.form.frequencyUnit || null,
+      frequencyValue: this.form.frequencyValue || null,
+      shoes: null,
+      horseIds: Array.from(this.selectedHorseIds),
+      horseDetails: Array.from(this.selectedHorseIds).map((horseId) => {
+        const detail = this.getHorseDetail(horseId);
+        return {
+          horseId,
+          shoeCount: detail.shoeCount ?? 0,
+          note: detail.note ?? ''
+        };
+      })
     };
 
     this.farrierAppService.create(dto).subscribe({

@@ -62,9 +62,13 @@ Az alkalmazás az [Angular CLI](https://github.com/angular/angular-cli) 20.3.6-o
 ## Fejlesztői szerver
 
 Helyi szerver indítása:
-
+local:
 ```bash
-ng serve
+npm run start:local
+```
+LAN:
+```bash
+npm run start:lan
 ```
 
 Futtatás után a böngészőben nyisd meg a `http://localhost:4200/` címet. A forrásfájlok módosítása automatikus újratöltést indít.

@@ -18,9 +18,46 @@
 
     <div class="shot-details">
       <p><strong>Dátum:</strong> {{ shot.date }}</p>
+      @if (plannedDueDate) {
+        <p><strong>Tervezett időpont:</strong> {{ plannedDueDate }}</p>
+      }
       <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel() }}</p>
-      <p><strong>Érintett lovak száma:</strong> {{ shot.horseIds?.length || 0 }}</p>
     </div>
+
+    @if (nextPlannedDates.length > 0) {
+      <div class="planned-dates">
+        <h2>Tervezett oltások</h2>
+        <ul class="horse-list">
+          @for (date of nextPlannedDates; track date) {
+            <li class="horse-item">{{ date }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (plannedDueDate) {
+      <div class="due-shot-panel">
+        <h2>Esedékes oltás</h2>
+        @if (successMessage) {
+          <div class="success-msg">{{ successMessage }}</div>
+        }
+        <label class="inline">
+          <input type="checkbox" [(ngModel)]="markDueCompleted" />
+          Megtörtént az oltás
+        </label>
+        <div class="mt">
+          <label>Oltás dátuma:</label>
+          <input
+            type="date"
+            [(ngModel)]="completedDate"
+            [disabled]="!markDueCompleted"
+          />
+        </div>
+        <button class="save-button" (click)="confirmDueShot()" [disabled]="saving || !markDueCompleted">
+          Mentés
+        </button>
+      </div>
+    }
 
     <hr />
 
@@ -29,10 +66,10 @@
       <h2>Csatolt lovak</h2>
 
       <ul class="horse-list">
-        @if (shot.horseIds?.length === 0) {
+        @if (getKnownHorseIds(shot.horseIds).length === 0) {
           <li class="no-horses">Nincs csatolt ló</li>
         } @else {
-          @for (id of shot.horseIds; track id) {
+          @for (id of getKnownHorseIds(shot.horseIds); track id) {
             <li class="horse-item">
               {{ getHorseNameById(id) }}
             </li>

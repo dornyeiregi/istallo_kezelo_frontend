@@ -32,6 +32,31 @@
   align-items: center;
   gap: 0.75rem;
   position: relative;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--app-chip-bg);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 0.35rem 0.6rem;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--app-primary);
+}
+
+.filter-group select {
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--app-text);
+  outline: none;
 }
 
 .themed-button {
@@ -188,10 +213,49 @@
   background: var(--app-chip-bg);
 }
 
+@media (max-width: 900px) {
+  .calendar-page {
+    padding: 1.25rem;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .add-menu {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .calendar-wrapper {
+    padding: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .fc {
+    min-width: 580px;
+  }
+
+  .fc .fc-toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
 .fc .fc-scrollgrid {
   border: 1px solid var(--app-border);
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .fc .fc-scrollgrid td,
@@ -201,8 +265,140 @@
 
 .fc .fc-daygrid-event {
   font-weight: 600;
+  position: relative;
+  z-index: 3;
 }
 
 .fc .fc-daygrid-day.fc-day-today {
   background: var(--app-chip-bg);
+}
+
+.fc .fc-daygrid-day-frame,
+.fc .fc-daygrid-day-events,
+.fc .fc-daygrid-event-harness,
+.fc .fc-daygrid-body,
+.fc .fc-scroller-harness,
+.fc .fc-scroller,
+.fc .fc-scroller-liquid-absolute {
+  overflow: visible;
+}
+
+.fc .fc-daygrid-event:hover {
+  z-index: 1000;
+}
+
+.fc .fc-daygrid-event-harness:hover {
+  z-index: 1000;
+}
+
+:host ::ng-deep .fc-tooltip {
+  position: fixed;
+  background: rgba(20, 24, 33, 0.95);
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+}
+
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.popup {
+  width: min(520px, 100%);
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.popup h2 {
+  margin: 0;
+  color: var(--app-primary);
+  font-size: 1.4rem;
+}
+
+.popup .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.popup .form-group label {
+  font-weight: 600;
+  color: var(--app-primary);
+}
+
+.popup input[type="text"],
+.popup input[type="date"] {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--app-border);
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.popup .horse-list {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.popup .horse-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.2rem;
+  font-size: 0.95rem;
+  color: var(--app-text);
+}
+
+.popup .btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.popup .primary,
+.popup .secondary {
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.popup .primary {
+  background: var(--app-accent);
+  color: #fff;
+}
+
+.popup .primary:hover {
+  background: var(--app-accent-strong);
+}
+
+.popup .secondary {
+  background: var(--app-chip-bg);
+  color: var(--app-primary);
+}
+
+.popup .secondary:hover {
+  background: var(--app-border);
 }

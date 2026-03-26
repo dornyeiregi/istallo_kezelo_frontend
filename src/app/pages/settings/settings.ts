@@ -9,6 +9,8 @@ import { UserService } from '../../services/user.service';
 import { ThemeService, AppTheme } from '../../services/theme.service';
 import { AuthUser } from '../../models/auth.model';
 import { UserDTO } from '../../models/user.model';
+import { SettingsService } from '../../services/settings.service';
+import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings.model';
 
 @Component({
   selector: 'app-settings',
@@ -21,11 +23,19 @@ export class SettingsPage implements OnInit {
   loading = true;
   error: string | null = null;
   successMessage = '';
+  accessMessage = '';
 
   authUser: AuthUser | null = null;
   user: UserDTO | null = null;
   editMode = false;
   passwordMode = false;
+  accessLoading = false;
+  accessError: string | null = null;
+  employeeAccess: EmployeeAccessSettingsDTO = {
+    viewShots: false,
+    viewTreatments: false,
+    viewFarrierApps: false
+  };
 
   form = {
     firstName: '',
@@ -57,6 +67,7 @@ export class SettingsPage implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private themeService: ThemeService,
+    private settingsService: SettingsService,
     private router: Router
   ) {}
 
@@ -70,6 +81,24 @@ export class SettingsPage implements OnInit {
 
       this.authUser = user;
       this.loadUserDetails(user);
+      if (this.isAdmin) {
+        this.loadEmployeeAccess();
+      }
+    });
+  }
+
+  private loadEmployeeAccess(): void {
+    this.accessLoading = true;
+    this.accessError = null;
+    this.settingsService.getEmployeeAccess().subscribe({
+      next: (data) => {
+        this.employeeAccess = { ...this.employeeAccess, ...data };
+        this.accessLoading = false;
+      },
+      error: () => {
+        this.accessError = 'Nem sikerült betölteni az alkalmazotti hozzáféréseket.';
+        this.accessLoading = false;
+      }
     });
   }
 
@@ -259,6 +288,36 @@ export class SettingsPage implements OnInit {
 
   get currentTheme(): AppTheme {
     return this.themeService.getTheme();
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
+  }
+
+  saveEmployeeAccess(): void {
+    if (!this.isAdmin) return;
+    this.accessLoading = true;
+    this.accessError = null;
+    this.accessMessage = '';
+
+    const payload: EmployeeAccessSettingsDTO = {
+      viewShots: !!this.employeeAccess.viewShots,
+      viewTreatments: !!this.employeeAccess.viewTreatments,
+      viewFarrierApps: !!this.employeeAccess.viewFarrierApps
+    };
+
+    this.settingsService.updateEmployeeAccess(payload).subscribe({
+      next: (updated) => {
+        this.employeeAccess = { ...updated };
+        this.accessLoading = false;
+        this.accessMessage = 'Alkalmazotti hozzáférések frissítve.';
+        setTimeout(() => this.accessMessage = '', 2000);
+      },
+      error: () => {
+        this.accessLoading = false;
+        this.accessError = 'Nem sikerült menteni az alkalmazotti hozzáféréseket.';
+      }
+    });
   }
 
   goBack(): void {

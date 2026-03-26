@@ -18,10 +18,47 @@
 
     <div class="farrier-details">
       <p><strong>Dátum:</strong> {{ farrierApp.appointmentDate }}</p>
+      @if (plannedDueDate) {
+        <p><strong>Tervezett időpont:</strong> {{ plannedDueDate }}</p>
+      }
       <p><strong>Telefon:</strong> {{ farrierApp.farrierPhone || '-' }}</p>
-      <p><strong>Patkolás:</strong> {{ farrierApp.shoes ? 'Igen' : 'Nem' }}</p>
-        <p><strong>Érintett lovak száma:</strong> {{ farrierApp.horseIds.length || 0 }}</p>
+      <p><strong>Gyakoriság:</strong> {{ getFrequencyLabel() }}</p>
     </div>
+
+    @if (nextPlannedDates.length > 0) {
+      <div class="planned-dates">
+        <h2>Tervezett patkolások</h2>
+        <ul class="horse-list">
+          @for (date of nextPlannedDates; track date) {
+            <li class="horse-item">{{ date }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (plannedDueDate) {
+      <div class="due-panel">
+        <h2>Esedékes patkolás</h2>
+        @if (successMessage) {
+          <div class="success-msg">{{ successMessage }}</div>
+        }
+        <label class="inline">
+          <input type="checkbox" [(ngModel)]="markDueCompleted" />
+          Megtörtént a patkolás
+        </label>
+        <div class="mt">
+          <label>Patkolás dátuma:</label>
+          <input
+            type="date"
+            [(ngModel)]="completedDate"
+            [disabled]="!markDueCompleted"
+          />
+        </div>
+        <button class="save-button" (click)="confirmDueFarrier()" [disabled]="saving || !markDueCompleted">
+          Mentés
+        </button>
+      </div>
+    }
 
     <hr />
 
@@ -30,12 +67,18 @@
       <h2>Csatolt lovak</h2>
 
       <ul class="horse-list">
-        @if (!farrierApp.horseIds || farrierApp.horseIds.length === 0) {
+        @if (getKnownHorseIds(farrierApp.horseIds).length === 0) {
           <li class="no-horses">Nincs csatolt ló</li>
         } @else {
-          @for (id of farrierApp.horseIds; track id) {
+          @for (id of getKnownHorseIds(farrierApp.horseIds); track id) {
             <li class="horse-item">
-              {{ getHorseNameById(id) }}
+              <div class="horse-item-line">
+                <span class="horse-name">{{ getHorseNameById(id) }}</span>
+                <span class="horse-shoes">{{ getHorseShoeLabel(id) }}</span>
+              </div>
+              @if (getHorseDetail(id).note) {
+                <div class="horse-note">{{ getHorseDetail(id).note }}</div>
+              }
             </li>
           }
         }
@@ -51,14 +94,33 @@
 
       <ul class="edit-horse-list">
         @for (horse of horses; track horse.id) {
-          <label class="horse-row">
-            <input
-              type="checkbox"
-              [checked]="selectedHorseIds.has(horse.id!)"
-              (change)="toggleHorseAssignment(horse.id!)"
-            />
-            {{ horse.horseName }}
-          </label>
+          <div class="horse-row">
+            <label class="horse-check">
+              <input
+                type="checkbox"
+                [checked]="selectedHorseIds.has(horse.id!)"
+                (change)="toggleHorseAssignment(horse.id!)"
+              />
+              {{ horse.horseName }}
+            </label>
+
+            @if (selectedHorseIds.has(horse.id!)) {
+              <div class="horse-details">
+                <select
+                  name="shoeCount-{{ horse.id }}"
+                  [(ngModel)]="getHorseDetail(horse.id!).shoeCount">
+                  <option [ngValue]="0">Nincs patkó</option>
+                  <option [ngValue]="2">2 patkó</option>
+                  <option [ngValue]="4">4 patkó</option>
+                </select>
+                <input
+                  type="text"
+                  name="horseNote-{{ horse.id }}"
+                  placeholder="Megjegyzés"
+                  [(ngModel)]="getHorseDetail(horse.id!).note" />
+              </div>
+            }
+          </div>
         }
       </ul>
 

@@ -4,5 +4,6 @@ export interface HorseFarrierAppDTO {
   horseName?: string;
   farrierName?: string;
   appointmentDate?: string;
-  shoes?: boolean;
+  shoeCount?: number;
+  note?: string | null;
 }

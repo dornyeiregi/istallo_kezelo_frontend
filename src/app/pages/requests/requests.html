@@ -14,7 +14,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
     <section class="request-block">
       <h2>Ló kérések</h2>
@@ -70,7 +70,25 @@
               <div>
                 <strong>Ütemterv #{{ req.feedSchedId }}</strong>
                 <div class="muted">Kérés: {{ req.requestedByName || '-' }}</div>
-                <div class="muted">Lovak: {{ req.horseIds?.length || 0 }} | Tételek: {{ req.itemIds?.length || 0 }}</div>
+                <div class="muted">Kérés ideje: {{ formatRequestedAt(req) }}</div>
+                <div class="muted">Időpontok: {{ getFeedTimeLabelForRequest(req) }}</div>
+                <div class="muted">Leírás: {{ getFeedDescriptionForRequest(req) }}</div>
+                <div class="muted">
+                  Lovak:
+                  @if (getHorseNamesForRequest(req).length === 0) {
+                    -
+                  } @else {
+                    {{ getHorseNamesForRequest(req).join(', ') }}
+                  }
+                </div>
+                <div class="muted">
+                  Tételek:
+                  @if (getFeedItemLabelsForRequest(req).length === 0) {
+                    -
+                  } @else {
+                    {{ getFeedItemLabelsForRequest(req).join(', ') }}
+                  }
+                </div>
               </div>
               <div class="request-actions">
                 <button class="themed-button" (click)="approveFeedSchedRequest(req)">Jóváhagyás</button>

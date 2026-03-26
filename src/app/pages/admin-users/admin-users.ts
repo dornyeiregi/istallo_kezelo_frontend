@@ -80,14 +80,25 @@ export class AdminUsersPage implements OnInit, OnDestroy {
   }
 
   updateRole(user: UserDTO, newRole: string): void {
-    if (user.userType === newRole) return;
+    const normalized = (newRole || '').toUpperCase();
+    if (user.userType === normalized) return;
 
-    this.adminService.updateUserRole(user.userId!, newRole).subscribe({
+    if (!user.userId) {
+      alert('Hiányzó felhasználó azonosító.');
+      return;
+    }
+
+    this.adminService.updateUserRole(user.userId, normalized).subscribe({
       next: (res) => {
-        user.userType = newRole as any;
+        user.userType = normalized as any;
         alert(res);
       },
-      error: () => alert('Sikertelen módosítás.')
+      error: (err) => {
+        const msg = typeof err?.error === 'string'
+          ? err.error
+          : 'Sikertelen módosítás.';
+        alert(msg);
+      }
     });
   }
 

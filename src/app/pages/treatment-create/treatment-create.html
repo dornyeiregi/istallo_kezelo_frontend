@@ -36,6 +36,26 @@
     </div>
 
     <div class="form-group">
+      <label>Gyakoriság</label>
+      <div class="inline-group">
+        <input
+          type="number"
+          name="frequencyValue"
+          min="1"
+          placeholder="Mennyiség"
+          [(ngModel)]="form.frequencyValue" />
+        <select
+          name="frequencyUnit"
+          [(ngModel)]="form.frequencyUnit">
+          <option [ngValue]="''">Nincs</option>
+          @for (unit of frequencyUnits; track unit) {
+            <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label>Leírás</label>
       <textarea
         name="description"

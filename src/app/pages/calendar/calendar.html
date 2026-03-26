@@ -10,6 +10,25 @@
   <div class="calendar-header">
     <h1>Naptár</h1>
     <div class="header-actions">
+      <div class="filter-group">
+        <label for="eventTypeFilter">Típus</label>
+        <select id="eventTypeFilter" [(ngModel)]="selectedEventType" (change)="onFilterChange()">
+          <option value="all">Összes</option>
+          <option value="SHOT">Oltás</option>
+          <option value="TREATMENT">Kezelés</option>
+          <option value="FARRIER_APP">Patkolás</option>
+          <option value="CUSTOM">Egyéb</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="horseFilter">Ló</label>
+        <select id="horseFilter" [(ngModel)]="selectedHorseId" (change)="onFilterChange()">
+          <option value="all">Összes</option>
+          @for (horse of horses; track horse.id) {
+            <option [value]="horse.id">{{ horse.horseName }}</option>
+          }
+        </select>
+      </div>
       @if (loading) {
         <span class="loading">Loading…</span>
       }
@@ -22,6 +41,7 @@
             <button class="menu-button" (click)="createAppointment('treatment')">Kezelés</button>
             <button class="menu-button" (click)="createAppointment('shot')">Oltás</button>
             <button class="menu-button" (click)="createAppointment('farrier')">Patkolás</button>
+            <button class="menu-button" (click)="openCustomEvent()">Egyéb esemény</button>
           </div>
         }
       }
@@ -33,3 +53,48 @@
   </div>
 
 </div>
+
+@if (showCustomPopup) {
+  <div class="popup-backdrop">
+    <div class="popup">
+      <h2>Egyéb esemény</h2>
+
+      @if (customError) {
+        <div class="load-error">{{ customError }}</div>
+      }
+
+      <div class="form-group">
+        <label>Dátum</label>
+        <input type="date" [(ngModel)]="customDate" />
+      </div>
+
+      <div class="form-group">
+        <label>Leírás</label>
+        <input type="text" [(ngModel)]="customDescription" placeholder="Pl. állatorvosi vizit" />
+      </div>
+
+      <div class="form-group horse-list">
+        <label>Lovak</label>
+        @if (horses.length === 0) {
+          <p>Nincs elérhető ló.</p>
+        } @else {
+          @for (horse of horses; track horse.id) {
+            <label class="horse-row">
+              <input
+                type="checkbox"
+                [checked]="customHorseIds.has(horse.id!)"
+                (change)="toggleCustomHorse(horse.id!)"
+              />
+              {{ horse.horseName }}
+            </label>
+          }
+        }
+      </div>
+
+      <div class="btn-row">
+        <button class="primary" (click)="submitCustomEvent()">Mentés</button>
+        <button class="secondary" (click)="showCustomPopup = false">Mégse</button>
+      </div>
+    </div>
+  </div>
+}

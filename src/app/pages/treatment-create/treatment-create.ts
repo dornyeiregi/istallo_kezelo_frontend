@@ -24,7 +24,17 @@ export class TreatmentCreatePage implements OnInit {
   form: TreatmentDTO = {
     treatmentName: '',
     description: '',
+    frequencyUnit: '',
+    frequencyValue: undefined,
     date: ''
+  };
+
+  frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
+  frequencyLabels: { [key: string]: string } = {
+    DAYS: 'Nap',
+    WEEKS: 'Hét',
+    MONTHS: 'Hónap',
+    YEARS: 'Év'
   };
 
   constructor(
@@ -84,6 +94,8 @@ export class TreatmentCreatePage implements OnInit {
     const dto: TreatmentDTO = {
       treatmentName: this.form.treatmentName,
       description: this.form.description || '',
+      frequencyUnit: this.form.frequencyUnit || null,
+      frequencyValue: this.form.frequencyValue || null,
       date: this.form.date,
       horseIds: Array.from(this.selectedHorseIds)
     };

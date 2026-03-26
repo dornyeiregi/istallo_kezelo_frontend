@@ -29,6 +29,18 @@ input, select, textarea {
   border-radius: 8px;
 }
 
+.inline-group {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.inline-group input,
+.inline-group select {
+  width: auto;
+  flex: 1;
+}
+
 textarea {
   resize: vertical;
 }

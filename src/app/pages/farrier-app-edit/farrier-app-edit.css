@@ -34,6 +34,18 @@ textarea {
   resize: vertical;
 }
 
+.inline-group {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.inline-group input,
+.inline-group select {
+  width: auto;
+  flex: 1;
+}
+
 .checkbox-row label {
   display: flex;
   align-items: center;
@@ -61,8 +73,16 @@ textarea {
   align-items: center;
   gap: 10px;
   padding: 6px 4px;
-  cursor: pointer;
   width: 100%;
+  flex-wrap: wrap;
+}
+
+.horse-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .horse-row input[type="checkbox"] {
@@ -72,6 +92,21 @@ textarea {
 .horse-row:hover {
   background: var(--app-chip-bg);
   border-radius: 6px;
+}
+
+.horse-details {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex: 1 1 100%;
+}
+
+.horse-details select {
+  max-width: 140px;
+}
+
+.horse-details input[type="text"] {
+  flex: 1;
 }
 
 .submit-button {

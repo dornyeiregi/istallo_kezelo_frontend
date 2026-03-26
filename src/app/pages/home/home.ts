@@ -5,6 +5,9 @@ import { FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { HorseService } from '../../services/horse.service';
 import { FeedSchedService } from '../../services/feed-sched.service';
+import { SettingsService } from '../../services/settings.service';
+import { StorageService } from '../../services/storage.service';
+import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings.model';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +19,9 @@ import { FeedSchedService } from '../../services/feed-sched.service';
 export class HomePage implements OnInit {
   userType: string | null = null;
   requestBadge = 0;
+  storageWarningCount = 0;
+  storageWarningLevel: 'NONE' | 'YELLOW' | 'RED' = 'NONE';
+  employeeAccess: EmployeeAccessSettingsDTO | null = null;
   
   tiles = [
     {
@@ -93,7 +99,9 @@ export class HomePage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private horseService: HorseService,
-    private feedSchedService: FeedSchedService
+    private feedSchedService: FeedSchedService,
+    private settingsService: SettingsService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -102,13 +110,40 @@ export class HomePage implements OnInit {
         if (this.userType === 'ADMIN') {
           this.refreshRequestBadge();
         }
+        if (this.userType === 'ADMIN' || this.userType === 'EMPLOYEE') {
+          this.refreshStorageWarnings();
+        }
+        if (this.userType === 'EMPLOYEE') {
+          this.settingsService.getEmployeeAccess().subscribe({
+            next: (settings) => {
+              this.employeeAccess = settings;
+            },
+            error: () => {
+              this.employeeAccess = { viewShots: false, viewTreatments: false, viewFarrierApps: false };
+            }
+          });
+        }
       });
   }
 
   // segédfüggvény a felh. típus szerinti megjelenítéshez
   canViewTile(tile: any): boolean {
     if (!tile.roles || tile.roles.length === 0) return true;
-    return tile.roles.includes(this.userType || '');
+    const roleMatch = tile.roles.includes(this.userType || '');
+    if (!roleMatch) return false;
+    if (this.userType !== 'EMPLOYEE') return true;
+
+    if (!this.employeeAccess) return false;
+    switch (tile.link) {
+      case '/shots':
+        return this.employeeAccess.viewShots;
+      case '/treatments':
+        return this.employeeAccess.viewTreatments;
+      case '/farrier-apps':
+        return this.employeeAccess.viewFarrierApps;
+      default:
+        return true;
+    }
   }
 
   private refreshRequestBadge(): void {
@@ -120,6 +155,25 @@ export class HomePage implements OnInit {
             this.requestBadge = horseCount + requests.length;
           }
         });
+      }
+    });
+  }
+
+  private refreshStorageWarnings(): void {
+    this.storageService.getAlerts().subscribe({
+      next: (alerts) => {
+        this.storageWarningCount = alerts.length;
+        if (alerts.some(a => a.warningLevel === 'RED')) {
+          this.storageWarningLevel = 'RED';
+        } else if (alerts.length > 0) {
+          this.storageWarningLevel = 'YELLOW';
+        } else {
+          this.storageWarningLevel = 'NONE';
+        }
+      },
+      error: () => {
+        this.storageWarningCount = 0;
+        this.storageWarningLevel = 'NONE';
       }
     });
   }

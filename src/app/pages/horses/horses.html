@@ -20,6 +20,11 @@
           {{ showInactive ? 'Aktív lovak' : 'Inaktív lovak' }}
         </button>
       }
+      @if (canViewPending) {
+        <button class="themed-button" (click)="togglePending()" [disabled]="showInactive">
+          {{ showPending ? 'Aktív lovak' : 'Függő lovak' }}
+        </button>
+      }
     </div>
 
     <p class="subtitle">A rendszerben jelen lévő lovak listája</p>
@@ -28,7 +33,7 @@
   @if (loading) {
     <div class="info">Betöltés...</div>
   } @else if (error) {
-    <div class="error">{{ error }}</div>
+    <div class="load-error">{{ error }}</div>
   } @else {
 
     @if (deleteMode) {
@@ -52,13 +57,23 @@
               <span class="sex-label">{{ getSexLabel(horse.sex) }}</span>
             </div>
 
-            @if (horse.isActive === false) {
-              <div class="pending-badge">Függőben</div>
-            }
+          @if (horse.isPending) {
+            <div class="pending-badge">Függőben</div>
+          } @else if (horse.isActive === false) {
+            <div class="inactive-badge">Inaktív</div>
+          }
 
           <p><strong>Tulajdonos:</strong> {{ horse.ownerName }}</p>
           <p><strong>Istálló:</strong> {{ horse.stableName || '-' }}</p>
           <p><strong>Mikrochip:</strong> {{ horse.microchipNum || '-' }}</p>
+
+          @if (showInactive && canDelete) {
+            <div class="inactive-actions">
+              <button class="themed-button" (click)="activateHorse(horse); $event.stopPropagation();">
+                Aktiválás
+              </button>
+            </div>
+          }
 
           @if (editMode) {
             <div class="edit-hint">

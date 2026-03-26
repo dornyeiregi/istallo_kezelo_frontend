@@ -18,7 +18,6 @@
 
     <div class="feed-details">
       <p><strong>Leírás:</strong> {{ feedSched.description || '-' }}</p>
-      <p><strong>Érintett lovak száma:</strong> {{ feedSched.horseIds.length || 0 }}</p>
       <p><strong>Tételek:</strong> {{ assignedItems.length ? getItemNames().join(', ') : '-' }}</p>
     </div>
 
@@ -29,10 +28,10 @@
       <h2>Csatolt lovak</h2>
 
       <ul class="horse-list">
-        @if (!feedSched.horseIds || feedSched.horseIds.length === 0) {
+        @if (getKnownHorseIds(feedSched.horseIds).length === 0) {
           <li class="no-horses">Nincs csatolt ló</li>
         } @else {
-          @for (id of feedSched.horseIds; track id) {
+          @for (id of getKnownHorseIds(feedSched.horseIds); track id) {
             <li class="horse-item">
               {{ getHorseNameById(id) }}
             </li>

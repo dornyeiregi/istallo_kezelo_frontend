@@ -3,4 +3,5 @@ export interface ItemDTO {
   name: string;
   itemType: string;         // Backend enum
   itemCategory: string;     // Backend enum
+  feedUnitAmount?: number | null;
 }

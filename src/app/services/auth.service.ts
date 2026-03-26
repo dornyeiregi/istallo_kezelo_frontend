@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { AuthResponse, AuthUser, LoginPayload, RegisterPayload } from '../models/auth.model';
+import { API_BASE_URL } from '../config';
 
 const TOKEN_KEY = 'auth.token';
 const USER_KEY = 'auth.user';
@@ -11,7 +12,7 @@ const RETURN_URL_KEY = 'auth.returnUrl';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiBase = 'http://localhost:8080/api/auth';
+  private readonly apiBase = `${API_BASE_URL}/api/auth`;
   private readonly currentUserSubject = new BehaviorSubject<AuthUser | null>(this.loadStoredUser());
 
   readonly currentUser$ = this.currentUserSubject.asObservable();

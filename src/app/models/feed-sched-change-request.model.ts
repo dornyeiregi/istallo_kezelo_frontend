@@ -1,3 +1,5 @@
+import { FeedSchedItemAmountDTO } from './feed-sched.model';
+
 export interface FeedSchedChangeRequestDTO {
   id: number;
   feedSchedId: number;
@@ -9,4 +11,5 @@ export interface FeedSchedChangeRequestDTO {
   requestedAt?: string;
   horseIds?: number[];
   itemIds?: number[];
+  items?: FeedSchedItemAmountDTO[];
 }

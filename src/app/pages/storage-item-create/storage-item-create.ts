@@ -20,7 +20,7 @@ export class StorageItemCreatePage {
   success = false;
 
   // Backend enumok
-  itemTypes = ['HAY', 'FEED', 'SUPPLEMENT', 'MACHINE'];
+  itemTypes = ['HAY', 'FEED', 'SUPPLEMENT', 'MACHINE', 'ACCESSORY', 'BEDDING'];
   itemCategories = ['CONSUMABLE', 'OBJECT'];
 
   // Szűrt típuslista
@@ -31,7 +31,9 @@ export class StorageItemCreatePage {
     HAY: 'Szálas takarmány',
     FEED: 'Abraktakarmány',
     SUPPLEMENT: 'Táplálékkiegészítő',
-    MACHINE: 'Gép'
+    MACHINE: 'Gép',
+    ACCESSORY: 'Kellék',
+    BEDDING: 'Alom'
   };
 
   itemCategoryLabels: { [key: string]: string } = {
@@ -43,8 +45,16 @@ export class StorageItemCreatePage {
     name: '',
     itemType: '',
     itemCategory: '',
-    amountStored: 0
+    feedUnitAmount: 1,
+    packageCount: 0,
+    packageSize: 0
   };
+
+  get totalStored(): number {
+    const count = Number(this.form.packageCount) || 0;
+    const size = Number(this.form.packageSize) || 0;
+    return count * size;
+  }
 
   constructor(
     private itemService: ItemService,
@@ -62,7 +72,7 @@ export class StorageItemCreatePage {
     if (category === 'CONSUMABLE') {
       this.filteredItemTypes = ['HAY', 'FEED', 'SUPPLEMENT'];
     } else if (category === 'OBJECT') {
-      this.filteredItemTypes = ['MACHINE'];
+      this.filteredItemTypes = ['MACHINE', 'ACCESSORY', 'BEDDING'];
     } else {
       this.filteredItemTypes = [];
     }
@@ -79,8 +89,13 @@ export class StorageItemCreatePage {
       return;
     }
 
-    if (this.form.amountStored < 0) {
-      this.error = 'A tárolt mennyiség nem lehet negatív.';
+    if (this.totalStored <= 0) {
+      this.error = 'A tároló mennyiségnek pozitívnak kell lennie.';
+      return;
+    }
+
+    if (this.form.feedUnitAmount <= 0) {
+      this.error = 'Az etetési adag mennyiségnek pozitívnak kell lennie.';
       return;
     }
 
@@ -89,7 +104,8 @@ export class StorageItemCreatePage {
     const itemDto: ItemDTO = {
       name: this.form.name,
       itemType: this.form.itemType,
-      itemCategory: this.form.itemCategory
+      itemCategory: this.form.itemCategory,
+      feedUnitAmount: this.form.feedUnitAmount
     };
 
     this.itemService.create(itemDto).subscribe({
@@ -102,7 +118,7 @@ export class StorageItemCreatePage {
 
         const storageDto: StorageDTO = {
           itemId: createdItem.itemId,
-          amountStored: this.form.amountStored,
+          amountStored: this.totalStored,
           amountInUse: 0
         };
 

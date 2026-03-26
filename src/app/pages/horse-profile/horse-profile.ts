@@ -10,9 +10,10 @@ import { HorseShotService } from '../../services/horse-shot.service';
 import { FormsModule } from '@angular/forms';
 import { TreatmentDTO } from '../../models/treatment.model';
 import { TreatmentService } from '../../services/treatment.service';
-import { FarrierAppDTO } from '../../models/farrier-app.model';
+import { FarrierAppDTO, FarrierHorseDetailDTO } from '../../models/farrier-app.model';
 import { FarrierAppService } from '../../services/farrier-app.service';
 import { FeedSchedDTO } from '../../models/feed-sched.model';
+import { FeedSchedChangeRequestDTO } from '../../models/feed-sched-change-request.model';
 import { FeedSchedService } from '../../services/feed-sched.service';
 import { HorseFeedSchedService } from '../../services/horse-feed-sched.service';
 import { HorseFarrierAppService } from '../../services/horse-farrier-app.service';
@@ -23,6 +24,8 @@ import { AuthService } from '../../services/auth.service';
 import { forkJoin, Observable, of } from 'rxjs';
 import { ItemService } from '../../services/item.service';
 import { ItemDTO } from '../../models/item.model';
+import { SettingsService } from '../../services/settings.service';
+import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings.model';
 
 @Component({
   selector: 'app-horse-profile',
@@ -53,15 +56,32 @@ export class HorseProfilePage implements OnInit {
     farrierOption: 'existing' | 'new' = 'existing';
     selectedFarrierAppId: number | null = null;
     allFarrierApps: FarrierAppDTO[] = [];
+    farrierShoeCount: number = 4;
+    farrierNote: string = '';
     feedScheds: FeedSchedDTO[] = [];
     showAllFeedScheds = false;
     showFeedEditor = false;
     feedEditorError = '';
+    feedChangePending = false;
+    feedChangeMessage = '';
+    pendingFeedRequestsForHorse: FeedSchedChangeRequestDTO[] = [];
+    feedToastMessage = '';
+    feedToastVisible = false;
     expandedFeedSchedId: number | null = null;
     items: ItemDTO[] = [];
+    feedEditorItems: ItemDTO[] = [];
+    private allowedFeedItemIds = new Set<number>();
     horsesForFeed: HorseDTO[] = [];
     otherHorsesForFeed: HorseDTO[] = [];
     feedEditor = this.createEmptyFeedEditor();
+    employeeAccess: EmployeeAccessSettingsDTO = {
+      viewShots: false,
+      viewTreatments: false,
+      viewFarrierApps: false
+    };
+    canViewShots = true;
+    canViewTreatments = true;
+    canViewFarrierApps = true;
 
 
     constructor(
@@ -77,10 +97,12 @@ export class HorseProfilePage implements OnInit {
         private itemService: ItemService,
         private horseFarrierAppService: HorseFarrierAppService,
         private horseTreatmentService: HorseTreatmentService,
-        private authService: AuthService
+        private authService: AuthService,
+        private settingsService: SettingsService
     ) {}
 
     ngOnInit(): void {
+        this.resolveEmployeeAccess();
         const navHorse = this.router.getCurrentNavigation()?.extras.state?.['horse'] as HorseDTO | undefined;
         if (navHorse) {
             this.horse = navHorse;
@@ -98,59 +120,43 @@ export class HorseProfilePage implements OnInit {
         this.fetchHorse(horseName);
     }
 
-    private fetchHorse(horsename: string): void {
-      const isOwner = this.authService.hasAnyRole(['OWNER', 'ROLE_OWNER']);
-      if (isOwner) {
-        forkJoin([
-          this.horseService.getAll(),
-          this.horseService.getMyRequests()
-        ]).subscribe({
-          next: ([horses, pending]) => {
-            const merged = [...horses, ...pending];
-            this.horse = merged.find((horse) => horse.horseName === horsename);
-
-            if (!this.horse) {
-              this.error = 'Nem található ló ezzel a névvel.';
-              this.loading = false;
-              return;
-            }
-
-            this.loadShots(this.horse.id!);
-            this.loadTreatments(this.horse.id!);
-            this.loadFarrierApps(this.horse.id!);
-            this.loadFeedScheds(this.horse.id!);
-
-            this.loading = false;
-          },
-          error: () => {
-            this.error = 'Nem sikerült betölteni a ló adatait.';
-            this.loading = false;
-          }
-        });
-      } else {
-        this.horseService.getAll().subscribe({
-          next: (horses) => {
-            this.horse = horses.find((horse) => horse.horseName === horsename);
-
-            if (!this.horse) {
-              this.error = 'Nem található ló ezzel a névvel.';
-              this.loading = false;
-              return;
-            }
-
-            this.loadShots(this.horse.id!);
-            this.loadTreatments(this.horse.id!);
-            this.loadFarrierApps(this.horse.id!);
-            this.loadFeedScheds(this.horse.id!);
-
-            this.loading = false;
-          },
-          error: () => {
-            this.error = 'Nem sikerült betölteni a ló adatait.';
-            this.loading = false;
-          }
-        });
+    private resolveEmployeeAccess(): void {
+      if (!this.authService.hasAnyRole(['EMPLOYEE', 'ROLE_EMPLOYEE'])) {
+        this.canViewShots = true;
+        this.canViewTreatments = true;
+        this.canViewFarrierApps = true;
+        return;
       }
+      this.settingsService.getEmployeeAccess().subscribe({
+        next: (settings) => {
+          this.employeeAccess = settings;
+          this.canViewShots = !!settings.viewShots;
+          this.canViewTreatments = !!settings.viewTreatments;
+          this.canViewFarrierApps = !!settings.viewFarrierApps;
+        },
+        error: () => {
+          this.canViewShots = false;
+          this.canViewTreatments = false;
+          this.canViewFarrierApps = false;
+        }
+      });
+    }
+
+    private fetchHorse(horsename: string): void {
+      this.horseService.getByName(horsename).subscribe({
+        next: (horse) => {
+          this.horse = horse;
+          if (this.canViewShots) this.loadShots(this.horse.id!);
+          if (this.canViewTreatments) this.loadTreatments(this.horse.id!);
+          if (this.canViewFarrierApps) this.loadFarrierApps(this.horse.id!);
+          this.loadFeedScheds(this.horse.id!);
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Nem található ló ezzel a névvel.';
+          this.loading = false;
+        }
+      });
     }
 
 
@@ -211,14 +217,30 @@ export class HorseProfilePage implements OnInit {
       });
     }
 
+    getFarrierHorseDetail(app: FarrierAppDTO): FarrierHorseDetailDTO | null {
+      const horseId = this.horse?.id;
+      if (!horseId || !app.horseDetails) return null;
+      return app.horseDetails.find(detail => detail.horseId === horseId) || null;
+    }
+
+    getFarrierShoeLabel(app: FarrierAppDTO): string {
+      const detail = this.getFarrierHorseDetail(app);
+      const count = detail?.shoeCount ?? 0;
+      if (count === 4) return '4 patkó';
+      if (count === 2) return '2 patkó';
+      return 'Nincs patkó';
+    }
+
     loadFeedScheds(horseId: number): void {
       const isOwner = this.authService.hasAnyRole(['OWNER', 'ROLE_OWNER']);
-      const pending$ = isOwner ? this.horseService.getMyRequests() : of([]);
+      const pending$ = isOwner ? this.feedSchedService.getMyChangeRequests() : of([]);
+
+      const horses$ = isOwner ? this.horseService.getMine() : this.horseService.getAll();
 
       forkJoin({
         feedScheds: this.feedSchedService.getAllOfHorseById(horseId),
         items: this.itemService.getAll(),
-        horses: this.horseService.getAll(),
+        horses: horses$,
         pending: pending$
       }).subscribe({
         next: ({ feedScheds, items, horses, pending }) => {
@@ -226,8 +248,13 @@ export class HorseProfilePage implements OnInit {
             (b.feedSchedId || 0) - (a.feedSchedId || 0)
           );
           this.items = items;
-          this.horsesForFeed = this.mergeHorses(horses, pending as HorseDTO[]);
+          this.feedEditorItems = items.filter(i => (i.itemType || '').toUpperCase() !== 'BEDDING');
+          this.allowedFeedItemIds = new Set(
+            this.feedEditorItems.map(i => i.itemId).filter(Boolean) as number[]
+          );
+          this.horsesForFeed = this.mergeHorses(horses, []);
           this.otherHorsesForFeed = this.horsesForFeed.filter(h => h.id !== this.currentHorseId);
+          this.updatePendingFeedNotice(pending as FeedSchedChangeRequestDTO[]);
           this.refreshFeedEditorFromExisting();
         },
         error: () => {
@@ -286,7 +313,7 @@ export class HorseProfilePage implements OnInit {
         return feed.items.map(item => {
           const name = this.getItemNameById(item.itemId);
           const amount = Number.isFinite(item.amount) ? item.amount : 0;
-          return `${name} (${amount})`;
+          return `${name} - ${this.formatKg(amount)} kg`;
         });
       }
       if (feed.itemIds && feed.itemIds.length > 0) {
@@ -295,12 +322,14 @@ export class HorseProfilePage implements OnInit {
       return [];
     }
 
-    getFeedSchedsForTime(time: FeedTimeKey): FeedSchedDTO[] {
-      return this.feedScheds.filter(feed => {
-        if (time === 'morning') return !!feed.feedMorning;
-        if (time === 'noon') return !!feed.feedNoon;
-        return !!feed.feedEvening;
-      });
+    private formatKg(value: number): string {
+      if (!Number.isFinite(value)) return '0';
+      const normalized = Math.round(value * 100) / 100;
+      return Number.isInteger(normalized) ? String(normalized) : normalized.toFixed(2);
+    }
+
+    getFeedSchedForTime(time: FeedTimeKey): FeedSchedDTO | null {
+      return this.getExistingFeedSchedsByTime()[time];
     }
 
     private getItemNameById(itemId: number): string {
@@ -484,11 +513,15 @@ export class HorseProfilePage implements OnInit {
         const dto: HorseFarrierAppDTO = {
           horseId: this.horse.id,
           farrierAppId: selected.farrierAppId,
+          shoeCount: this.farrierShoeCount,
+          note: this.farrierNote
         };
 
         this.horseFarrierAppService.create(dto)
           .subscribe(() => {
             this.showFarrierPopup = false;
+            this.farrierShoeCount = 4;
+            this.farrierNote = '';
             this.loadFarrierApps(this.horse!.id!);
           });
 
@@ -521,7 +554,18 @@ export class HorseProfilePage implements OnInit {
       }
 
       forkJoin(tasks).subscribe({
-        next: () => {
+        next: (responses) => {
+          const pending = (responses as unknown[]).find(
+            r => typeof r === 'string' && r.toLowerCase().includes('kérés')
+          ) as string | undefined;
+          if (pending) {
+            this.feedChangePending = true;
+            this.feedChangeMessage = pending;
+            this.showFeedToast(pending);
+          } else {
+            this.feedChangePending = false;
+            this.feedChangeMessage = '';
+          }
           this.showFeedEditor = false;
           this.loadFeedScheds(this.horse!.id!);
         },
@@ -651,9 +695,38 @@ export class HorseProfilePage implements OnInit {
       if (!horseId) return tasks;
       let hasError = false;
 
+      const detachHorseFromExisting = (block: FeedEditorBlock, flags: Partial<FeedSchedDTO>) => {
+        if (block.existingFeedSchedId == null) return;
+        const remainingHorseIds = (block.existingHorseIds || []).filter(id => id !== horseId);
+        if (remainingHorseIds.length === 0) {
+          tasks.push(this.feedSchedService.delete(block.existingFeedSchedId));
+          return;
+        }
+
+        const existingItems = (block.existingItemIds || []).map(itemId => ({
+          itemId,
+          amount: Number(block.existingItemAmounts?.[itemId] || 0)
+        }));
+
+        const dto: FeedSchedDTO = {
+          feedMorning: !!flags.feedMorning,
+          feedNoon: !!flags.feedNoon,
+          feedEvening: !!flags.feedEvening,
+          description: block.existingDescription || '',
+          horseIds: remainingHorseIds,
+          itemIds: block.existingItemIds || [],
+          items: existingItems
+        };
+
+        tasks.push(this.feedSchedService.update(block.existingFeedSchedId, dto));
+      };
+
       const pushIfEnabled = (time: FeedTimeKey, label: string, flags: Partial<FeedSchedDTO>) => {
         const block = this.feedEditor[time];
-        if (!block.enabled) return;
+        if (!block.enabled) {
+          detachHorseFromExisting(block, flags);
+          return;
+        }
 
         if (block.itemIds.length === 0) {
           this.feedEditorError = 'Minden kijelölt időponthoz adj meg legalább egy tételt.';
@@ -672,7 +745,9 @@ export class HorseProfilePage implements OnInit {
           return;
         }
 
-        const horseIds = Array.from(new Set([horseId, ...block.horseIds]));
+        const horseIds = block.includeOtherHorses
+          ? Array.from(new Set([horseId, ...block.horseIds]))
+          : [horseId];
 
         const dto: FeedSchedDTO = {
           feedMorning: !!flags.feedMorning,
@@ -685,7 +760,14 @@ export class HorseProfilePage implements OnInit {
         };
 
         if (block.existingFeedSchedId != null) {
-          tasks.push(this.feedSchedService.update(block.existingFeedSchedId, dto));
+          const existingHorseIds = block.existingHorseIds || [];
+          const hasOtherHorses = existingHorseIds.some(id => id !== horseId);
+          if (block.includeOtherHorses || !hasOtherHorses) {
+            tasks.push(this.feedSchedService.update(block.existingFeedSchedId, dto));
+          } else {
+            detachHorseFromExisting(block, flags);
+            tasks.push(this.feedSchedService.create(dto));
+          }
         } else {
           tasks.push(this.feedSchedService.create(dto));
         }
@@ -709,13 +791,16 @@ export class HorseProfilePage implements OnInit {
         block.enabled = true;
         block.existingFeedSchedId = feed.feedSchedId ?? null;
         block.existingDescription = feed.description || '';
-        block.itemIds = feed.itemIds ? [...feed.itemIds] : [];
+        block.itemIds = this.filterAllowedItemIds(feed.itemIds);
         block.itemAmounts = this.buildItemAmounts(feed);
         block.horseIds = feed.horseIds ? [...feed.horseIds] : [];
+        block.existingHorseIds = feed.horseIds ? [...feed.horseIds] : [];
+        block.existingItemIds = this.filterAllowedItemIds(feed.itemIds);
+        block.existingItemAmounts = this.buildItemAmounts(feed);
         if (this.currentHorseId && !block.horseIds.includes(this.currentHorseId)) {
           block.horseIds = [...block.horseIds, this.currentHorseId];
         }
-        block.includeOtherHorses = block.horseIds.some(id => id !== this.currentHorseId);
+        block.includeOtherHorses = false;
       });
     }
 
@@ -723,14 +808,77 @@ export class HorseProfilePage implements OnInit {
       const amounts: Record<number, number> = {};
       if (feed.items && feed.items.length > 0) {
         feed.items.forEach(item => {
-          amounts[item.itemId] = Number.isFinite(item.amount) ? item.amount : 0;
+          if (this.allowedFeedItemIds.has(item.itemId)) {
+            amounts[item.itemId] = Number.isFinite(item.amount) ? item.amount : 0;
+          }
         });
       } else if (feed.itemIds) {
-        feed.itemIds.forEach(id => {
-          amounts[id] = 1;
-        });
+        feed.itemIds
+          .filter(id => this.allowedFeedItemIds.has(id))
+          .forEach(id => {
+            amounts[id] = 1;
+          });
       }
       return amounts;
+    }
+
+    private filterAllowedItemIds(itemIds?: number[] | null): number[] {
+      if (!itemIds || itemIds.length === 0) return [];
+      return itemIds.filter(id => this.allowedFeedItemIds.has(id));
+    }
+
+    private updatePendingFeedNotice(requests: FeedSchedChangeRequestDTO[]) {
+      const horseId = this.currentHorseId;
+      if (!horseId || !requests || requests.length === 0) {
+        this.feedChangePending = false;
+        this.feedChangeMessage = '';
+        this.pendingFeedRequestsForHorse = [];
+        return;
+      }
+      this.pendingFeedRequestsForHorse = requests.filter(r => (r.horseIds || []).includes(horseId));
+      const count = this.pendingFeedRequestsForHorse.length;
+      if (count > 0) {
+        this.feedChangePending = true;
+        this.feedChangeMessage = `Etetés módosítási kérelem függőben (${count}).`;
+      } else {
+        this.feedChangePending = false;
+        this.feedChangeMessage = '';
+      }
+    }
+
+    private showFeedToast(message: string) {
+      this.feedToastMessage = message;
+      this.feedToastVisible = true;
+      setTimeout(() => {
+        this.feedToastVisible = false;
+      }, 3000);
+    }
+
+    getRequestTimeLabel(request: FeedSchedChangeRequestDTO): string {
+      const parts: string[] = [];
+      if (request.requestedMorning) parts.push('Reggel');
+      if (request.requestedNoon) parts.push('Dél');
+      if (request.requestedEvening) parts.push('Este');
+      return parts.length ? parts.join(' + ') : '-';
+    }
+
+    getRequestItemDetails(request: FeedSchedChangeRequestDTO): string[] {
+      if (request.items && request.items.length > 0) {
+        return request.items.map(item => {
+          const name = this.getItemNameById(item.itemId);
+          const amount = Number.isFinite(item.amount) ? item.amount : 0;
+          return amount > 0 ? `${name} (${amount})` : name;
+        });
+      }
+      if (request.itemIds && request.itemIds.length > 0) {
+        return request.itemIds.map(id => this.getItemNameById(id));
+      }
+      return [];
+    }
+
+    getRequestHorseNames(request: FeedSchedChangeRequestDTO): string[] {
+      if (!request.horseIds || request.horseIds.length === 0) return [];
+      return request.horseIds.map(id => this.getHorseNameById(id));
     }
 
     private getExistingFeedSchedsByTime(): Record<FeedTimeKey, FeedSchedDTO | null> {
@@ -768,12 +916,25 @@ export class HorseProfilePage implements OnInit {
         includeOtherHorses: false,
         horseIds: this.currentHorseId ? [this.currentHorseId] : [],
         existingFeedSchedId: null,
-        existingDescription: ''
+        existingDescription: '',
+        existingHorseIds: [],
+        existingItemIds: [],
+        existingItemAmounts: {}
       };
+
+      const buildBlock = (): FeedEditorBlock => ({
+        ...base,
+        itemIds: [],
+        itemAmounts: {},
+        horseIds: base.horseIds ? [...base.horseIds] : [],
+        existingHorseIds: [],
+        existingItemIds: [],
+        existingItemAmounts: {}
+      });
       return {
-        morning: { ...base, horseIds: base.horseIds ? [...base.horseIds] : [] },
-        noon: { ...base, horseIds: base.horseIds ? [...base.horseIds] : [] },
-        evening: { ...base, horseIds: base.horseIds ? [...base.horseIds] : [] }
+        morning: buildBlock(),
+        noon: buildBlock(),
+        evening: buildBlock()
       };
     }
 }
@@ -788,6 +949,9 @@ type FeedEditorBlock = {
   horseIds: number[];
   existingFeedSchedId: number | null;
   existingDescription: string;
+  existingHorseIds: number[];
+  existingItemIds: number[];
+  existingItemAmounts: Record<number, number>;
 };
 
 type FeedEditorState = {

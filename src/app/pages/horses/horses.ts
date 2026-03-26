@@ -21,6 +21,7 @@ export class HorsesPage implements OnInit {
   editMode = false;
   showAll = false;
   showInactive = false;
+  showPending = false;
   deleteMode = false;
   deleteSuccess = '';
   confirmDeleteHorse: HorseDTO | null = null;
@@ -34,6 +35,10 @@ export class HorsesPage implements OnInit {
               private authService: AuthService) {}
 
   ngOnInit(): void {
+    if (this.isEmployee) {
+      this.showAll = true;
+    }
+
     if (this.canToggleView) {
       this.showAll = true;
     }
@@ -50,14 +55,26 @@ export class HorsesPage implements OnInit {
 
   loadHorses(): void {
     this.loading = true;
-    const source$ = this.showInactive
-      ? this.horseService.getInactive()
-      : (this.showAll ? this.horseService.getAll() : this.horseService.getMine());
+    if (this.showInactive && !this.canToggleView) {
+      this.showInactive = false;
+    }
+    if (this.showPending && !this.canViewPending) {
+      this.showPending = false;
+    }
+
+    let source$;
+    if (this.showInactive) {
+      source$ = this.horseService.getInactive();
+    } else if (this.showPending) {
+      source$ = this.canToggleView ? this.horseService.getRequests() : this.horseService.getMyRequests();
+    } else {
+      source$ = (this.isEmployee || this.showAll ? this.horseService.getAll() : this.horseService.getMine());
+    }
 
     source$.subscribe({
       next: (data) => {
         this.horses = data;
-        if (!this.showInactive) {
+        if (!this.showInactive && !this.showPending) {
           this.loadPendingForOwner();
         }
         this.loading = false;
@@ -102,16 +119,38 @@ export class HorsesPage implements OnInit {
     return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
+  get isEmployee(): boolean {
+    return this.authService.hasAnyRole(['EMPLOYEE', 'ROLE_EMPLOYEE']);
+  }
+
+  get canViewPending(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN', 'OWNER', 'ROLE_OWNER']);
+  }
+
   toggleView(): void {
     this.showAll = !this.showAll;
     if (this.showInactive) {
       this.showInactive = false;
+    }
+    if (this.showPending) {
+      this.showPending = false;
     }
     this.loadHorses();
   }
 
   toggleInactive(): void {
     this.showInactive = !this.showInactive;
+    if (this.showInactive) {
+      this.showPending = false;
+    }
+    this.loadHorses();
+  }
+
+  togglePending(): void {
+    this.showPending = !this.showPending;
+    if (this.showPending) {
+      this.showInactive = false;
+    }
     this.loadHorses();
   }
 
@@ -187,6 +226,19 @@ export class HorsesPage implements OnInit {
 
         this.confirmDeleteHorse = null;
         this.deleteMode = false;
+      }
+    });
+  }
+
+  activateHorse(horse: HorseDTO): void {
+    if (!horse.id) return;
+    this.horseService.activate(horse.id).subscribe({
+      next: () => {
+        this.showToast(`A(z) ${horse.horseName} aktiválva.`);
+        this.loadHorses();
+      },
+      error: () => {
+        this.showToast('Nem sikerült aktiválni a lovat.');
       }
     });
   }

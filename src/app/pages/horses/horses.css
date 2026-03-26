@@ -62,6 +62,26 @@
   color: #8a5a00;
 }
 
+.inactive-badge {
+  display: inline-block;
+  margin: 0.4rem 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #e3e7ef;
+  color: #4a5568;
+}
+
+.inactive-actions {
+  margin-top: 0.6rem;
+}
+
+.inactive-actions .themed-button {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.9rem;
+}
+
 .edit-hint {
   font-size: 0.85rem;
   color: var(--app-accent-strong);

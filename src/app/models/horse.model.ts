@@ -14,5 +14,6 @@ export interface HorseDTO {
   passportNum: string;
   additional: string;
   isActive?: boolean;
+  isPending?: boolean;
   feedSchedId?: number;
 }

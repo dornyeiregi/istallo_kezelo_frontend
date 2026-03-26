@@ -22,9 +22,29 @@
           <span class="value">{{ horseCount }}</span>
         </article>
         <article class="stat-card">
-          <span class="label">Becsült napi széna</span>
-          <span class="value">{{ estimatedDailyHayKg | number:'1.0-0' }} kg</span>
-          <span class="hint">{{ averageHayPerHorseKg }} kg / ló</span>
+          <span class="label">Szalmahasználat</span>
+          <span class="value">
+            {{ stable.strawUsageKg != null ? (stable.strawUsageKg | number:'1.0-2') : 'Nincs megadva' }}
+            @if (stable.strawUsageKg != null) { kg }
+          </span>
+          <span class="hint">Istálló szintű adat</span>
+        </article>
+        <article class="stat-card">
+          <span class="label">Napi etetés összesen</span>
+          @if (dailyFeedLoading) {
+            <span class="value">Betöltés...</span>
+          } @else if (dailyFeedTotals.length === 0) {
+            <span class="value">Nincs adat</span>
+          } @else {
+            <ul class="daily-feed-list">
+              @for (item of dailyFeedTotals; track item.itemId) {
+                <li>
+                  <span class="item-name">{{ item.name }}</span>
+                  <span class="item-amount">{{ item.amount | number:'1.0-2' }} kg</span>
+                </li>
+              }
+            </ul>
+          }
         </article>
       </div>
     </section>
@@ -33,6 +53,51 @@
       <div class="delete-warning">
         Törlés mód aktív — kattints a törölni kívánt lóra.
       </div>
+    }
+
+    @if (editMode) {
+      <section class="stable-edit-card">
+        <h2>Istálló szerkesztése</h2>
+        <p class="edit-hint-text">Add meg almonként a napi felhasználást. Az összes mennyiség automatikusan számolódik.</p>
+
+        <div class="form-row">
+          <label>Alom típusok (kg/nap)</label>
+          <div class="bedding-list">
+            @for (row of stableEditItems; track $index) {
+              <div class="bedding-row">
+                <select class="bedding-select" [(ngModel)]="row.itemId">
+                  <option [ngValue]="null">Válassz alom tételt...</option>
+                  @for (item of beddingItems; track item.itemId) {
+                    <option [ngValue]="item.itemId">{{ item.name }}</option>
+                  }
+                </select>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder="Napi mennyiség (kg)"
+                  [(ngModel)]="row.usageKg"
+                />
+                <button type="button" class="link-button" (click)="removeStableBeddingRow($index)">Törlés</button>
+              </div>
+            }
+          </div>
+          <div class="bedding-footer">
+            <button type="button" class="themed-button" (click)="addStableBeddingRow()">Új alom</button>
+            <div class="bedding-total">
+              Összesen: <strong>{{ totalBeddingUsage | number:'1.0-2' }} kg/nap</strong>
+            </div>
+          </div>
+        </div>
+
+        @if (stableEditError) {
+          <div class="error">{{ stableEditError }}</div>
+        }
+
+        <div class="edit-actions">
+          <button class="themed-button" (click)="saveStableEdits()">Mentés</button>
+        </div>
+      </section>
     }
 
     <section class="horse-section">

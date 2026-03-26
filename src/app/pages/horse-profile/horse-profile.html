@@ -62,195 +62,135 @@
     </section>
 
     <section class="horse-section">
-      <h2>Oltások</h2>
-
-      @if (shots.length === 0) {
-        <p class="no-shots">Nincs rögzített oltás.</p>
-      } @else {
-
-        <ul class="shot-list">
-          @for (shot of (showAllShots ? shots : shots.slice(0, 3)); track shot.shotId) {
-            <li class="shot-card" (click)="goToShot(shot.shotId!)">
-
-              <div class="shot-title">
-                <i class="fa-solid fa-syringe icon" aria-hidden="true"></i>
-                <strong>{{ shot.shotName }}</strong>
-              </div>
-
-              <div class="shot-meta">
-                <span><strong>Dátum:</strong> {{ shot.date }}</span>
-                <span><strong>Gyakoriság:</strong> {{ getFrequencyLabel(shot) }}</span>
-              </div>
-
-            </li>
-          }
-        </ul>
-
-        @if (shots.length > 3) {
-          <button class="toggle-button" (click)="showAllShots = !showAllShots">
-            {{ showAllShots ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
-          </button>
-        }
-      }
-    </section>
-
-    <section class="horse-section">
-      <h2>Kezelések</h2>
-
-      @if (treatments.length === 0) {
-        <p class="no-shots">Nincs rögzített kezelés.</p>
-      } @else {
-
-        <ul class="shot-list">
-          @for (treatment of (showAllTreatments ? treatments : treatments.slice(0, 3)); track treatment.treatmentId) {
-            <li class="shot-card" (click)="goToTreatment(treatment.treatmentId!)">
-
-              <div class="shot-title">
-                <i class="fa-solid fa-briefcase-medical icon" aria-hidden="true"></i>
-                <strong>{{ treatment.treatmentName }}</strong>
-              </div>
-
-              <div class="shot-meta">
-                <span><strong>Dátum:</strong> {{ treatment.date }}</span>
-                <span><strong>Leírás:</strong> {{ treatment.description || '-' }}</span>
-              </div>
-
-            </li>
-          }
-        </ul>
-
-        @if (treatments.length > 3) {
-          <button class="toggle-button" (click)="showAllTreatments = !showAllTreatments">
-            {{ showAllTreatments ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
-          </button>
-        }
-      }
-    </section>
-
-    <section class="horse-section">
-      <h2>Patkolási időpontok</h2>
-
-      @if (farrierApps.length === 0) {
-        <p class="no-shots">Nincs rögzített patkolási időpont.</p>
-      } @else {
-
-        <ul class="shot-list">
-          @for (app of (showAllFarrierApps ? farrierApps : farrierApps.slice(0, 3)); track app.farrierAppId) {
-            <li class="shot-card" (click)="goToFarrierApp(app.farrierAppId!)">
-
-              <div class="shot-title">
-                <i class="fa-solid fa-hammer icon" aria-hidden="true"></i>
-                <strong>{{ app.farrierName }}</strong>
-              </div>
-
-              <div class="shot-meta">
-                <span><strong>Dátum:</strong> {{ app.appointmentDate }}</span>
-                <span><strong>Patkolás:</strong> {{ app.shoes ? 'Igen' : 'Nem' }}</span>
-              </div>
-
-            </li>
-          }
-        </ul>
-
-        @if (farrierApps.length > 3) {
-          <button class="toggle-button" (click)="showAllFarrierApps = !showAllFarrierApps">
-            {{ showAllFarrierApps ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
-          </button>
-        }
-      }
-    </section>
-
-    <section class="horse-section">
       <h2>Etetési ütemtervek</h2>
-
-      @if (feedScheds.length === 0) {
-        <p class="no-shots">Nincs rögzített etetési ütemterv.</p>
-      } @else {
-
-        <div class="feed-sched-grid">
-          <div class="feed-sched-column">
-            <h3>Reggel</h3>
-            @if (getFeedSchedsForTime('morning').length === 0) {
-              <p class="no-shots">Nincs reggeli etetés.</p>
-            } @else {
-              @for (feed of getFeedSchedsForTime('morning'); track feed.feedSchedId) {
-                <div class="feed-sched-card">
-                  <div class="feed-sched-title">
-                    <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
-                    <strong>{{ getFeedSchedDisplayName(feed) }}</strong>
-                  </div>
-                  <div class="feed-sched-meta">
-                    <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
-                    <span><strong>Tételek:</strong>
-                      @if (getFeedItemDetails(feed).length === 0) {
-                        -
-                      } @else {
-                        {{ getFeedItemDetails(feed).join(', ') }}
-                      }
-                    </span>
-                  </div>
-                </div>
-              }
-            }
-          </div>
-
-          <div class="feed-sched-column">
-            <h3>Dél</h3>
-            @if (getFeedSchedsForTime('noon').length === 0) {
-              <p class="no-shots">Nincs déli etetés.</p>
-            } @else {
-              @for (feed of getFeedSchedsForTime('noon'); track feed.feedSchedId) {
-                <div class="feed-sched-card">
-                  <div class="feed-sched-title">
-                    <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
-                    <strong>{{ getFeedSchedDisplayName(feed) }}</strong>
-                  </div>
-                  <div class="feed-sched-meta">
-                    <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
-                    <span><strong>Tételek:</strong>
-                      @if (getFeedItemDetails(feed).length === 0) {
-                        -
-                      } @else {
-                        {{ getFeedItemDetails(feed).join(', ') }}
-                      }
-                    </span>
-                  </div>
-                </div>
-              }
-            }
-          </div>
-
-          <div class="feed-sched-column">
-            <h3>Este</h3>
-            @if (getFeedSchedsForTime('evening').length === 0) {
-              <p class="no-shots">Nincs esti etetés.</p>
-            } @else {
-              @for (feed of getFeedSchedsForTime('evening'); track feed.feedSchedId) {
-                <div class="feed-sched-card">
-                  <div class="feed-sched-title">
-                    <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
-                    <strong>{{ getFeedSchedDisplayName(feed) }}</strong>
-                  </div>
-                  <div class="feed-sched-meta">
-                    <span><strong>Leírás:</strong> {{ feed.description || '-' }}</span>
-                    <span><strong>Tételek:</strong>
-                      @if (getFeedItemDetails(feed).length === 0) {
-                        -
-                      } @else {
-                        {{ getFeedItemDetails(feed).join(', ') }}
-                      }
-                    </span>
-                  </div>
-                </div>
-              }
-            }
-          </div>
+      @if (feedChangePending) {
+        <div class="pending-note">
+          {{ feedChangeMessage || 'Etetés módosítási kérelem függőben.' }}
         </div>
       }
+      @if (pendingFeedRequestsForHorse.length > 0) {
+        <div class="pending-list">
+          @for (req of pendingFeedRequestsForHorse; track req.id) {
+            <div class="pending-card">
+              <div class="pending-title">
+                <strong>Függőben lévő kérelem</strong>
+                <span class="pending-time">{{ req.requestedAt || '-' }}</span>
+              </div>
+              <div class="pending-row"><strong>Időpontok:</strong> {{ getRequestTimeLabel(req) }}</div>
+              <div class="pending-row"><strong>Leírás:</strong> {{ req.description || '-' }}</div>
+              <div class="pending-row">
+                <strong>Lovak:</strong>
+                @if (getRequestHorseNames(req).length === 0) {
+                  -
+                } @else {
+                  {{ getRequestHorseNames(req).join(', ') }}
+                }
+              </div>
+              <div class="pending-row">
+                <strong>Tételek:</strong>
+                @if (getRequestItemDetails(req).length === 0) {
+                  -
+                } @else {
+                  {{ getRequestItemDetails(req).join(', ') }}
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+      <div class="feed-sched-grid">
+        <div class="feed-sched-column">
+          <h3>Reggel</h3>
+          @let feedMorning = getFeedSchedForTime('morning');
+          @if (!feedMorning) {
+            <p class="no-shots">Nincs reggeli etetés.</p>
+          } @else {
+            <div class="feed-sched-card">
+              <div class="feed-sched-title">
+                <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+              </div>
+              <div class="feed-sched-meta">
+                <div class="feed-items">
+                  <strong>Tételek:</strong>
+                  @if (!feedMorning || getFeedItemDetails(feedMorning).length === 0) {
+                    <span class="muted">-</span>
+                  } @else {
+                    <ul>
+                      @for (detail of getFeedItemDetails(feedMorning); track detail) {
+                        <li>{{ detail }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+                <span><strong>Leírás:</strong> {{ feedMorning?.description || '-' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="feed-sched-column">
+          <h3>Dél</h3>
+          @let feedNoon = getFeedSchedForTime('noon');
+          @if (!feedNoon) {
+            <p class="no-shots">Nincs déli etetés.</p>
+          } @else {
+            <div class="feed-sched-card">
+              <div class="feed-sched-title">
+                <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+              </div>
+              <div class="feed-sched-meta">
+                <div class="feed-items">
+                  <strong>Tételek:</strong>
+                  @if (!feedNoon || getFeedItemDetails(feedNoon).length === 0) {
+                    <span class="muted">-</span>
+                  } @else {
+                    <ul>
+                      @for (detail of getFeedItemDetails(feedNoon); track detail) {
+                        <li>{{ detail }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+                <span><strong>Leírás:</strong> {{ feedNoon?.description || '-' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="feed-sched-column">
+          <h3>Este</h3>
+          @let feedEvening = getFeedSchedForTime('evening');
+          @if (!feedEvening) {
+            <p class="no-shots">Nincs esti etetés.</p>
+          } @else {
+            <div class="feed-sched-card">
+              <div class="feed-sched-title">
+                <i class="fa-solid fa-bowl-rice icon" aria-hidden="true"></i>
+              </div>
+              <div class="feed-sched-meta">
+                <div class="feed-items">
+                  <strong>Tételek:</strong>
+                  @if (!feedEvening || getFeedItemDetails(feedEvening).length === 0) {
+                    <span class="muted">-</span>
+                  } @else {
+                    <ul>
+                      @for (detail of getFeedItemDetails(feedEvening); track detail) {
+                        <li>{{ detail }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+                <span><strong>Leírás:</strong> {{ feedEvening?.description || '-' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
 
       @if (showFeedEditor) {
         <div class="feed-editor">
           <p class="feed-note">Ha egy időpontot sem jelölsz be, az összes etetés törlődik erről a lóról.</p>
+          <p class="feed-note">Mértékegység: kg/adag.</p>
           <div class="feed-columns">
             <!-- Reggel -->
             <div class="feed-column">
@@ -261,7 +201,7 @@
               </label>
 
               <div class="item-list" [class.disabled]="!feedEditor.morning.enabled">
-                @for (item of items; track item.itemId) {
+                @for (item of feedEditorItems; track item.itemId) {
                   <div class="item-row">
                     <label>
                       <input
@@ -275,7 +215,7 @@
                     <input
                       type="number"
                       min="0"
-                      placeholder="Mennyiség"
+                      placeholder="Mennyiség (kg/adag)"
                       [disabled]="!feedEditor.morning.enabled || !isFeedItemSelected('morning', item.itemId!)"
                       [value]="feedEditor.morning.itemAmounts[item.itemId!]"
                       (input)="updateFeedItemAmount('morning', item.itemId!, $any($event.target).value)"
@@ -319,7 +259,7 @@
               </label>
 
               <div class="item-list" [class.disabled]="!feedEditor.noon.enabled">
-                @for (item of items; track item.itemId) {
+                @for (item of feedEditorItems; track item.itemId) {
                   <div class="item-row">
                     <label>
                       <input
@@ -333,7 +273,7 @@
                     <input
                       type="number"
                       min="0"
-                      placeholder="Mennyiség"
+                      placeholder="Mennyiség (kg/adag)"
                       [disabled]="!feedEditor.noon.enabled || !isFeedItemSelected('noon', item.itemId!)"
                       [value]="feedEditor.noon.itemAmounts[item.itemId!]"
                       (input)="updateFeedItemAmount('noon', item.itemId!, $any($event.target).value)"
@@ -377,7 +317,7 @@
               </label>
 
               <div class="item-list" [class.disabled]="!feedEditor.evening.enabled">
-                @for (item of items; track item.itemId) {
+                @for (item of feedEditorItems; track item.itemId) {
                   <div class="item-row">
                     <label>
                       <input
@@ -391,7 +331,7 @@
                     <input
                       type="number"
                       min="0"
-                      placeholder="Mennyiség"
+                      placeholder="Mennyiség (kg/adag)"
                       [disabled]="!feedEditor.evening.enabled || !isFeedItemSelected('evening', item.itemId!)"
                       [value]="feedEditor.evening.itemAmounts[item.itemId!]"
                       (input)="updateFeedItemAmount('evening', item.itemId!, $any($event.target).value)"
@@ -439,6 +379,114 @@
       }
     </section>
 
+    @if (canViewShots) {
+    <section class="horse-section">
+      <h2>Oltások</h2>
+
+      @if (shots.length === 0) {
+        <p class="no-shots">Nincs rögzített oltás.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (shot of (showAllShots ? shots : shots.slice(0, 3)); track shot.shotId) {
+            <li class="shot-card" (click)="goToShot(shot.shotId!)">
+
+              <div class="shot-title">
+                <i class="fa-solid fa-syringe icon" aria-hidden="true"></i>
+                <strong>{{ shot.shotName }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Dátum:</strong> {{ shot.date }}</span>
+                <span><strong>Gyakoriság:</strong> {{ getFrequencyLabel(shot) }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (shots.length > 3) {
+          <button class="toggle-button" (click)="showAllShots = !showAllShots">
+            {{ showAllShots ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+    }
+
+    @if (canViewFarrierApps) {
+    <section class="horse-section">
+      <h2>Patkolási időpontok</h2>
+
+      @if (farrierApps.length === 0) {
+        <p class="no-shots">Nincs rögzített patkolási időpont.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (app of (showAllFarrierApps ? farrierApps : farrierApps.slice(0, 3)); track app.farrierAppId) {
+            <li class="shot-card" (click)="goToFarrierApp(app.farrierAppId!)">
+
+              <div class="shot-title">
+                <i class="fa-solid fa-hammer icon" aria-hidden="true"></i>
+                <strong>{{ app.farrierName }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Dátum:</strong> {{ app.appointmentDate }}</span>
+                <span><strong>Patkók:</strong> {{ getFarrierShoeLabel(app) }}</span>
+                @if (getFarrierHorseDetail(app)?.note) {
+                  <span><strong>Megjegyzés:</strong> {{ getFarrierHorseDetail(app)?.note }}</span>
+                }
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (farrierApps.length > 3) {
+          <button class="toggle-button" (click)="showAllFarrierApps = !showAllFarrierApps">
+            {{ showAllFarrierApps ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+    }
+
+    @if (canViewTreatments) {
+    <section class="horse-section">
+      <h2>Kezelések</h2>
+
+      @if (treatments.length === 0) {
+        <p class="no-shots">Nincs rögzített kezelés.</p>
+      } @else {
+
+        <ul class="shot-list">
+          @for (treatment of (showAllTreatments ? treatments : treatments.slice(0, 3)); track treatment.treatmentId) {
+            <li class="shot-card" (click)="goToTreatment(treatment.treatmentId!)">
+
+              <div class="shot-title">
+                <i class="fa-solid fa-briefcase-medical icon" aria-hidden="true"></i>
+                <strong>{{ treatment.treatmentName }}</strong>
+              </div>
+
+              <div class="shot-meta">
+                <span><strong>Dátum:</strong> {{ treatment.date }}</span>
+                <span><strong>Leírás:</strong> {{ treatment.description || '-' }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+
+        @if (treatments.length > 3) {
+          <button class="toggle-button" (click)="showAllTreatments = !showAllTreatments">
+            {{ showAllTreatments ? 'Kevesebb megjelenítése' : 'Összes megjelenítése' }}
+          </button>
+        }
+      }
+    </section>
+    }
+
   }
 </div>
 
@@ -475,6 +523,10 @@
 
     </div>
   </div>
+}
+
+@if (feedToastVisible) {
+  <div class="toast">{{ feedToastMessage }}</div>
 }
 
 <!-- Kezelés hozzáadási popup -->
@@ -535,6 +587,20 @@
               </option>
             }
           </select>
+        </div>
+
+        <div class="mt">
+          <label>Patkók száma:</label>
+          <select [(ngModel)]="farrierShoeCount">
+            <option [ngValue]="0">Nincs patkó</option>
+            <option [ngValue]="2">2 patkó</option>
+            <option [ngValue]="4">4 patkó</option>
+          </select>
+        </div>
+
+        <div class="mt">
+          <label>Megjegyzés:</label>
+          <input type="text" [(ngModel)]="farrierNote" placeholder="Megjegyzés" />
         </div>
       }
 

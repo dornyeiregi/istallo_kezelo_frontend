@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FarrierAppService } from '../../services/farrier-app.service';
-import { FarrierAppDTO } from '../../models/farrier-app.model';
+import { FarrierAppDTO, FarrierHorseDetailDTO } from '../../models/farrier-app.model';
 import { HorseService } from '../../services/horse.service';
 import { HorseDTO } from '../../models/horse.model';
 
@@ -23,14 +23,24 @@ export class FarrierAppEditPage implements OnInit {
   farrierAppId: number | null = null;
   horses: HorseDTO[] = [];
   selectedHorseIds: Set<number> = new Set();
+  horseDetails = new Map<number, FarrierHorseDetailDTO>();
 
   form: FarrierAppDTO = {
     farrierAppId: undefined,
     farrierName: '',
     farrierPhone: '',
     appointmentDate: '',
-    shoes: false,
+    frequencyUnit: '',
+    frequencyValue: undefined,
     horseIds: []
+  };
+
+  frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
+  frequencyLabels: { [key: string]: string } = {
+    DAYS: 'Nap',
+    WEEKS: 'Hét',
+    MONTHS: 'Hónap',
+    YEARS: 'Év'
   };
 
   constructor(
@@ -60,12 +70,30 @@ export class FarrierAppEditPage implements OnInit {
           farrierName: farrierApp.farrierName,
           farrierPhone: farrierApp.farrierPhone,
           appointmentDate: farrierApp.appointmentDate,
-          shoes: !!farrierApp.shoes,
-          horseIds: farrierApp.horseIds || []
+          frequencyUnit: farrierApp.frequencyUnit ?? '',
+          frequencyValue: farrierApp.frequencyValue ?? undefined,
+          shoes: farrierApp.shoes ?? null,
+          horseIds: farrierApp.horseIds || [],
+          horseDetails: farrierApp.horseDetails || []
         };
 
         this.horses = horses;
         this.selectedHorseIds = new Set(farrierApp.horseIds || []);
+        this.horseDetails.clear();
+        (farrierApp.horseDetails || []).forEach((detail) => {
+          if (detail.horseId != null) {
+            this.horseDetails.set(detail.horseId, {
+              horseId: detail.horseId,
+              shoeCount: detail.shoeCount ?? 0,
+              note: detail.note ?? ''
+            });
+          }
+        });
+        this.selectedHorseIds.forEach((horseId) => {
+          if (!this.horseDetails.has(horseId)) {
+            this.horseDetails.set(horseId, { horseId, shoeCount: 4, note: '' });
+          }
+        });
         this.loading = false;
       },
       error: () => {
@@ -84,9 +112,20 @@ export class FarrierAppEditPage implements OnInit {
 
     if (this.selectedHorseIds.has(horseId)) {
       this.selectedHorseIds.delete(horseId);
+      this.horseDetails.delete(horseId);
     } else {
       this.selectedHorseIds.add(horseId);
+      if (!this.horseDetails.has(horseId)) {
+        this.horseDetails.set(horseId, { horseId, shoeCount: 4, note: '' });
+      }
     }
+  }
+
+  getHorseDetail(horseId: number): FarrierHorseDetailDTO {
+    if (!this.horseDetails.has(horseId)) {
+      this.horseDetails.set(horseId, { horseId, shoeCount: 4, note: '' });
+    }
+    return this.horseDetails.get(horseId)!;
   }
 
   onSubmit() {
@@ -104,8 +143,18 @@ export class FarrierAppEditPage implements OnInit {
       farrierName: this.form.farrierName,
       farrierPhone: this.form.farrierPhone,
       appointmentDate: this.form.appointmentDate,
-      shoes: !!this.form.shoes,
-      horseIds: Array.from(this.selectedHorseIds)
+      frequencyUnit: this.form.frequencyUnit || null,
+      frequencyValue: this.form.frequencyValue || null,
+      shoes: null,
+      horseIds: Array.from(this.selectedHorseIds),
+      horseDetails: Array.from(this.selectedHorseIds).map((horseId) => {
+        const detail = this.getHorseDetail(horseId);
+        return {
+          horseId,
+          shoeCount: detail.shoeCount ?? 0,
+          note: detail.note ?? ''
+        };
+      })
     };
 
     this.farrierAppService.update(this.farrierAppId, dto).subscribe({

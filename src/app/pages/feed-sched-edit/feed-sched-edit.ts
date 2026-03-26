@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FeedSchedService } from '../../services/feed-sched.service';
-import { FeedSchedDTO } from '../../models/feed-sched.model';
+import { FeedSchedDTO, FeedSchedItemAmountDTO } from '../../models/feed-sched.model';
 import { HorseService } from '../../services/horse.service';
 import { HorseDTO } from '../../models/horse.model';
 import { ItemService } from '../../services/item.service';
@@ -27,6 +27,7 @@ export class FeedSchedEditPage implements OnInit {
   selectedHorseIds: Set<number> = new Set();
   items: ItemDTO[] = [];
   selectedItemIds: Set<number> = new Set();
+  itemAmounts: Record<number, number | null> = {};
 
   form: FeedSchedDTO = {
     feedSchedId: undefined,
@@ -62,6 +63,8 @@ export class FeedSchedEditPage implements OnInit {
       items: this.itemService.getAll()
     }).subscribe({
       next: ({ feedSched, horses, items }) => {
+        const filteredItems = items.filter(i => (i.itemType || '').toUpperCase() !== 'BEDDING');
+        const allowedItemIds = new Set(filteredItems.map(i => i.itemId).filter(Boolean) as number[]);
         this.form = {
           feedSchedId: feedSched.feedSchedId,
           feedMorning: !!feedSched.feedMorning,
@@ -73,9 +76,17 @@ export class FeedSchedEditPage implements OnInit {
         };
 
         this.horses = horses;
-        this.items = items;
+        this.items = filteredItems;
         this.selectedHorseIds = new Set(feedSched.horseIds || []);
-        this.selectedItemIds = new Set(feedSched.itemIds || []);
+        this.selectedItemIds = new Set((feedSched.itemIds || []).filter(id => allowedItemIds.has(id)));
+        this.itemAmounts = {};
+        if (feedSched.items && feedSched.items.length > 0) {
+          feedSched.items.forEach(item => {
+            if (allowedItemIds.has(item.itemId)) {
+              this.itemAmounts[item.itemId] = item.amount;
+            }
+          });
+        }
         this.loading = false;
       },
       error: () => {
@@ -104,8 +115,12 @@ export class FeedSchedEditPage implements OnInit {
 
     if (this.selectedItemIds.has(itemId)) {
       this.selectedItemIds.delete(itemId);
+      delete this.itemAmounts[itemId];
     } else {
       this.selectedItemIds.add(itemId);
+      if (!Number.isFinite(this.itemAmounts[itemId] as number)) {
+        this.itemAmounts[itemId] = 1;
+      }
     }
   }
 
@@ -130,6 +145,17 @@ export class FeedSchedEditPage implements OnInit {
 
     const horseIds = Array.from(this.selectedHorseIds).filter(id => Number.isFinite(id));
     const itemIds = Array.from(this.selectedItemIds).filter(id => Number.isFinite(id));
+    const items: FeedSchedItemAmountDTO[] = [];
+
+    for (const itemId of itemIds) {
+      const amount = this.itemAmounts[itemId];
+      if (amount == null || !Number.isFinite(amount) || amount <= 0) {
+        this.loading = false;
+        this.error = 'Minden kiválasztott tételhez adj meg pozitív mennyiséget.';
+        return;
+      }
+      items.push({ itemId, amount });
+    }
 
     const dto: FeedSchedDTO = {
       feedSchedId: this.feedSchedId,
@@ -138,7 +164,8 @@ export class FeedSchedEditPage implements OnInit {
       feedEvening: this.form.feedEvening,
       description: this.form.description || '',
       horseIds,
-      itemIds
+      itemIds,
+      items
     };
 
     this.feedSchedService.update(this.feedSchedId, dto).subscribe({
