@@ -192,8 +192,8 @@ export class ItemProfilePage implements OnInit {
     this.storageService.update(this.storage.storageId!, dto).subscribe({
       next: () => {
         this.storage!.amountStored = newStored;
-        this.showToast('Készlet sikeresen hozzáadva.');
         this.closeAddStockModal();
+        this.showToast('Készlet sikeresen hozzáadva.');
       },
       error: () => {
         this.modalError = 'Nem sikerült frissíteni a készletet.';
@@ -243,8 +243,8 @@ export class ItemProfilePage implements OnInit {
     this.storageService.update(this.storage.storageId!, dto).subscribe({
       next: () => {
         this.storage!.amountStored = newStored;
-        this.showToast('Készlet sikeresen levonva.');
         this.closeRemoveStockModal();
+        this.showToast('Készlet sikeresen levonva.');
       },
       error: () => {
         this.modalError = 'Nem sikerült frissíteni a készletet.';

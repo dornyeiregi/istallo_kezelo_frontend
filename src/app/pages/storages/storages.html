@@ -130,14 +130,19 @@
       <p><strong>Elérhető:</strong> {{ (storage.amountStored - storage.amountInUse) | number:'1.0-1' }} kg</p>
     </div>
 
+    <div class="stock-warning green">
+      <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+      @if (storage.daysRemaining !== null && storage.daysRemaining !== undefined) {
+        {{ storage.daysRemaining }} napra elegendő készlet
+      } @else {
+        Nincs adat a készletről
+      }
+    </div>
+
     @if (storage.warningLevel && storage.warningLevel !== 'NONE') {
       <div class="stock-warning" [class.red]="storage.warningLevel === 'RED'" [class.yellow]="storage.warningLevel === 'YELLOW'">
         <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-        @if (storage.daysRemaining !== null && storage.daysRemaining !== undefined) {
-          {{ storage.daysRemaining }} napra elegendő készlet
-        } @else {
-          Alacsony készlet
-        }
+        Alacsony készlet
       </div>
     }
 

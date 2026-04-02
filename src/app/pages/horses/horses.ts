@@ -19,9 +19,7 @@ export class HorsesPage implements OnInit {
   loading = true;
   error = '';
   editMode = false;
-  showAll = false;
-  showInactive = false;
-  showPending = false;
+  activeView: 'ALL' | 'MINE' | 'PENDING' | 'INACTIVE' = 'ALL';
   deleteMode = false;
   deleteSuccess = '';
   confirmDeleteHorse: HorseDTO | null = null;
@@ -35,13 +33,7 @@ export class HorsesPage implements OnInit {
               private authService: AuthService) {}
 
   ngOnInit(): void {
-    if (this.isEmployee) {
-      this.showAll = true;
-    }
-
-    if (this.canToggleView) {
-      this.showAll = true;
-    }
+    this.activeView = (this.canToggleView || this.isEmployee) ? 'ALL' : 'MINE';
     this.loadHorses();
 
     if (this.canToggleView) {
@@ -55,26 +47,41 @@ export class HorsesPage implements OnInit {
 
   loadHorses(): void {
     this.loading = true;
-    if (this.showInactive && !this.canToggleView) {
-      this.showInactive = false;
-    }
-    if (this.showPending && !this.canViewPending) {
-      this.showPending = false;
-    }
+    this.error = '';
 
     let source$;
-    if (this.showInactive) {
-      source$ = this.horseService.getInactive();
-    } else if (this.showPending) {
-      source$ = this.canToggleView ? this.horseService.getRequests() : this.horseService.getMyRequests();
-    } else {
-      source$ = (this.isEmployee || this.showAll ? this.horseService.getAll() : this.horseService.getMine());
+    switch (this.activeView) {
+      case 'INACTIVE':
+        if (!this.canToggleView) {
+          this.error = 'Nincs jogosultság az inaktív lovak megtekintéséhez.';
+          this.horses = [];
+          this.loading = false;
+          return;
+        }
+        source$ = this.horseService.getInactive();
+        break;
+      case 'PENDING':
+        if (!this.canViewPending) {
+          this.error = 'Nincs jogosultság a függő lovak megtekintéséhez.';
+          this.horses = [];
+          this.loading = false;
+          return;
+        }
+        source$ = this.canToggleView ? this.horseService.getRequests() : this.horseService.getMyRequests();
+        break;
+      case 'MINE':
+        source$ = this.isEmployee ? this.horseService.getAll() : this.horseService.getMine();
+        break;
+      case 'ALL':
+      default:
+        source$ = (this.isEmployee || this.canToggleView) ? this.horseService.getAll() : this.horseService.getMine();
+        break;
     }
 
     source$.subscribe({
       next: (data) => {
         this.horses = data;
-        if (!this.showInactive && !this.showPending) {
+        if (this.activeView === 'ALL' || this.activeView === 'MINE') {
           this.loadPendingForOwner();
         }
         this.loading = false;
@@ -127,30 +134,8 @@ export class HorsesPage implements OnInit {
     return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN', 'OWNER', 'ROLE_OWNER']);
   }
 
-  toggleView(): void {
-    this.showAll = !this.showAll;
-    if (this.showInactive) {
-      this.showInactive = false;
-    }
-    if (this.showPending) {
-      this.showPending = false;
-    }
-    this.loadHorses();
-  }
-
-  toggleInactive(): void {
-    this.showInactive = !this.showInactive;
-    if (this.showInactive) {
-      this.showPending = false;
-    }
-    this.loadHorses();
-  }
-
-  togglePending(): void {
-    this.showPending = !this.showPending;
-    if (this.showPending) {
-      this.showInactive = false;
-    }
+  setView(view: 'ALL' | 'MINE' | 'PENDING' | 'INACTIVE'): void {
+    this.activeView = view;
     this.loadHorses();
   }
 

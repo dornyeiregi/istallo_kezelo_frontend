@@ -35,12 +35,14 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.5rem;
+  min-height: 2.6rem;
 }
 
 .horse-card h3 {
   margin: 0;
   color: var(--app-primary);
   font-size: 1.2rem;
+  line-height: 1.3;
 }
 
 .sex-label {
@@ -92,6 +94,22 @@
   cursor: pointer;
   border-color: var(--app-accent);
   background: var(--app-chip-bg);
+}
+
+.view-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.view-button {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.view-button.active {
+  background-color: var(--app-accent-strong);
 }
 
 .themed-button {

@@ -12,19 +12,36 @@
     <div class="header-left">
       <h1>Lovak</h1>
 
-      @if (canToggleView) {
-        <button class="themed-button" (click)="toggleView()" [disabled]="showInactive">
-          {{ showAll ? 'Csak a saját lovak' : 'Összes aktív ló' }}
+      <div class="view-toggle">
+        <button
+          class="themed-button view-button"
+          [class.active]="activeView === 'ALL'"
+          (click)="setView('ALL')"
+        >
+          Összes ló
         </button>
-        <button class="themed-button" (click)="toggleInactive()">
-          {{ showInactive ? 'Aktív lovak' : 'Inaktív lovak' }}
+        <button
+          class="themed-button view-button"
+          [class.active]="activeView === 'MINE'"
+          (click)="setView('MINE')"
+        >
+          Saját lovak
         </button>
-      }
-      @if (canViewPending) {
-        <button class="themed-button" (click)="togglePending()" [disabled]="showInactive">
-          {{ showPending ? 'Aktív lovak' : 'Függő lovak' }}
+        <button
+          class="themed-button view-button"
+          [class.active]="activeView === 'PENDING'"
+          (click)="setView('PENDING')"
+        >
+          Függőben lévő lovak
         </button>
-      }
+        <button
+          class="themed-button view-button"
+          [class.active]="activeView === 'INACTIVE'"
+          (click)="setView('INACTIVE')"
+        >
+          Inaktív lovak
+        </button>
+      </div>
     </div>
 
     <p class="subtitle">A rendszerben jelen lévő lovak listája</p>
@@ -67,7 +84,7 @@
           <p><strong>Istálló:</strong> {{ horse.stableName || '-' }}</p>
           <p><strong>Mikrochip:</strong> {{ horse.microchipNum || '-' }}</p>
 
-          @if (showInactive && canDelete) {
+          @if (activeView === 'INACTIVE' && canDelete) {
             <div class="inactive-actions">
               <button class="themed-button" (click)="activateHorse(horse); $event.stopPropagation();">
                 Aktiválás

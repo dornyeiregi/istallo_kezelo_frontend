@@ -191,6 +191,12 @@
   border-color: var(--app-danger-border);
 }
 
+.stock-warning.green {
+  background: #e8f7ee;
+  color: #1f7a3a;
+  border-color: #7ad59a;
+}
+
 /* SZERKESZTŐ MEZŐK */
 
 .edit-fields {
