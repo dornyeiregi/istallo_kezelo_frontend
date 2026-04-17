@@ -16,7 +16,6 @@ export class RegisterPage implements OnInit {
   form!: FormGroup;
   loading = false;
   error = '';
-  readonly userTypes: UserType[] = ['OWNER', 'EMPLOYEE'];
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +32,7 @@ export class RegisterPage implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
-      userType: ['EMPLOYEE', Validators.required]
+      userType: ['OWNER', Validators.required]
     });
   }
 
@@ -87,7 +86,7 @@ export class RegisterPage implements OnInit {
         : '',
       username: trimmedUsername,
       password: this.form.value.password,
-      userType: this.form.value.userType as UserType
+      userType: 'OWNER'
     };
 
     console.debug('Register payload', payload);

@@ -24,9 +24,9 @@
 
       <div class="quick-stats">
         <article class="stat-card">
-          <span class="label">Születési idő</span>
+          <span class="label">Nem</span>
           <span class="value">
-            {{ horse.dob || 'Nincs megadva' }}
+            {{ getSexLabel(horse.sex) }}
           </span>
         </article>
 
@@ -38,9 +38,9 @@
         </article>
 
         <article class="stat-card">
-          <span class="label">Nem</span>
+          <span class="label">Születési idő</span>
           <span class="value">
-            {{ getSexLabel(horse.sex) }}
+            {{ horse.dob || 'Nincs megadva' }}
           </span>
         </article>
       </div>
@@ -52,9 +52,9 @@
       <ul class="horse-list">
         <li class="horse-card">
           <div class="details">
-            <p><strong>Teljes név:</strong> {{ horse.horseName }}</p>
             <p><strong>Mikrochip:</strong> {{ horse.microchipNum || 'Nincs megadva' }}</p>
             <p><strong>Útlevél:</strong> {{ horse.passportNum || 'Nincs megadva' }}</p>
+            <p><strong>Tulajdonos telefonszáma:</strong> {{ horse.ownerPhone || 'Nincs megadva' }}</p>
             <p><strong>Megjegyzés:</strong> {{ horse.additional || '—' }}</p>
           </div>
         </li>

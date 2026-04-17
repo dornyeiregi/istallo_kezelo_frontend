@@ -36,11 +36,4 @@ export class StorageService {
     });
   }
 
-  sync(): Observable<string> {
-    return this.http.post(
-      `${this.apiUrl}/sync`,
-      {},
-      { responseType: 'text' }
-    ) as Observable<string>;
-  }
 }

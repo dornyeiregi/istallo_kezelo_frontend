@@ -3,8 +3,7 @@
     <div class="overlay">
       <h1>Csatlakozz a StableManagerhez</h1>
       <p>
-        Hozz létre fiókot, válaszd ki szerepköröd, és kezeld az istállók mindennapi működését
-        digitálisan.
+        Hozz létre fiókot, és kezeld az istállók mindennapi működését digitálisan.
       </p>
     </div>
   </section>
@@ -13,8 +12,7 @@
     <div class="form-wrapper">
       <h2>Új felhasználó létrehozása</h2>
       <p class="subtitle">
-        Állítsd be a felhasználói adataidat, és válaszd ki, hogy tulajdonosként vagy
-        alkalmazottként veszel részt a rendszerben.
+        Állítsd be a felhasználói adataidat, és hozd létre a tulajdonosi fiókodat.
       </p>
 
       <form [formGroup]="form" (ngSubmit)="submit()">
@@ -83,25 +81,6 @@
             }
           </label>
         </div>
-
-        <fieldset class="field usertype-field">
-          <legend class="field-label">Felhasználói típus</legend>
-          <div class="option-group">
-            @for (type of userTypes; track type) {
-              <label class="option">
-                <input type="radio" formControlName="userType" [value]="type" />
-                <span class="option-title">{{ type === 'OWNER' ? 'Tulajdonos' : 'Alkalmazott' }}</span>
-                <span class="option-hint">
-                  {{
-                    type === 'OWNER'
-                      ? 'Teljes hozzáférés az istállókhoz és folyamatokhoz.'
-                      : 'Hozzáférés a napi teendőkhöz és lóadatokhoz.'
-                  }}
-                </span>
-              </label>
-            }
-          </div>
-        </fieldset>
 
         @if (error) {
           <div class="error">{{ error }}</div>

@@ -9,7 +9,6 @@ import { StorageDTO } from '../../models/storage.model';
 import { StorageService } from '../../services/storage.service';
 import { ItemDTO } from '../../models/item.model';
 import { ItemService } from '../../services/item.service';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-storages',
@@ -37,10 +36,17 @@ export class StoragesPage implements OnInit {
 
   editedNames: { [storageId: number]: string } = {};
   confirmDeleteStorage: StorageDTO | null = null;
+  selectedStorage: StorageDTO | null = null;
 
   toastMessage = '';
   toastVisible = false;
-  syncing = false;
+
+  showAddStockModal = false;
+  showRemoveStockModal = false;
+  stockChangeAmount = 0;
+  addStockServings = 0;
+  addStockServingKg: number | null = null;
+  modalError: string | null = null;
 
   itemTypeLabels: { [key: string]: string } = {
     HAY: 'Szálas takarmány',
@@ -59,7 +65,6 @@ export class StoragesPage implements OnInit {
   constructor(
     private storageService: StorageService,
     private itemService: ItemService,
-    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -121,6 +126,7 @@ export class StoragesPage implements OnInit {
     if (this.editMode) {
       this.deleteMode = false;
       this.confirmDeleteStorage = null;
+      this.selectedStorage = null;
 
       this.editedNames = this.storages.reduce((acc, s) => {
         if (s.storageId != null) {
@@ -133,7 +139,10 @@ export class StoragesPage implements OnInit {
 
   deleteStorageMode(): void {
     this.deleteMode = !this.deleteMode;
-    if (this.deleteMode) this.editMode = false;
+    if (this.deleteMode) {
+      this.editMode = false;
+      this.selectedStorage = null;
+    }
     this.confirmDeleteStorage = null;
   }
 
@@ -182,6 +191,9 @@ export class StoragesPage implements OnInit {
     this.storageService.delete(storage.storageId).subscribe({
       next: () => {
         this.showToast(`A(z) ${this.getItemName(storage)} tároló törölve.`);
+        if (this.selectedStorage?.storageId === storage.storageId) {
+          this.selectedStorage = null;
+        }
         this.loadData();
         this.confirmDeleteStorage = null;
         this.deleteMode = false;
@@ -199,6 +211,108 @@ export class StoragesPage implements OnInit {
   }
 
   // ======================
+  //   KÉSZLET KEZELÉS
+  // ======================
+  openAddStockModal(): void {
+    if (!this.selectedStorage) {
+      this.showToast('Válassz ki egy tételt a készlet módosításához.');
+      return;
+    }
+    const item = this.getSelectedItem();
+    this.stockChangeAmount = 0;
+    this.addStockServings = 0;
+    this.addStockServingKg = item?.feedUnitAmount ?? null;
+    this.modalError = null;
+    this.showAddStockModal = true;
+  }
+
+  closeAddStockModal(): void {
+    this.showAddStockModal = false;
+    this.modalError = null;
+  }
+
+  confirmAddStock(): void {
+    if (!this.selectedStorage) {
+      this.modalError = 'Nincs kiválasztott tétel.';
+      return;
+    }
+    if (this.addStockServings <= 0 || !this.addStockServingKg || this.addStockServingKg <= 0) {
+      this.modalError = 'Add meg az adagok számát és az adag tömegét.';
+      return;
+    }
+    this.stockChangeAmount = this.addStockServings * this.addStockServingKg;
+    if (this.stockChangeAmount <= 0) {
+      this.modalError = 'A mennyiségnek pozitívnak kell lennie.';
+      return;
+    }
+
+    const newStored = (this.selectedStorage.amountStored || 0) + this.stockChangeAmount;
+    const dto: StorageDTO = {
+      ...this.selectedStorage,
+      amountStored: newStored
+    };
+
+    this.storageService.update(this.selectedStorage.storageId!, dto).subscribe({
+      next: () => {
+        this.selectedStorage!.amountStored = newStored;
+        this.closeAddStockModal();
+        this.showToast('Készlet sikeresen hozzáadva.');
+      },
+      error: () => {
+        this.modalError = 'Nem sikerült frissíteni a készletet.';
+      }
+    });
+  }
+
+  openRemoveStockModal(): void {
+    if (!this.selectedStorage) {
+      this.showToast('Válassz ki egy tételt a készlet módosításához.');
+      return;
+    }
+    this.stockChangeAmount = 0;
+    this.modalError = null;
+    this.showRemoveStockModal = true;
+  }
+
+  closeRemoveStockModal(): void {
+    this.showRemoveStockModal = false;
+    this.modalError = null;
+  }
+
+  confirmRemoveStock(): void {
+    if (!this.selectedStorage) {
+      this.modalError = 'Nincs kiválasztott tétel.';
+      return;
+    }
+    if (this.stockChangeAmount <= 0) {
+      this.modalError = 'A mennyiségnek pozitívnak kell lennie.';
+      return;
+    }
+    const currentStored = this.selectedStorage.amountStored || 0;
+    const newStored = currentStored - this.stockChangeAmount;
+    if (newStored < 0) {
+      this.modalError = 'Nincs ennyi készlet raktáron.';
+      return;
+    }
+
+    const dto: StorageDTO = {
+      ...this.selectedStorage,
+      amountStored: newStored
+    };
+
+    this.storageService.update(this.selectedStorage.storageId!, dto).subscribe({
+      next: () => {
+        this.selectedStorage!.amountStored = newStored;
+        this.closeRemoveStockModal();
+        this.showToast('Készlet sikeresen levonva.');
+      },
+      error: () => {
+        this.modalError = 'Nem sikerült frissíteni a készletet.';
+      }
+    });
+  }
+
+  // ======================
   //   TOAST
   // ======================
   showToast(message: string): void {
@@ -206,27 +320,6 @@ export class StoragesPage implements OnInit {
     this.toastVisible = true;
 
     setTimeout(() => (this.toastVisible = false), 3000);
-  }
-
-  syncStorages(): void {
-    if (this.syncing) return;
-    this.syncing = true;
-
-    this.storageService.sync().subscribe({
-      next: () => {
-        this.showToast('Tárolók szinkronizálva.');
-        this.loadData();
-        this.syncing = false;
-      },
-      error: () => {
-        this.showToast('Nem sikerült szinkronizálni a tárolókat.');
-        this.syncing = false;
-      }
-    });
-  }
-
-  get isAdmin(): boolean {
-    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
   // ======================
@@ -245,6 +338,16 @@ export class StoragesPage implements OnInit {
   getItemCategory(storage: StorageDTO): string {
     const item = this.itemsMap[storage.itemId];
     return item ? this.itemCategoryLabels[item.itemCategory] : '-';
+  }
+
+  getSelectedItemName(): string {
+    if (!this.selectedStorage) return '-';
+    return this.getItemName(this.selectedStorage);
+  }
+
+  private getSelectedItem(): ItemDTO | null {
+    if (!this.selectedStorage) return null;
+    return this.itemsMap[this.selectedStorage.itemId] || null;
   }
 
   // ======================
@@ -271,10 +374,7 @@ export class StoragesPage implements OnInit {
       this.confirmDelete(storage);
       return;
     }
-
-    this.router.navigate(['/items', storage.itemId], {
-      state: { storage }
-    });
+    this.selectedStorage = storage;
   }
 
   // ======================
@@ -286,6 +386,16 @@ export class StoragesPage implements OnInit {
         label: 'Tétel hozzáadása',
         icon: 'fa-plus',
         onClick: () => this.addItemWithStorage()
+      },
+      {
+        label: 'Készlet hozzáadása',
+        icon: 'fa-boxes-stacked',
+        onClick: () => this.openAddStockModal()
+      },
+      {
+        label: 'Készlet levonása',
+        icon: 'fa-minus',
+        onClick: () => this.openRemoveStockModal()
       },
       {
         label: 'Szerkesztés',

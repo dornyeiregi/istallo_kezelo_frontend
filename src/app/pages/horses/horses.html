@@ -68,11 +68,7 @@
           [class.delete-mode]="deleteMode"
           (click)="deleteMode ? confirmDelete(horse) : onCardClick(horse)"
         >
-
-            <div class="horse-card-header">
-              <h3>{{ horse.horseName }}</h3>
-              <span class="sex-label">{{ getSexLabel(horse.sex) }}</span>
-            </div>
+          <h3>{{ horse.horseName }}</h3>
 
           @if (horse.isPending) {
             <div class="pending-badge">Függőben</div>
@@ -80,9 +76,11 @@
             <div class="inactive-badge">Inaktív</div>
           }
 
-          <p><strong>Tulajdonos:</strong> {{ horse.ownerName }}</p>
-          <p><strong>Istálló:</strong> {{ horse.stableName || '-' }}</p>
-          <p><strong>Mikrochip:</strong> {{ horse.microchipNum || '-' }}</p>
+          <div class="details">
+            <span class="detail"><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</span>
+            <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
+            <span class="detail"><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span>
+          </div>
 
           @if (activeView === 'INACTIVE' && canDelete) {
             <div class="inactive-actions">

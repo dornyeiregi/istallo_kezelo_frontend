@@ -6,6 +6,7 @@ export interface HorseDTO {
 
   ownerId?: number;
   ownerName?: string;
+  ownerPhone?: string;
 
   stableId?: number;
   stableName?: string;

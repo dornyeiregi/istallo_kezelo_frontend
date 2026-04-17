@@ -13,7 +13,6 @@ import { authGuard } from './guards/auth.guard';
 import { HorseEditPage } from './pages/horse-edit/horse-edit';
 import { StoragesPage } from './pages/storages/storages';
 import { StorageItemCreatePage } from './pages/storage-item-create/storage-item-create';
-import { ItemProfilePage } from './pages/item-profile/item-profile';
 import { ShotsPage } from './pages/shots/shots';
 import { ShotCreatePage } from './pages/shot-create/shot-create';
 import { ShotProfilePage } from './pages/shot-profile/shot-profile';
@@ -106,12 +105,6 @@ export const routes: Routes = [
     component: StorageItemCreatePage,
     canActivate: [authGuard],
     data: { roles: ['ADMIN'] }
-  },
-  {
-    path: 'items/:itemId',
-    component: ItemProfilePage,
-    canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE'] }
   },
   {
     path: 'shots',

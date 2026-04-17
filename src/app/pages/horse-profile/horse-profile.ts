@@ -26,6 +26,7 @@ import { ItemService } from '../../services/item.service';
 import { ItemDTO } from '../../models/item.model';
 import { SettingsService } from '../../services/settings.service';
 import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-horse-profile',
@@ -98,7 +99,8 @@ export class HorseProfilePage implements OnInit {
         private horseFarrierAppService: HorseFarrierAppService,
         private horseTreatmentService: HorseTreatmentService,
         private authService: AuthService,
-        private settingsService: SettingsService
+        private settingsService: SettingsService,
+        private userService: UserService
     ) {}
 
     ngOnInit(): void {
@@ -106,6 +108,7 @@ export class HorseProfilePage implements OnInit {
         const navHorse = this.router.getCurrentNavigation()?.extras.state?.['horse'] as HorseDTO | undefined;
         if (navHorse) {
             this.horse = navHorse;
+            this.populateOwnerPhone(navHorse);
             this.loading = false;
             return;
         }
@@ -146,6 +149,7 @@ export class HorseProfilePage implements OnInit {
       this.horseService.getByName(horsename).subscribe({
         next: (horse) => {
           this.horse = horse;
+          this.populateOwnerPhone(horse);
           if (this.canViewShots) this.loadShots(this.horse.id!);
           if (this.canViewTreatments) this.loadTreatments(this.horse.id!);
           if (this.canViewFarrierApps) this.loadFarrierApps(this.horse.id!);
@@ -155,6 +159,17 @@ export class HorseProfilePage implements OnInit {
         error: () => {
           this.error = 'Nem található ló ezzel a névvel.';
           this.loading = false;
+        }
+      });
+    }
+
+    private populateOwnerPhone(horse: HorseDTO): void {
+      if (!horse.ownerId) return;
+      this.userService.getById(horse.ownerId).subscribe({
+        next: (user) => {
+          if (this.horse) {
+            this.horse.ownerPhone = user.phone || '';
+          }
         }
       });
     }
