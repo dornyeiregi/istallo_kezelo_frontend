@@ -21,11 +21,8 @@
   } @else if (error) {
     <div class="load-error">{{ error }}</div>
   } @else {
-
     @if (deleteMode) {
-      <div class="delete-warning">
-        Törlés mód aktív — kattints a törölni kívánt időpontra.
-      </div>
+      <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt időpontra.</div>
     }
     @if (editMode) {
       <div class="delete-warning">
@@ -34,7 +31,6 @@
     }
 
     <section class="farrier-grid" aria-label="Patkolási időpontok">
-
       @for (app of farrierApps; track app.farrierAppId) {
         <div
           class="farrier-card"
@@ -42,7 +38,6 @@
           [class.delete-mode]="deleteMode"
           (click)="onCardClick(app)"
         >
-
           <div class="farrier-card-header">
             <h3>{{ app.farrierName }}</h3>
             <span class="date-label">
@@ -57,17 +52,21 @@
               <ul class="horse-name-list">
                 @for (horse of (app.horseDetails || []).slice(0, 3); track horse.horseId) {
                   <li>
-                    {{ horse.horseName || ('Ló #' + horse.horseId) }}
+                    {{ horse.horseName || 'Ló #' + horse.horseId }}
                     <span class="horse-shoe-count">
-                      ({{ horse.shoeCount === 4 ? '4 patkó' : horse.shoeCount === 2 ? '2 patkó' : 'Nincs patkó' }})
+                      ({{
+                        horse.shoeCount === 4
+                          ? '4 patkó'
+                          : horse.shoeCount === 2
+                            ? '2 patkó'
+                            : 'Nincs patkó'
+                      }})
                     </span>
                   </li>
                 }
               </ul>
               @if (app.horseDetails && app.horseDetails.length > 3) {
-                <div class="muted">
-                  {{ app.horseDetails.length - 3 }} további ló...
-                </div>
+                <div class="muted">{{ app.horseDetails.length - 3 }} további ló...</div>
               }
             } @else {
               <div class="muted">Nincs csatolt ló.</div>
@@ -87,10 +86,8 @@
               <span>Kattints a törléshez</span>
             </div>
           }
-
         </div>
       }
-
     </section>
   }
 </div>

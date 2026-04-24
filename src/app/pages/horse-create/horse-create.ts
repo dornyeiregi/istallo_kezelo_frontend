@@ -19,10 +19,9 @@ import { FeedSchedItemDTO } from '../../models/feed-sched-item.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './horse-create.html',
-  styleUrls: ['./horse-create.css']
+  styleUrls: ['./horse-create.css'],
 })
 export class HorseCreatePage implements OnInit {
-
   horse: Partial<HorseDTO> = {
     horseName: '',
     dob: '',
@@ -32,7 +31,7 @@ export class HorseCreatePage implements OnInit {
     additional: '',
     stableName: '',
     ownerId: undefined,
-    feedSchedId: undefined
+    feedSchedId: undefined,
   };
 
   stables: StableDTO[] = [];
@@ -52,11 +51,10 @@ export class HorseCreatePage implements OnInit {
     private authService: AuthService,
     private feedSchedService: FeedSchedService,
     private feedSchedItemService: FeedSchedItemService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-
     this.preselectStableName = history.state['preselectStableName'] || null;
 
     if (this.preselectStableName) {
@@ -66,12 +64,12 @@ export class HorseCreatePage implements OnInit {
     if (this.isAdmin) {
       this.stableService.getAll().subscribe({
         next: (data) => (this.stables = data),
-        error: () => (this.error = 'Nem sikerült betölteni az istállókat.')
+        error: () => (this.error = 'Nem sikerült betölteni az istállókat.'),
       });
 
       this.feedSchedService.getAll().subscribe({
         next: (data) => (this.feedScheds = data),
-        error: () => (this.error = 'Nem sikerült betölteni az etetési ütemterveket.')
+        error: () => (this.error = 'Nem sikerült betölteni az etetési ütemterveket.'),
       });
 
       this.feedSchedItemService.getAll().subscribe({
@@ -80,15 +78,14 @@ export class HorseCreatePage implements OnInit {
         },
         error: () => {
           this.feedSchedItemsById = new Map();
-        }
+        },
       });
-
     }
 
     if (this.isAdmin) {
       this.userService.getAll().subscribe({
         next: (data) => (this.users = data),
-        error: () => (this.error = 'Nem sikerült betölteni a felhasználókat.')
+        error: () => (this.error = 'Nem sikerült betölteni a felhasználókat.'),
       });
     }
   }
@@ -123,7 +120,7 @@ export class HorseCreatePage implements OnInit {
         console.error(err);
         this.error = 'Nem sikerült létrehozni a lovat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -150,7 +147,7 @@ export class HorseCreatePage implements OnInit {
 
   private groupItemsByFeed(feedItems: FeedSchedItemDTO[]): Map<number, string[]> {
     const map = new Map<number, string[]>();
-    feedItems.forEach(fi => {
+    feedItems.forEach((fi) => {
       const list = map.get(fi.feedSchedId) || [];
       list.push(this.formatItemLabel(fi));
       map.set(fi.feedSchedId, list);

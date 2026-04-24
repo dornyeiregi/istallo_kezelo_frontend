@@ -5,7 +5,7 @@ import { HorseDTO } from '../models/horse.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HorseService {
   private apiUrl = `${API_BASE_URL}/api/horses`;
@@ -32,7 +32,6 @@ export class HorseService {
     return this.http.get<HorseDTO>(`${this.apiUrl}/byName/${encodeURIComponent(horseName)}`);
   }
 
-
   create(dto: HorseDTO): Observable<HorseDTO> {
     return this.http.post<HorseDTO>(this.apiUrl, dto);
   }
@@ -42,7 +41,7 @@ export class HorseService {
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text'});
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
 
   deactivate(id: number): Observable<HorseDTO> {
@@ -61,11 +60,16 @@ export class HorseService {
     return this.http.get<HorseDTO[]>(`${this.apiUrl}/requests/mine`);
   }
 
-  approveRequest(id: number, payload: { stableId: number; feedSchedId?: number | null }): Observable<HorseDTO> {
+  approveRequest(
+    id: number,
+    payload: { stableId: number; feedSchedId?: number | null },
+  ): Observable<HorseDTO> {
     return this.http.patch<HorseDTO>(`${this.apiUrl}/requests/${id}/approve`, payload);
   }
 
   rejectRequest(id: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/requests/${id}`, { responseType: 'text' }) as Observable<string>;
+    return this.http.delete(`${this.apiUrl}/requests/${id}`, {
+      responseType: 'text',
+    }) as Observable<string>;
   }
 }

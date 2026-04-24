@@ -17,7 +17,7 @@ import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './settings.html',
-  styleUrls: ['./settings.css']
+  styleUrls: ['./settings.css'],
 })
 export class SettingsPage implements OnInit {
   loading = true;
@@ -34,33 +34,33 @@ export class SettingsPage implements OnInit {
   employeeAccess: EmployeeAccessSettingsDTO = {
     viewShots: false,
     viewTreatments: false,
-    viewFarrierApps: false
+    viewFarrierApps: false,
   };
 
   form = {
     firstName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
   };
 
   passwordForm = {
     currentPassword: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
 
   themes: { value: AppTheme; label: string; description: string }[] = [
     {
       value: 'rose',
       label: 'Rose',
-      description: 'Rózsaszín téma'
+      description: 'Rózsaszín téma',
     },
     {
       value: 'sage',
       label: 'Sage',
-      description: 'Zöldes paletta'
-    }
+      description: 'Zöldes paletta',
+    },
   ];
 
   constructor(
@@ -68,7 +68,7 @@ export class SettingsPage implements OnInit {
     private userService: UserService,
     private themeService: ThemeService,
     private settingsService: SettingsService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -98,7 +98,7 @@ export class SettingsPage implements OnInit {
       error: () => {
         this.accessError = 'Nem sikerült betölteni az alkalmazotti hozzáféréseket.';
         this.accessLoading = false;
-      }
+      },
     });
   }
 
@@ -114,7 +114,7 @@ export class SettingsPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a felhasználói adatokat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -180,7 +180,7 @@ export class SettingsPage implements OnInit {
       this.passwordForm = {
         currentPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
       };
     }
   }
@@ -208,7 +208,7 @@ export class SettingsPage implements OnInit {
       userFname: this.form.firstName,
       userLname: this.form.lastName,
       fName: this.form.firstName,
-      lName: this.form.lastName
+      lName: this.form.lastName,
     };
 
     this.userService.update(this.user.userId, dto).subscribe({
@@ -217,18 +217,15 @@ export class SettingsPage implements OnInit {
           ...this.user!,
           ...updated,
           userFname: this.form.firstName,
-          userLname: this.form.lastName
+          userLname: this.form.lastName,
         };
 
-        const fullName = [this.form.lastName, this.form.firstName]
-          .filter(Boolean)
-          .join(' ')
-          .trim();
+        const fullName = [this.form.lastName, this.form.firstName].filter(Boolean).join(' ').trim();
 
         this.authService.updateStoredUser({
           email: this.form.email,
           phone: this.form.phone,
-          fullName: fullName || this.authUser?.fullName
+          fullName: fullName || this.authUser?.fullName,
         });
 
         this.successMessage = 'Adatok sikeresen frissítve.';
@@ -238,7 +235,7 @@ export class SettingsPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült frissíteni a felhasználói adatokat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -261,25 +258,24 @@ export class SettingsPage implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.authService.changePassword(
-      this.passwordForm.currentPassword,
-      this.passwordForm.newPassword
-    ).subscribe({
-      next: () => {
-        this.loading = false;
-        this.successMessage = 'Jelszó sikeresen módosítva.';
-        this.passwordMode = false;
-        this.passwordForm = {
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        };
-      },
-      error: () => {
-        this.loading = false;
-        this.error = 'Nem sikerült módosítani a jelszót.';
-      }
-    });
+    this.authService
+      .changePassword(this.passwordForm.currentPassword, this.passwordForm.newPassword)
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.successMessage = 'Jelszó sikeresen módosítva.';
+          this.passwordMode = false;
+          this.passwordForm = {
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          };
+        },
+        error: () => {
+          this.loading = false;
+          this.error = 'Nem sikerült módosítani a jelszót.';
+        },
+      });
   }
 
   setTheme(theme: AppTheme): void {
@@ -303,7 +299,7 @@ export class SettingsPage implements OnInit {
     const payload: EmployeeAccessSettingsDTO = {
       viewShots: !!this.employeeAccess.viewShots,
       viewTreatments: !!this.employeeAccess.viewTreatments,
-      viewFarrierApps: !!this.employeeAccess.viewFarrierApps
+      viewFarrierApps: !!this.employeeAccess.viewFarrierApps,
     };
 
     this.settingsService.updateEmployeeAccess(payload).subscribe({
@@ -311,12 +307,12 @@ export class SettingsPage implements OnInit {
         this.employeeAccess = { ...updated };
         this.accessLoading = false;
         this.accessMessage = 'Alkalmazotti hozzáférések frissítve.';
-        setTimeout(() => this.accessMessage = '', 2000);
+        setTimeout(() => (this.accessMessage = ''), 2000);
       },
       error: () => {
         this.accessLoading = false;
         this.accessError = 'Nem sikerült menteni az alkalmazotti hozzáféréseket.';
-      }
+      },
     });
   }
 
@@ -329,13 +325,13 @@ export class SettingsPage implements OnInit {
       {
         label: 'Adatok szerkesztése',
         icon: 'fa-pen-to-square',
-        onClick: () => this.toggleEditMode()
+        onClick: () => this.toggleEditMode(),
       },
       {
         label: 'Jelszó módosítása',
         icon: 'fa-key',
-        onClick: () => this.togglePasswordMode()
-      }
+        onClick: () => this.togglePasswordMode(),
+      },
     ];
   }
 }

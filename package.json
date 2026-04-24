@@ -8,7 +8,8 @@
     "start:lan": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:safari": "ng test --watch=false --browsers=Safari --reporters=progress"
   },
   "prettier": {
     "printWidth": 100,
@@ -49,6 +50,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "karma-safari-launcher": "^1.0.0",
     "typescript": "~5.9.2"
   }
 }

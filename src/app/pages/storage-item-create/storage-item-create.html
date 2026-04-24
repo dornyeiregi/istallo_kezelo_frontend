@@ -13,23 +13,14 @@
   }
 
   @if (success) {
-    <div class="success-msg">
-      Tétel és tároló sikeresen létrehozva!
-    </div>
+    <div class="success-msg">Tétel és tároló sikeresen létrehozva!</div>
   }
 
   <form (ngSubmit)="onSubmit()" #itemForm="ngForm" novalidate>
     <div class="form-group">
       <label for="name">Tétel neve *</label>
-      <input
-        id="name"
-        name="name"
-        type="text"
-        [(ngModel)]="form.name"
-        required
-      />
+      <input id="name" name="name" type="text" [(ngModel)]="form.name" required />
     </div>
-
 
     <div class="form-group">
       <label for="itemCategory">Kategória *</label>
@@ -47,22 +38,15 @@
       </select>
     </div>
 
-
     <div class="form-group">
       <label for="itemType">Típus *</label>
-      <select
-        id="itemType"
-        name="itemType"
-        [(ngModel)]="form.itemType"
-        required
-      >
+      <select id="itemType" name="itemType" [(ngModel)]="form.itemType" required>
         <option value="" disabled selected>Válassz típust</option>
         @for (type of filteredItemTypes; track type) {
           <option [ngValue]="type">{{ itemTypeLabels[type] }}</option>
         }
       </select>
     </div>
-
 
     <div class="form-group">
       <label for="feedUnitAmount">
@@ -71,7 +55,8 @@
           class="hint-icon"
           data-tooltip="Egy etetéshez felhasznált mennyiség. Pl. 1 kg/adag."
           aria-label="Etetési adag súgó"
-        >?</span>
+          >?</span
+        >
       </label>
       <input
         id="feedUnitAmount"
@@ -91,7 +76,8 @@
           class="hint-icon"
           data-tooltip="Add meg a darabszámot és az egy egység (zsák) súlyát. Összesen = darab × zsák (kg)."
           aria-label="Tároló mennyiség súgó"
-        >?</span>
+          >?</span
+        >
       </label>
       <div class="inline-group">
         <input
@@ -115,14 +101,10 @@
           required
         />
       </div>
-      <div class="hint">Összesen: {{ totalStored | number:'1.0-2' }} kg</div>
+      <div class="hint">Összesen: {{ totalStored | number: '1.0-2' }} kg</div>
     </div>
 
-    <button
-      type="submit"
-      class="submit-button"
-      [disabled]="loading || !itemForm.form.valid"
-    >
+    <button type="submit" class="submit-button" [disabled]="loading || !itemForm.form.valid">
       <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
       Létrehozás
     </button>

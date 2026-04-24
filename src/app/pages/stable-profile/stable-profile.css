@@ -138,7 +138,9 @@
 
 .horse-card {
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   border: 2px solid var(--app-border);
   border-radius: 10px;
   padding: 1rem;
@@ -147,13 +149,13 @@
 
 .horse-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   border-color: var(--app-accent);
 }
 
 .horse-card:active {
   transform: translateY(-1px);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .horse-card.edit-mode {
@@ -200,7 +202,7 @@
   border-radius: 12px;
   border: 1px solid var(--app-border);
   background: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .stable-edit-card h2 {
@@ -248,7 +250,7 @@
   padding: 0.2rem 0.4rem;
 }
 
-.bedding-row input[type="number"] {
+.bedding-row input[type='number'] {
   height: 36px;
   padding: 0.35rem 0.6rem;
   border-radius: 8px;

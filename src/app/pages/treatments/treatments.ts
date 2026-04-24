@@ -12,8 +12,11 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './treatments.html',
-  styleUrls: ['./treatments.css']
+  styleUrls: ['./treatments.css'],
 })
+/**
+ * Lists treatment records and coordinates list-level CRUD actions.
+ */
 export class TreatmentsPage implements OnInit {
   treatments: TreatmentDTO[] = [];
   loading = true;
@@ -28,7 +31,7 @@ export class TreatmentsPage implements OnInit {
   constructor(
     private treatmentService: TreatmentService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -40,8 +43,8 @@ export class TreatmentsPage implements OnInit {
 
     this.treatmentService.getAll().subscribe({
       next: (data) => {
-        this.treatments = data.sort((a, b) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime()
+        this.treatments = data.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
 
         this.loading = false;
@@ -50,7 +53,7 @@ export class TreatmentsPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a kezeléseket.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -71,8 +74,10 @@ export class TreatmentsPage implements OnInit {
     }
   }
 
+  /**
+   * Handles treatment card selection for delete, edit, and detail navigation modes.
+   */
   onCardClick(treatment: TreatmentDTO): void {
-    // Törlés mód
     if (this.deleteMode) {
       this.confirmDelete(treatment);
       return;
@@ -86,7 +91,6 @@ export class TreatmentsPage implements OnInit {
       return;
     }
 
-    // Normál kattintás
     if (treatment.treatmentId != null) {
       this.router.navigate(['/treatments', treatment.treatmentId]);
     }
@@ -101,9 +105,11 @@ export class TreatmentsPage implements OnInit {
 
     this.treatmentService.delete(this.confirmDeleteTreatment.treatmentId).subscribe({
       next: () => {
-        this.showToast(`A(z) ${this.confirmDeleteTreatment!.treatmentName} kezelés sikeresen törölve.`);
+        this.showToast(
+          `A(z) ${this.confirmDeleteTreatment!.treatmentName} kezelés sikeresen törölve.`,
+        );
         this.treatments = this.treatments.filter(
-          t => t.treatmentId !== this.confirmDeleteTreatment!.treatmentId
+          (t) => t.treatmentId !== this.confirmDeleteTreatment!.treatmentId,
         );
         this.confirmDeleteTreatment = null;
         this.deleteMode = false;
@@ -112,7 +118,7 @@ export class TreatmentsPage implements OnInit {
         this.showToast('Nem sikerült törölni a kezelést.');
         this.confirmDeleteTreatment = null;
         this.deleteMode = false;
-      }
+      },
     });
   }
 
@@ -134,7 +140,7 @@ export class TreatmentsPage implements OnInit {
       'ADMIN',
       'OWNER',
       'ROLE_ADMIN',
-      'ROLE_OWNER'
+      'ROLE_OWNER',
     ]);
 
     if (!isAdminOrOwner) {
@@ -150,12 +156,12 @@ export class TreatmentsPage implements OnInit {
           this.deleteMode = false;
           this.confirmDeleteTreatment = null;
           this.addTreatment();
-        }
+        },
       },
       {
         label: 'Szerkesztés',
         icon: 'fa-pen-to-square',
-        onClick: () => this.toggleEditMode()
+        onClick: () => this.toggleEditMode(),
       },
       {
         label: 'Törlés mód',
@@ -165,8 +171,8 @@ export class TreatmentsPage implements OnInit {
           this.editMode = false;
           this.confirmDeleteTreatment = null;
           this.toastVisible = false;
-        }
-      }
+        },
+      },
     ];
   }
 }

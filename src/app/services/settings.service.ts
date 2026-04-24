@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../config';
 import { EmployeeAccessSettingsDTO } from '../models/employee-access-settings.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingsService {
   private apiUrl = `${API_BASE_URL}/api/settings/employee-access`;
@@ -20,7 +20,7 @@ export class SettingsService {
         tap((data) => {
           this.cachedValue = data;
         }),
-        shareReplay(1)
+        shareReplay(1),
       );
     }
     return this.cache$;
@@ -31,7 +31,7 @@ export class SettingsService {
       tap((data) => {
         this.cachedValue = data;
         this.cache$ = undefined;
-      })
+      }),
     );
   }
 

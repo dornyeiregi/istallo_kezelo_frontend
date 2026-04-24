@@ -36,188 +36,189 @@ export const routes: Routes = [
   {
     path: '',
     component: HomePage,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'admin/users',
     component: AdminUsersPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ADMIN'] },
   },
   {
     path: 'user',
     redirectTo: 'settings',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'settings',
     component: SettingsPage,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'horses',
     component: HorsesPage,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'horses/new',
     component: HorseCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER']}
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'horses/edit/:id',
     component: HorseEditPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER']}
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'horses/:horseName',
     component: HorseProfilePage,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'stables',
     component: StablesPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE']}
+    data: { roles: ['ADMIN', 'EMPLOYEE'] },
   },
   {
     path: 'stables/new',
     component: StableCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ADMIN'] },
   },
   {
     path: 'stables/:stableName',
     component: StableProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE']}
+    data: { roles: ['ADMIN', 'EMPLOYEE'] },
   },
   {
     path: 'storages',
     component: StoragesPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE'] }
+    data: { roles: ['ADMIN', 'EMPLOYEE'] },
   },
   {
     path: 'storages/new-item',
     component: StorageItemCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ADMIN'] },
   },
   {
     path: 'shots',
     component: ShotsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewShots' }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewShots' },
   },
   {
     path: 'shots/new',
     component: ShotCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'shots/new/:horseId',
     component: ShotCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'shots/edit/:shotId',
     component: ShotEditPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'shots/:shotId',
     component: ShotProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewShots' }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewShots' },
   },
   {
     path: 'treatments',
     component: TreatmentsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewTreatments' }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewTreatments' },
   },
   {
     path: 'treatments/new',
     component: TreatmentCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'treatments/new/:horseId',
     component: TreatmentCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'treatments/edit/:treatmentId',
     component: TreatmentEditPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'treatments/:treatmentId',
     component: TreatmentProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewTreatments' }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewTreatments' },
   },
   {
     path: 'farrier-apps',
     component: FarrierAppsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'EMPLOYEE', 'OWNER'], employeeAccessSetting: 'viewFarrierApps' }
+    data: { roles: ['ADMIN', 'EMPLOYEE', 'OWNER'], employeeAccessSetting: 'viewFarrierApps' },
   },
   {
     path: 'farrier-apps/new',
     component: FarrierAppCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'farrier-apps/new/:horseId',
     component: FarrierAppCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'farrier-apps/edit/:farrierAppId',
     component: FarrierAppEditPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'farrier-apps/:farrierAppId',
     component: FarrierAppProfilePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewFarrierApps' }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'], employeeAccessSetting: 'viewFarrierApps' },
   },
   {
     path: 'feed-scheds/new',
     component: FeedSchedCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
   {
     path: 'feed-scheds/new/:horseId',
     component: FeedSchedCreatePage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER'] }
+    data: { roles: ['ADMIN', 'OWNER'] },
   },
-  { path: 'calendar',
+  {
+    path: 'calendar',
     component: CalendarPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'] }
+    data: { roles: ['ADMIN', 'OWNER', 'EMPLOYEE'] },
   },
   {
     path: 'requests',
     component: RequestsPage,
     canActivate: [authGuard],
-    data: { roles: ['ADMIN'] }
+    data: { roles: ['ADMIN'] },
   },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' },
 ];

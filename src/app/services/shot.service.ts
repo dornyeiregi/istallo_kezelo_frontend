@@ -5,7 +5,7 @@ import { ShotDTO } from '../models/shot.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShotService {
   private apiUrl = `${API_BASE_URL}/api/shots`;
@@ -29,11 +29,12 @@ export class ShotService {
   }
 
   update(id: number, dto: ShotDTO): Observable<string> {
-    return this.http.patch(`${this.apiUrl}/${id}`, dto, { responseType: 'text' }) as Observable<string>;
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, {
+      responseType: 'text',
+    }) as Observable<string>;
   }
 
   delete(id: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' }) as Observable<string>;
   }
-
 }

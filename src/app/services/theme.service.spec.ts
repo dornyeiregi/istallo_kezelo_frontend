@@ -7,7 +7,7 @@ describe('ThemeService', () => {
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({
-      providers: [ThemeService]
+      providers: [ThemeService],
     });
     service = TestBed.inject(ThemeService);
   });

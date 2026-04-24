@@ -14,7 +14,7 @@ import { UserDTO } from '../../models/user.model';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './user-profile.html',
-  styleUrls: ['./user-profile.css']
+  styleUrls: ['./user-profile.css'],
 })
 export class UserProfilePage implements OnInit {
   loading = true;
@@ -30,19 +30,19 @@ export class UserProfilePage implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
   };
 
   passwordForm = {
     currentPassword: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +70,7 @@ export class UserProfilePage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a felhasználói adatokat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -136,7 +136,7 @@ export class UserProfilePage implements OnInit {
       this.passwordForm = {
         currentPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
       };
     }
   }
@@ -164,7 +164,7 @@ export class UserProfilePage implements OnInit {
       userFname: this.form.firstName,
       userLname: this.form.lastName,
       fName: this.form.firstName,
-      lName: this.form.lastName
+      lName: this.form.lastName,
     };
 
     this.userService.update(this.user.userId, dto).subscribe({
@@ -173,18 +173,15 @@ export class UserProfilePage implements OnInit {
           ...this.user!,
           ...updated,
           userFname: this.form.firstName,
-          userLname: this.form.lastName
+          userLname: this.form.lastName,
         };
 
-        const fullName = [this.form.lastName, this.form.firstName]
-          .filter(Boolean)
-          .join(' ')
-          .trim();
+        const fullName = [this.form.lastName, this.form.firstName].filter(Boolean).join(' ').trim();
 
         this.authService.updateStoredUser({
           email: this.form.email,
           phone: this.form.phone,
-          fullName: fullName || this.authUser?.fullName
+          fullName: fullName || this.authUser?.fullName,
         });
 
         this.successMessage = 'Adatok sikeresen frissítve.';
@@ -194,7 +191,7 @@ export class UserProfilePage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült frissíteni a felhasználói adatokat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -217,25 +214,24 @@ export class UserProfilePage implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.authService.changePassword(
-      this.passwordForm.currentPassword,
-      this.passwordForm.newPassword
-    ).subscribe({
-      next: () => {
-        this.loading = false;
-        this.successMessage = 'Jelszó sikeresen módosítva.';
-        this.passwordMode = false;
-        this.passwordForm = {
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        };
-      },
-      error: () => {
-        this.loading = false;
-        this.error = 'Nem sikerült módosítani a jelszót.';
-      }
-    });
+    this.authService
+      .changePassword(this.passwordForm.currentPassword, this.passwordForm.newPassword)
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.successMessage = 'Jelszó sikeresen módosítva.';
+          this.passwordMode = false;
+          this.passwordForm = {
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          };
+        },
+        error: () => {
+          this.loading = false;
+          this.error = 'Nem sikerült módosítani a jelszót.';
+        },
+      });
   }
 
   goBack(): void {
@@ -247,13 +243,13 @@ export class UserProfilePage implements OnInit {
       {
         label: 'Adatok szerkesztése',
         icon: 'fa-pen-to-square',
-        onClick: () => this.toggleEditMode()
+        onClick: () => this.toggleEditMode(),
       },
       {
         label: 'Jelszó módosítása',
         icon: 'fa-key',
-        onClick: () => this.togglePasswordMode()
-      }
+        onClick: () => this.togglePasswordMode(),
+      },
     ];
   }
 }

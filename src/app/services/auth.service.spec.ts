@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { API_BASE_URL } from '../config';
@@ -17,7 +18,7 @@ describe('AuthService', () => {
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      providers: [AuthService],
     });
 
     service = TestBed.inject(AuthService);
@@ -33,7 +34,7 @@ describe('AuthService', () => {
     const user: AuthUser = {
       id: 1,
       username: 'u',
-      roles: ['ADMIN']
+      roles: ['ADMIN'],
     } as AuthUser;
     const response: AuthResponse = { token: 'tkn', user };
 
@@ -75,7 +76,7 @@ describe('AuthService', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      providers: [AuthService],
     });
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -93,17 +94,10 @@ describe('AuthService', () => {
 
   it('loadStoredUser clears invalid JSON', () => {
     localStorage.setItem(USER_KEY, '{invalid}');
-    const removeSpy = spyOn(localStorage, 'removeItem').and.callThrough();
 
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService]
-    });
-    service = TestBed.inject(AuthService);
-    httpMock = TestBed.inject(HttpTestingController);
+    service = new AuthService(TestBed.inject(HttpClient));
 
-    expect(removeSpy).toHaveBeenCalledWith(USER_KEY);
+    expect(localStorage.getItem(USER_KEY)).toBeNull();
     expect(service.isLoggedIn()).toBeFalse();
   });
 });

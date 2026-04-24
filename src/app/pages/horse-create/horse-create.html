@@ -9,8 +9,6 @@
   <h1>Új ló hozzáadása</h1>
 
   <form (ngSubmit)="onSubmit()" #horseForm="ngForm" novalidate>
-
-    <!-- Ló neve -->
     <div class="form-group">
       <label for="horseName">Ló neve *</label>
       <input
@@ -27,29 +25,14 @@
       }
     </div>
 
-    <!-- Születési idő -->
     <div class="form-group">
       <label for="dob">Születési idő (HH/NN/ÉÉÉÉ)</label>
-      <input
-        type="date"
-        id="dob"
-        name="dob"
-        [(ngModel)]="horse.dob"
-        required
-      />
+      <input type="date" id="dob" name="dob" [(ngModel)]="horse.dob" required />
     </div>
 
-
-    <!-- Nem -->
     <div class="form-group">
       <label for="sex">Ló neme *</label>
-      <select
-        id="sex"
-        name="sex"
-        [(ngModel)]="horse.sex"
-        required
-        #sex="ngModel"
-      >
+      <select id="sex" name="sex" [(ngModel)]="horse.sex" required #sex="ngModel">
         <option [ngValue]="null" disabled selected>Válassz...</option>
         <option value="G">Herélt</option>
         <option value="M">Csődör</option>
@@ -61,7 +44,6 @@
     </div>
 
     @if (isAdmin) {
-      <!-- Istálló kiválasztása -->
       <div class="form-group">
         <label for="stable">Istálló *</label>
         <select
@@ -87,22 +69,13 @@
     }
 
     @if (isAdmin) {
-      <!-- Tulajdonos kiválasztása -->
       <div class="form-group">
         <label for="owner">Tulajdonos *</label>
-        <select
-          id="owner"
-          name="ownerId"
-          [(ngModel)]="horse.ownerId"
-          required
-          #owner="ngModel"
-        >
+        <select id="owner" name="ownerId" [(ngModel)]="horse.ownerId" required #owner="ngModel">
           <option [ngValue]="null" disabled selected>Válassz tulajdonost...</option>
 
           @for (user of users; track user.username) {
-            <option [ngValue]="user.userId">
-              {{ user.userLname }} {{ user.userFname }}
-            </option>
+            <option [ngValue]="user.userId">{{ user.userLname }} {{ user.userFname }}</option>
           }
         </select>
 
@@ -112,7 +85,6 @@
       </div>
     }
 
-    <!-- Útlevélszám -->
     <div class="form-group">
       <label for="passportNum">Útlevélszám</label>
       <input
@@ -124,7 +96,6 @@
       />
     </div>
 
-    <!-- Mikrochip -->
     <div class="form-group">
       <label for="microchipNum">Mikrochip szám</label>
       <input
@@ -136,7 +107,6 @@
       />
     </div>
 
-    <!-- Megjegyzés -->
     <div class="form-group">
       <label for="additional">Megjegyzés</label>
       <textarea
@@ -147,12 +117,7 @@
       ></textarea>
     </div>
 
-    <!-- Submit -->
-    <button
-      type="submit"
-      [disabled]="horseForm.invalid || loading"
-      class="submit-button"
-    >
+    <button type="submit" [disabled]="horseForm.invalid || loading" class="submit-button">
       <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
       Ló mentése
     </button>
@@ -163,25 +128,23 @@
 
     @if (success) {
       <div class="success-msg">
-        {{ isAdmin ? 'Ló sikeresen hozzáadva!' : 'Kérés elküldve, admin jóváhagyás után jelenik meg.' }}
+        {{
+          isAdmin ? 'Ló sikeresen hozzáadva!' : 'Kérés elküldve, admin jóváhagyás után jelenik meg.'
+        }}
       </div>
     }
   </form>
 </div>
-    @if (isAdmin) {
-      <div class="form-group">
-        <label for="feedSchedId">Etetési ütemterv (opcionális)</label>
-        <select
-          id="feedSchedId"
-          name="feedSchedId"
-          [(ngModel)]="horse.feedSchedId"
-        >
-          <option [ngValue]="null">Nincs hozzárendelve</option>
-          @for (fs of feedScheds; track fs.feedSchedId) {
-            <option [ngValue]="fs.feedSchedId">
-              {{ getFeedSchedSelectLabel(fs) }}
-            </option>
-          }
-        </select>
-      </div>
-    }
+@if (isAdmin) {
+  <div class="form-group">
+    <label for="feedSchedId">Etetési ütemterv (opcionális)</label>
+    <select id="feedSchedId" name="feedSchedId" [(ngModel)]="horse.feedSchedId">
+      <option [ngValue]="null">Nincs hozzárendelve</option>
+      @for (fs of feedScheds; track fs.feedSchedId) {
+        <option [ngValue]="fs.feedSchedId">
+          {{ getFeedSchedSelectLabel(fs) }}
+        </option>
+      }
+    </select>
+  </div>
+}

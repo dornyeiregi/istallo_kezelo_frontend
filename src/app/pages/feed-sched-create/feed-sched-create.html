@@ -1,5 +1,4 @@
 <div class="form-container">
-
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -18,7 +17,6 @@
   }
 
   <form (ngSubmit)="onSubmit()" #feedForm="ngForm">
-
     <div class="form-group">
       <label>Etetési idő *</label>
       <div class="time-options">
@@ -27,7 +25,8 @@
             type="checkbox"
             name="feedMorning"
             [(ngModel)]="form.feedMorning"
-            (change)="onFeedTimeChange()" />
+            (change)="onFeedTimeChange()"
+          />
           Reggel
         </label>
         <label class="time-option">
@@ -35,7 +34,8 @@
             type="checkbox"
             name="feedNoon"
             [(ngModel)]="form.feedNoon"
-            (change)="onFeedTimeChange()" />
+            (change)="onFeedTimeChange()"
+          />
           Dél
         </label>
         <label class="time-option">
@@ -43,7 +43,8 @@
             type="checkbox"
             name="feedEvening"
             [(ngModel)]="form.feedEvening"
-            (change)="onFeedTimeChange()" />
+            (change)="onFeedTimeChange()"
+          />
           Este
         </label>
       </div>
@@ -55,7 +56,8 @@
         name="description"
         rows="4"
         [(ngModel)]="form.description"
-        placeholder="Rövid leírás az etetésről"></textarea>
+        placeholder="Rövid leírás az etetésről"
+      ></textarea>
     </div>
 
     <div class="form-group horse-list">
@@ -64,9 +66,7 @@
       @if (horses.length === 0) {
         <p>Nincs elérhető ló.</p>
       } @else {
-
         @for (horse of horses; track horse.id) {
-
           <label class="horse-row" [attr.data-key]="horse.id">
             <input
               type="checkbox"
@@ -179,7 +179,5 @@
     @if (loading) {
       <div class="info">Mentés folyamatban...</div>
     }
-
   </form>
-
 </div>

@@ -6,7 +6,7 @@ import {
   EventClickArg,
   EventInput,
   DatesSetArg,
-  EventMountArg
+  EventMountArg,
 } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import huLocale from '@fullcalendar/core/locales/hu';
@@ -33,7 +33,7 @@ import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings
   standalone: true,
   imports: [CommonModule, FormsModule, FullCalendarModule],
   templateUrl: './calendar.html',
-  styleUrls: ['./calendar.css']
+  styleUrls: ['./calendar.css'],
 })
 export class CalendarPage implements OnInit, OnDestroy {
   loading = false;
@@ -45,7 +45,7 @@ export class CalendarPage implements OnInit, OnDestroy {
   employeeAccess: EmployeeAccessSettingsDTO = {
     viewShots: false,
     viewTreatments: false,
-    viewFarrierApps: false
+    viewFarrierApps: false,
   };
   canViewShots = true;
   canViewTreatments = true;
@@ -72,7 +72,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     locale: huLocale,
     datesSet: (arg) => this.onDatesSet(arg),
     eventClick: (arg) => this.onEventClick(arg),
-    eventDidMount: (arg) => this.onEventMount(arg)
+    eventDidMount: (arg) => this.onEventMount(arg),
   };
 
   constructor(
@@ -83,7 +83,7 @@ export class CalendarPage implements OnInit, OnDestroy {
     private horseService: HorseService,
     private treatmentService: TreatmentService,
     private farrierAppService: FarrierAppService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
   ) {}
 
   ngOnInit(): void {
@@ -159,13 +159,13 @@ export class CalendarPage implements OnInit, OnDestroy {
       return;
     }
 
-    const requests = Array.from(this.customHorseIds).map(horseId =>
+    const requests = Array.from(this.customHorseIds).map((horseId) =>
       this.calendarEventService.create({
         horseId,
         eventType: 'CUSTOM',
         eventDate: this.customDate,
-        description: this.customDescription.trim()
-      })
+        description: this.customDescription.trim(),
+      }),
     );
 
     this.loading = true;
@@ -177,7 +177,7 @@ export class CalendarPage implements OnInit, OnDestroy {
       error: () => {
         this.loading = false;
         this.customError = 'Nem sikerült létrehozni az eseményt.';
-      }
+      },
     });
   }
 
@@ -209,23 +209,27 @@ export class CalendarPage implements OnInit, OnDestroy {
       shots: shots$,
       treatments: treatments$,
       farrierApps: farrierApps$,
-      horses: this.horseService.getAll()
+      horses: this.horseService.getAll(),
     }).subscribe({
       next: ({ events, shots, treatments, farrierApps, horses }) => {
         const dueEvents = this.buildDueShotEvents(shots, horses, start, end);
         const dueTreatments = this.buildDueTreatmentEvents(treatments, horses, start, end);
         const dueFarrier = this.buildDueFarrierEvents(farrierApps, horses, start, end);
         this.horses = horses;
-        this.shotById = new Map(shots.filter(s => s.shotId != null).map(s => [s.shotId!, s]));
-        this.treatmentById = new Map(treatments.filter(t => t.treatmentId != null).map(t => [t.treatmentId!, t]));
-        this.farrierById = new Map(farrierApps.filter(f => f.farrierAppId != null).map(f => [f.farrierAppId!, f]));
+        this.shotById = new Map(shots.filter((s) => s.shotId != null).map((s) => [s.shotId!, s]));
+        this.treatmentById = new Map(
+          treatments.filter((t) => t.treatmentId != null).map((t) => [t.treatmentId!, t]),
+        );
+        this.farrierById = new Map(
+          farrierApps.filter((f) => f.farrierAppId != null).map((f) => [f.farrierAppId!, f]),
+        );
         this.allEvents = [...events, ...dueEvents, ...dueTreatments, ...dueFarrier];
         this.applyFilters();
         this.loading = false;
       },
       error: () => {
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -236,12 +240,12 @@ export class CalendarPage implements OnInit, OnDestroy {
       start: event.eventDate,
       allDay: true,
       color: this.getEventColor(event.eventType),
-      extendedProps: { dto: event }
+      extendedProps: { dto: event },
     }));
 
     this.calendarOptions = {
       ...this.calendarOptions,
-      events: mappedEvents
+      events: mappedEvents,
     };
   }
 
@@ -256,19 +260,17 @@ export class CalendarPage implements OnInit, OnDestroy {
         this.router.navigate(['/shots', dto.relatedEntityId]);
         break;
       case 'SHOT_DUE':
-        this.router.navigate(
-          ['/shots', dto.relatedEntityId],
-          { queryParams: { dueDate: dto.eventDate } }
-        );
+        this.router.navigate(['/shots', dto.relatedEntityId], {
+          queryParams: { dueDate: dto.eventDate },
+        });
         break;
       case 'TREATMENT':
         this.router.navigate(['/treatments', dto.relatedEntityId]);
         break;
       case 'TREATMENT_DUE':
-        this.router.navigate(
-          ['/treatments', dto.relatedEntityId],
-          { queryParams: { dueDate: dto.eventDate } }
-        );
+        this.router.navigate(['/treatments', dto.relatedEntityId], {
+          queryParams: { dueDate: dto.eventDate },
+        });
         break;
       case 'FARRIER_APP':
       case 'FARRIERAPP':
@@ -277,10 +279,9 @@ export class CalendarPage implements OnInit, OnDestroy {
         break;
       case 'FARRIER_APP_DUE':
       case 'FARRIERAPP_DUE':
-        this.router.navigate(
-          ['/farrier-apps', dto.relatedEntityId],
-          { queryParams: { dueDate: dto.eventDate } }
-        );
+        this.router.navigate(['/farrier-apps', dto.relatedEntityId], {
+          queryParams: { dueDate: dto.eventDate },
+        });
         break;
       default:
         break;
@@ -320,7 +321,14 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (treatment?.treatmentName) details.push(`Kezelés: ${treatment.treatmentName}`);
     }
 
-    if ((type === 'FARRIER_APP' || type === 'FARRIERAPP' || type === 'FARRIER' || type === 'FARRIER_APP_DUE' || type === 'FARRIERAPP_DUE') && relatedId != null) {
+    if (
+      (type === 'FARRIER_APP' ||
+        type === 'FARRIERAPP' ||
+        type === 'FARRIER' ||
+        type === 'FARRIER_APP_DUE' ||
+        type === 'FARRIERAPP_DUE') &&
+      relatedId != null
+    ) {
       const app = this.farrierById.get(relatedId);
       if (app?.farrierName) details.push(`Patkoló: ${app.farrierName}`);
       const shoeLabel = this.getFarrierShoeLabel(app, event.horseId);
@@ -336,7 +344,7 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   private getFarrierShoeLabel(app: FarrierAppDTO | undefined, horseId: number): string | null {
     if (!app?.horseDetails || !horseId) return null;
-    const detail = app.horseDetails.find(h => h.horseId === horseId);
+    const detail = app.horseDetails.find((h) => h.horseId === horseId);
     if (!detail) return null;
     switch (detail.shoeCount) {
       case 4:
@@ -490,14 +498,14 @@ export class CalendarPage implements OnInit, OnDestroy {
         this.canViewTreatments = false;
         this.canViewFarrierApps = false;
         this.reload();
-      }
+      },
     });
   }
 
   private applyFilters(): void {
     const typeFilter = this.selectedEventType;
     const horseFilter = this.selectedHorseId;
-    const filtered = this.allEvents.filter(event => {
+    const filtered = this.allEvents.filter((event) => {
       if (typeFilter !== 'all') {
         const normalized = this.normalizeEventType(event.eventType);
         if (typeFilter === 'SHOT') {
@@ -505,7 +513,13 @@ export class CalendarPage implements OnInit, OnDestroy {
         } else if (typeFilter === 'TREATMENT') {
           if (normalized !== 'TREATMENT' && normalized !== 'TREATMENT_DUE') return false;
         } else if (typeFilter === 'FARRIER_APP') {
-          if (normalized !== 'FARRIER_APP' && normalized !== 'FARRIERAPP' && normalized !== 'FARRIER_APP_DUE' && normalized !== 'FARRIERAPP_DUE') return false;
+          if (
+            normalized !== 'FARRIER_APP' &&
+            normalized !== 'FARRIERAPP' &&
+            normalized !== 'FARRIER_APP_DUE' &&
+            normalized !== 'FARRIERAPP_DUE'
+          )
+            return false;
         } else if (normalized !== typeFilter) {
           return false;
         }
@@ -523,15 +537,15 @@ export class CalendarPage implements OnInit, OnDestroy {
     shots: ShotDTO[],
     horses: HorseDTO[],
     start?: string | null,
-    end?: string | null
+    end?: string | null,
   ): CalendarEventDTO[] {
     const horseNameById = new Map<number, string>();
-    horses.forEach(h => {
+    horses.forEach((h) => {
       if (h.id != null) horseNameById.set(h.id, h.horseName);
     });
 
     const result: CalendarEventDTO[] = [];
-    shots.forEach(shot => {
+    shots.forEach((shot) => {
       if (!shot.shotId || !shot.date) return;
       if (!shot.frequencyValue || !shot.frequencyUnit) return;
       if (!shot.horseIds || shot.horseIds.length === 0) return;
@@ -546,13 +560,13 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (start && nextIso < start) return;
       if (end && nextIso >= end) return;
 
-      shot.horseIds.forEach(horseId => {
+      shot.horseIds.forEach((horseId) => {
         result.push({
           horseId,
           horseName: horseNameById.get(horseId),
           eventType: 'SHOT_DUE',
           eventDate: nextIso,
-          relatedEntityId: shot.shotId
+          relatedEntityId: shot.shotId,
         });
       });
     });
@@ -564,15 +578,15 @@ export class CalendarPage implements OnInit, OnDestroy {
     treatments: TreatmentDTO[],
     horses: HorseDTO[],
     start?: string | null,
-    end?: string | null
+    end?: string | null,
   ): CalendarEventDTO[] {
     const horseNameById = new Map<number, string>();
-    horses.forEach(h => {
+    horses.forEach((h) => {
       if (h.id != null) horseNameById.set(h.id, h.horseName);
     });
 
     const result: CalendarEventDTO[] = [];
-    treatments.forEach(treatment => {
+    treatments.forEach((treatment) => {
       if (!treatment.treatmentId || !treatment.date) return;
       if (!treatment.frequencyValue || !treatment.frequencyUnit) return;
       if (!treatment.horseIds || treatment.horseIds.length === 0) return;
@@ -580,20 +594,24 @@ export class CalendarPage implements OnInit, OnDestroy {
       const baseDate = new Date(treatment.date);
       if (Number.isNaN(baseDate.getTime())) return;
 
-      const nextDate = this.addFrequency(baseDate, treatment.frequencyValue, treatment.frequencyUnit);
+      const nextDate = this.addFrequency(
+        baseDate,
+        treatment.frequencyValue,
+        treatment.frequencyUnit,
+      );
       if (!nextDate) return;
 
       const nextIso = this.toIsoDate(nextDate);
       if (start && nextIso < start) return;
       if (end && nextIso >= end) return;
 
-      treatment.horseIds.forEach(horseId => {
+      treatment.horseIds.forEach((horseId) => {
         result.push({
           horseId,
           horseName: horseNameById.get(horseId),
           eventType: 'TREATMENT_DUE',
           eventDate: nextIso,
-          relatedEntityId: treatment.treatmentId
+          relatedEntityId: treatment.treatmentId,
         });
       });
     });
@@ -605,15 +623,15 @@ export class CalendarPage implements OnInit, OnDestroy {
     farrierApps: FarrierAppDTO[],
     horses: HorseDTO[],
     start?: string | null,
-    end?: string | null
+    end?: string | null,
   ): CalendarEventDTO[] {
     const horseNameById = new Map<number, string>();
-    horses.forEach(h => {
+    horses.forEach((h) => {
       if (h.id != null) horseNameById.set(h.id, h.horseName);
     });
 
     const result: CalendarEventDTO[] = [];
-    farrierApps.forEach(app => {
+    farrierApps.forEach((app) => {
       if (!app.farrierAppId || !app.appointmentDate) return;
       if (!app.frequencyValue || !app.frequencyUnit) return;
       if (!app.horseIds || app.horseIds.length === 0) return;
@@ -628,13 +646,13 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (start && nextIso < start) return;
       if (end && nextIso >= end) return;
 
-      app.horseIds.forEach(horseId => {
+      app.horseIds.forEach((horseId) => {
         result.push({
           horseId,
           horseName: horseNameById.get(horseId),
           eventType: 'FARRIER_APP_DUE',
           eventDate: nextIso,
-          relatedEntityId: app.farrierAppId
+          relatedEntityId: app.farrierAppId,
         });
       });
     });
@@ -677,9 +695,12 @@ export class CalendarPage implements OnInit, OnDestroy {
     const upper = (unit || '').toUpperCase();
     const normalized = upper.replace(/[ÁÉÍÓÖŐÚÜŰ]/g, (ch) => {
       switch (ch) {
-        case 'Á': return 'A';
-        case 'É': return 'E';
-        case 'Í': return 'I';
+        case 'Á':
+          return 'A';
+        case 'É':
+          return 'E';
+        case 'Í':
+          return 'I';
         case 'Ó':
         case 'Ö':
         case 'Ő':

@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, CrudMenuComponent, FormsModule],
   templateUrl: './stable-profile.html',
-  styleUrls: ['./stable-profile.css']
+  styleUrls: ['./stable-profile.css'],
 })
 export class StableProfilePage implements OnInit {
   stable?: StableDTO;
@@ -45,11 +45,13 @@ export class StableProfilePage implements OnInit {
     private horseService: HorseService,
     private authService: AuthService,
     private feedSchedService: FeedSchedService,
-    private itemService: ItemService
+    private itemService: ItemService,
   ) {}
 
   ngOnInit(): void {
-    const navStable = this.router.getCurrentNavigation()?.extras.state?.['stable'] as StableDTO | undefined;
+    const navStable = this.router.getCurrentNavigation()?.extras.state?.['stable'] as
+      | StableDTO
+      | undefined;
     if (navStable) {
       this.stable = navStable;
       this.loading = false;
@@ -75,7 +77,7 @@ export class StableProfilePage implements OnInit {
 
   get activeHorses(): HorseDTO[] {
     if (!this.stable?.horses) return [];
-    return this.stable.horses.filter(horse => horse.isActive !== false);
+    return this.stable.horses.filter((horse) => horse.isActive !== false);
   }
 
   get canDelete(): boolean {
@@ -105,7 +107,7 @@ export class StableProfilePage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni az istálló adatait.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -113,12 +115,12 @@ export class StableProfilePage implements OnInit {
     this.itemService.getAll().subscribe({
       next: (items) => {
         this.items = items;
-        this.beddingItems = items.filter(i => (i.itemType || '').toUpperCase() === 'BEDDING');
+        this.beddingItems = items.filter((i) => (i.itemType || '').toUpperCase() === 'BEDDING');
       },
       error: () => {
         this.items = [];
         this.beddingItems = [];
-      }
+      },
     });
   }
 
@@ -129,15 +131,11 @@ export class StableProfilePage implements OnInit {
     }
 
     if (this.editMode) {
-      this.router.navigate(
-        ['/horses/edit', horse.id],
-        { state: { returnToStable: this.stable?.stableName } }
-      );
+      this.router.navigate(['/horses/edit', horse.id], {
+        state: { returnToStable: this.stable?.stableName },
+      });
     } else {
-      this.router.navigate(
-        ['/horses', horse.horseName],
-        { state: { horse } }
-      );
+      this.router.navigate(['/horses', horse.horseName], { state: { horse } });
     }
   }
 
@@ -149,11 +147,11 @@ export class StableProfilePage implements OnInit {
     }
 
     this.dailyFeedLoading = true;
-    const feedRequests = horses.map(h => this.feedSchedService.getAllOfHorseById(h.id!));
+    const feedRequests = horses.map((h) => this.feedSchedService.getAllOfHorseById(h.id!));
 
     forkJoin({
       items: this.itemService.getAll(),
-      feeds: feedRequests.length ? forkJoin(feedRequests) : of([])
+      feeds: feedRequests.length ? forkJoin(feedRequests) : of([]),
     }).subscribe({
       next: ({ items, feeds }) => {
         const totals = this.buildDailyTotals(items, feeds as FeedSchedDTO[][], horses);
@@ -163,13 +161,13 @@ export class StableProfilePage implements OnInit {
       error: () => {
         this.dailyFeedTotals = [];
         this.dailyFeedLoading = false;
-      }
+      },
     });
   }
 
   private buildDailyTotals(items: ItemDTO[], feedsByHorse: FeedSchedDTO[][], horses: HorseDTO[]) {
     const itemNameById = new Map<number, string>();
-    items.forEach(item => {
+    items.forEach((item) => {
       if (item.itemId != null) itemNameById.set(item.itemId, item.name);
     });
 
@@ -188,7 +186,7 @@ export class StableProfilePage implements OnInit {
     const addFeed = (feed: FeedSchedDTO | null) => {
       if (!feed) return;
       if (feed.items && feed.items.length > 0) {
-        feed.items.forEach(item => {
+        feed.items.forEach((item) => {
           const id = item.itemId;
           if (id == null) return;
           const amount = Number.isFinite(item.amount) ? item.amount : 0;
@@ -197,16 +195,16 @@ export class StableProfilePage implements OnInit {
         return;
       }
       if (feed.itemIds && feed.itemIds.length > 0) {
-        feed.itemIds.forEach(id => {
+        feed.itemIds.forEach((id) => {
           totals.set(id, (totals.get(id) || 0) + 1);
         });
       }
     };
 
     feedsByHorse.forEach((feeds) => {
-      const morning = pickLatest(feeds, f => !!f.feedMorning);
-      const noon = pickLatest(feeds, f => !!f.feedNoon);
-      const evening = pickLatest(feeds, f => !!f.feedEvening);
+      const morning = pickLatest(feeds, (f) => !!f.feedMorning);
+      const noon = pickLatest(feeds, (f) => !!f.feedNoon);
+      const evening = pickLatest(feeds, (f) => !!f.feedEvening);
       addFeed(morning);
       addFeed(noon);
       addFeed(evening);
@@ -216,7 +214,7 @@ export class StableProfilePage implements OnInit {
       .map(([itemId, amount]) => ({
         itemId,
         name: itemNameById.get(itemId) || `Tétel #${itemId}`,
-        amount
+        amount,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }
@@ -247,15 +245,17 @@ export class StableProfilePage implements OnInit {
   performDelete(mode: 'delete' | 'deactivate'): void {
     if (!this.confirmDeleteHorse?.id) return;
 
-    const action$ = mode === 'deactivate'
-      ? this.horseService.deactivate(this.confirmDeleteHorse.id)
-      : this.horseService.delete(this.confirmDeleteHorse.id);
+    const action$ =
+      mode === 'deactivate'
+        ? this.horseService.deactivate(this.confirmDeleteHorse.id)
+        : this.horseService.delete(this.confirmDeleteHorse.id);
 
     action$.subscribe({
       next: () => {
-        const message = mode === 'deactivate'
-          ? `A(z) ${this.confirmDeleteHorse?.horseName} eltávolítva az istállóból.`
-          : `A(z) ${this.confirmDeleteHorse?.horseName} törölve.`;
+        const message =
+          mode === 'deactivate'
+            ? `A(z) ${this.confirmDeleteHorse?.horseName} eltávolítva az istállóból.`
+            : `A(z) ${this.confirmDeleteHorse?.horseName} törölve.`;
         this.showToast(message);
         this.confirmDeleteHorse = null;
 
@@ -269,7 +269,7 @@ export class StableProfilePage implements OnInit {
         this.showToast('Nem sikerült törölni a lovat.');
         this.confirmDeleteHorse = null;
         this.deleteMode = false;
-      }
+      },
     });
   }
 
@@ -290,7 +290,7 @@ export class StableProfilePage implements OnInit {
     if (!this.stable) return;
     const items = this.stable.stableItems || [];
     this.stableEditItems = items.length
-      ? items.map(link => ({ itemId: link.itemId, usageKg: link.usageKg }))
+      ? items.map((link) => ({ itemId: link.itemId, usageKg: link.usageKg }))
       : [];
   }
 
@@ -317,18 +317,19 @@ export class StableProfilePage implements OnInit {
       seenItemIds.add(row.itemId);
       const usage = Number.isFinite(row.usageKg as number) ? (row.usageKg as number) : 0;
       if (usage <= 0) {
-        this.stableEditError = 'Minden kiválasztott alom tételhez adj meg pozitív napi mennyiséget.';
+        this.stableEditError =
+          'Minden kiválasztott alom tételhez adj meg pozitív napi mennyiséget.';
         return;
       }
       stableItems.push({
         itemId: row.itemId as number,
-        usageKg: usage
+        usageKg: usage,
       });
     }
 
     const dto: Partial<StableDTO> = {
       strawUsageKg: this.totalBeddingUsage,
-      stableItems
+      stableItems,
     };
 
     this.stableService.update(this.stable.stableId, dto).subscribe({
@@ -341,7 +342,7 @@ export class StableProfilePage implements OnInit {
       },
       error: () => {
         this.stableEditError = 'Nem sikerült menteni az istálló adatokat.';
-      }
+      },
     });
   }
 
@@ -355,34 +356,31 @@ export class StableProfilePage implements OnInit {
   get crudActions() {
     const actions = [
       {
-        label: "Hozzáadás",
-        icon: "fa-plus",
+        label: 'Hozzáadás',
+        icon: 'fa-plus',
         onClick: () => {
-          this.router.navigate(
-            ['/horses/new'],
-            { 
-              state: { 
-                preselectStableId: this.stable?.stableId,
-                preselectStableName: this.stable?.stableName
-              }
-            }
-          );
-        }
+          this.router.navigate(['/horses/new'], {
+            state: {
+              preselectStableId: this.stable?.stableId,
+              preselectStableName: this.stable?.stableName,
+            },
+          });
+        },
       },
       {
-        label: "Szerkesztés",
-        icon: "fa-pen-to-square",
-        onClick: () => this.toggleEditMode()
+        label: 'Szerkesztés',
+        icon: 'fa-pen-to-square',
+        onClick: () => this.toggleEditMode(),
       },
       {
-        label: "Törlés",
-        icon: "fa-trash",
-        onClick: () => this.toggleDeleteMode()
-      }
+        label: 'Törlés',
+        icon: 'fa-trash',
+        onClick: () => this.toggleDeleteMode(),
+      },
     ];
 
     if (!this.canDelete) {
-      return actions.filter(action => action.label !== 'Törlés');
+      return actions.filter((action) => action.label !== 'Törlés');
     }
 
     return actions;
@@ -400,5 +398,4 @@ export class StableProfilePage implements OnInit {
         return sex ?? '';
     }
   }
-
 }

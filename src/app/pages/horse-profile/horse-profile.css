@@ -269,7 +269,7 @@
   align-items: center;
 }
 
-.item-row input[type="number"] {
+.item-row input[type='number'] {
   padding: 0.3rem 0.5rem;
   border: 1px solid var(--app-border);
   border-radius: 6px;
@@ -339,12 +339,12 @@
   margin-bottom: 0.8rem;
   cursor: pointer;
   transition: 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .shot-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
   background: var(--app-chip-bg);
 }
 
@@ -435,8 +435,14 @@
 }
 
 @keyframes popupFadeIn {
-  from { transform: translateY(-8px); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .popup h2 {
@@ -508,4 +514,6 @@ button.secondary:hover {
   background: #ccc2c5;
 }
 
-.mt { margin-top: 12px; }
+.mt {
+  margin-top: 12px;
+}

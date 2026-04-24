@@ -21,11 +21,8 @@
   } @else if (error) {
     <div class="load-error">{{ error }}</div>
   } @else {
-
     @if (deleteMode) {
-      <div class="delete-warning">
-        Törlés mód aktív — kattints a törölni kívánt kezelésre.
-      </div>
+      <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt kezelésre.</div>
     }
     @if (editMode) {
       <div class="delete-warning">
@@ -34,7 +31,6 @@
     }
 
     <section class="treatment-grid" aria-label="Kezelések listája">
-
       @for (treatment of treatments; track treatment.treatmentId) {
         <div
           class="treatment-card"
@@ -42,7 +38,6 @@
           [class.delete-mode]="deleteMode"
           (click)="onCardClick(treatment)"
         >
-
           <div class="treatment-card-header">
             <h3>{{ treatment.treatmentName }}</h3>
             <span class="date-label">
@@ -66,10 +61,8 @@
               <span>Kattints a törléshez</span>
             </div>
           }
-
         </div>
       }
-
     </section>
   }
 </div>

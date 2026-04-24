@@ -20,7 +20,7 @@ h1 {
   padding: 1.3rem;
   border-radius: 10px;
   border: 2px solid var(--app-border);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .planned-dates,
@@ -30,7 +30,7 @@ h1 {
   padding: 1.2rem 1.3rem;
   border-radius: 12px;
   border: 2px solid var(--app-border);
-  box-shadow: 0 6px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.06);
 }
 
 .planned-dates h2,
@@ -60,7 +60,7 @@ h1 {
   background-color: #e57f00;
 }
 
-.due-panel input[type="date"] {
+.due-panel input[type='date'] {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
@@ -138,7 +138,7 @@ h1 {
   background: var(--app-chip-bg);
 }
 
-.horse-row input[type="checkbox"] {
+.horse-row input[type='checkbox'] {
   transform: scale(1.25);
   margin-right: 6px;
 }

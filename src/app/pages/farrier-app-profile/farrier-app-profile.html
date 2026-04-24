@@ -13,7 +13,6 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else if (farrierApp) {
-
     <h1>{{ farrierApp.farrierName }}</h1>
 
     <div class="farrier-details">
@@ -48,13 +47,13 @@
         </label>
         <div class="mt">
           <label>Patkolás dátuma:</label>
-          <input
-            type="date"
-            [(ngModel)]="completedDate"
-            [disabled]="!markDueCompleted"
-          />
+          <input type="date" [(ngModel)]="completedDate" [disabled]="!markDueCompleted" />
         </div>
-        <button class="save-button" (click)="confirmDueFarrier()" [disabled]="saving || !markDueCompleted">
+        <button
+          class="save-button"
+          (click)="confirmDueFarrier()"
+          [disabled]="saving || !markDueCompleted"
+        >
           Mentés
         </button>
       </div>
@@ -63,7 +62,6 @@
     <hr />
 
     @if (!editHorsesMode) {
-
       <h2>Csatolt lovak</h2>
 
       <ul class="horse-list">
@@ -83,9 +81,7 @@
           }
         }
       </ul>
-
     } @else {
-
       <h2>Lovak szerkesztése</h2>
 
       @if (successMessage) {
@@ -108,7 +104,8 @@
               <div class="horse-details">
                 <select
                   name="shoeCount-{{ horse.id }}"
-                  [(ngModel)]="getHorseDetail(horse.id!).shoeCount">
+                  [(ngModel)]="getHorseDetail(horse.id!).shoeCount"
+                >
                   <option [ngValue]="0">Nincs patkó</option>
                   <option [ngValue]="2">2 patkó</option>
                   <option [ngValue]="4">4 patkó</option>
@@ -117,7 +114,8 @@
                   type="text"
                   name="horseNote-{{ horse.id }}"
                   placeholder="Megjegyzés"
-                  [(ngModel)]="getHorseDetail(horse.id!).note" />
+                  [(ngModel)]="getHorseDetail(horse.id!).note"
+                />
               </div>
             }
           </div>
@@ -128,9 +126,7 @@
         Mentés
       </button>
 
-      <button class="cancel-button" (click)="editHorsesMode = false">
-        Mégse
-      </button>
+      <button class="cancel-button" (click)="editHorsesMode = false">Mégse</button>
     }
   }
 </div>

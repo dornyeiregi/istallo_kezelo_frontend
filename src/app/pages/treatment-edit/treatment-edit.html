@@ -1,5 +1,4 @@
 <div class="form-container">
-
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -14,56 +13,48 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else {
-
     @if (success) {
       <div class="success-msg">Kezelés sikeresen frissítve!</div>
     }
 
     <form (ngSubmit)="onSubmit()" #treatmentForm="ngForm">
-
       <div class="form-group">
         <label>Kezelés neve *</label>
-        <input type="text"
-               name="treatmentName"
-               [(ngModel)]="form.treatmentName"
-               required />
+        <input type="text" name="treatmentName" [(ngModel)]="form.treatmentName" required />
       </div>
 
-    <div class="form-group">
-      <label>Dátum *</label>
-      <input type="date"
-             name="date"
-             [(ngModel)]="form.date"
-             required />
-    </div>
-
-    <div class="form-group">
-      <label>Gyakoriság</label>
-      <div class="inline-group">
-        <input
-          type="number"
-          name="frequencyValue"
-          min="1"
-          placeholder="Mennyiség"
-          [(ngModel)]="form.frequencyValue" />
-        <select
-          name="frequencyUnit"
-          [(ngModel)]="form.frequencyUnit">
-          <option [ngValue]="''">Nincs</option>
-          @for (unit of frequencyUnits; track unit) {
-            <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
-          }
-        </select>
+      <div class="form-group">
+        <label>Dátum *</label>
+        <input type="date" name="date" [(ngModel)]="form.date" required />
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Leírás</label>
-      <textarea
-        name="description"
+      <div class="form-group">
+        <label>Gyakoriság</label>
+        <div class="inline-group">
+          <input
+            type="number"
+            name="frequencyValue"
+            min="1"
+            placeholder="Mennyiség"
+            [(ngModel)]="form.frequencyValue"
+          />
+          <select name="frequencyUnit" [(ngModel)]="form.frequencyUnit">
+            <option [ngValue]="''">Nincs</option>
+            @for (unit of frequencyUnits; track unit) {
+              <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Leírás</label>
+        <textarea
+          name="description"
           rows="4"
           [(ngModel)]="form.description"
-          placeholder="Rövid leírás a kezelésről"></textarea>
+          placeholder="Rövid leírás a kezelésről"
+        ></textarea>
       </div>
 
       <div class="form-group horse-list">
@@ -72,9 +63,7 @@
         @if (horses.length === 0) {
           <p>Nincs elérhető ló.</p>
         } @else {
-
           @for (horse of horses; track horse.id) {
-
             <label class="horse-row" [attr.data-key]="horse.id">
               <input
                 type="checkbox"
@@ -95,8 +84,6 @@
       @if (loading) {
         <div class="info">Mentés folyamatban...</div>
       }
-
     </form>
   }
-
 </div>

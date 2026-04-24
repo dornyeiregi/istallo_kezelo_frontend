@@ -13,7 +13,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './farrier-app-edit.html',
-  styleUrls: ['./farrier-app-edit.css']
+  styleUrls: ['./farrier-app-edit.css'],
 })
 export class FarrierAppEditPage implements OnInit {
   loading = false;
@@ -32,7 +32,7 @@ export class FarrierAppEditPage implements OnInit {
     appointmentDate: '',
     frequencyUnit: '',
     frequencyValue: undefined,
-    horseIds: []
+    horseIds: [],
   };
 
   frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
@@ -40,14 +40,14 @@ export class FarrierAppEditPage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   constructor(
     private farrierAppService: FarrierAppService,
     private horseService: HorseService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class FarrierAppEditPage implements OnInit {
 
     forkJoin({
       farrierApp: this.farrierAppService.getById(id),
-      horses: this.horseService.getAll()
+      horses: this.horseService.getAll(),
     }).subscribe({
       next: ({ farrierApp, horses }) => {
         this.form = {
@@ -74,7 +74,7 @@ export class FarrierAppEditPage implements OnInit {
           frequencyValue: farrierApp.frequencyValue ?? undefined,
           shoes: farrierApp.shoes ?? null,
           horseIds: farrierApp.horseIds || [],
-          horseDetails: farrierApp.horseDetails || []
+          horseDetails: farrierApp.horseDetails || [],
         };
 
         this.horses = horses;
@@ -85,7 +85,7 @@ export class FarrierAppEditPage implements OnInit {
             this.horseDetails.set(detail.horseId, {
               horseId: detail.horseId,
               shoeCount: detail.shoeCount ?? 0,
-              note: detail.note ?? ''
+              note: detail.note ?? '',
             });
           }
         });
@@ -99,7 +99,7 @@ export class FarrierAppEditPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a patkolási időpontot.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -152,9 +152,9 @@ export class FarrierAppEditPage implements OnInit {
         return {
           horseId,
           shoeCount: detail.shoeCount ?? 0,
-          note: detail.note ?? ''
+          note: detail.note ?? '',
         };
-      })
+      }),
     };
 
     this.farrierAppService.update(this.farrierAppId, dto).subscribe({
@@ -163,16 +163,13 @@ export class FarrierAppEditPage implements OnInit {
         this.success = true;
 
         setTimeout(() => {
-          this.router.navigate(
-            ['/farrier-apps', this.farrierAppId],
-            { state: { fromEdit: true } }
-          );
+          this.router.navigate(['/farrier-apps', this.farrierAppId], { state: { fromEdit: true } });
         }, 800);
       },
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült frissíteni a patkolási időpontot.';
-      }
+      },
     });
   }
 

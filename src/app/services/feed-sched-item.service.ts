@@ -5,7 +5,7 @@ import { FeedSchedItemDTO } from '../models/feed-sched-item.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FeedSchedItemService {
   private apiUrl = `${API_BASE_URL}/api/feedSchedItems`;

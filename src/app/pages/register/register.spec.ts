@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { RegisterPage } from './register';
 import { AuthService } from '../../services/auth.service';
@@ -8,20 +8,22 @@ describe('RegisterPage', () => {
   let fixture: ComponentFixture<RegisterPage>;
   let component: RegisterPage;
   let authService: jasmine.SpyObj<AuthService>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
+  let navigateSpy: jasmine.Spy;
 
   beforeEach(async () => {
     authService = jasmine.createSpyObj<AuthService>('AuthService', ['register']);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [RegisterPage],
       providers: [
+        provideRouter([]),
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router }
-      ]
+      ],
     }).compileComponents();
 
+    router = TestBed.inject(Router);
+    navigateSpy = spyOn(router, 'navigate').and.resolveTo(true);
     fixture = TestBed.createComponent(RegisterPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -41,7 +43,7 @@ describe('RegisterPage', () => {
       username: 'abc',
       password: 'password',
       confirmPassword: 'different',
-      userType: 'OWNER'
+      userType: 'OWNER',
     });
 
     component.submit();
@@ -54,19 +56,19 @@ describe('RegisterPage', () => {
     component.form.setValue({
       fName: '  Anna ',
       lName: '  Kovacs ',
-      email: '  anna@ex.com ',
+      email: 'anna@ex.com',
       phone: ' 123 ',
       username: '  annak ',
       password: 'password1',
       confirmPassword: 'password1',
-      userType: 'OWNER'
+      userType: 'OWNER',
     });
 
     component.submit();
 
     expect(authService.register).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/login'], {
-      queryParams: { registered: 'true', username: 'annak' }
+    expect(navigateSpy).toHaveBeenCalledWith(['/login'], {
+      queryParams: { registered: 'true', username: 'annak' },
     });
   });
 
@@ -81,7 +83,7 @@ describe('RegisterPage', () => {
       username: 'annak',
       password: 'password1',
       confirmPassword: 'password1',
-      userType: 'OWNER'
+      userType: 'OWNER',
     });
 
     component.submit();

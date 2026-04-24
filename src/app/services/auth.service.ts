@@ -9,7 +9,7 @@ const USER_KEY = 'auth.user';
 const RETURN_URL_KEY = 'auth.returnUrl';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly apiBase = `${API_BASE_URL}/api/auth`;
@@ -26,7 +26,7 @@ export class AuthService {
         this.storeToken(response.token);
         this.storeUser(response.user);
         this.currentUserSubject.next(response.user);
-      })
+      }),
     );
   }
 
@@ -76,7 +76,7 @@ export class AuthService {
 
     const next: AuthUser = {
       ...current,
-      ...patch
+      ...patch,
     };
 
     this.storeUser(next);
@@ -87,7 +87,7 @@ export class AuthService {
     return this.http.post(
       `${this.apiBase}/change-password`,
       { currentPassword, newPassword },
-      { responseType: 'text' }
+      { responseType: 'text' },
     ) as Observable<string>;
   }
 

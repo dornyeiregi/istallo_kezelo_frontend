@@ -15,7 +15,7 @@ import { ItemDTO } from '../../models/item.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './feed-sched-edit.html',
-  styleUrls: ['./feed-sched-edit.css']
+  styleUrls: ['./feed-sched-edit.css'],
 })
 export class FeedSchedEditPage implements OnInit {
   loading = false;
@@ -36,7 +36,7 @@ export class FeedSchedEditPage implements OnInit {
     feedEvening: false,
     description: '',
     horseIds: [],
-    itemIds: []
+    itemIds: [],
   };
 
   constructor(
@@ -44,7 +44,7 @@ export class FeedSchedEditPage implements OnInit {
     private horseService: HorseService,
     private itemService: ItemService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -60,11 +60,13 @@ export class FeedSchedEditPage implements OnInit {
     forkJoin({
       feedSched: this.feedSchedService.getById(id),
       horses: this.horseService.getAll(),
-      items: this.itemService.getAll()
+      items: this.itemService.getAll(),
     }).subscribe({
       next: ({ feedSched, horses, items }) => {
-        const filteredItems = items.filter(i => (i.itemType || '').toUpperCase() !== 'BEDDING');
-        const allowedItemIds = new Set(filteredItems.map(i => i.itemId).filter(Boolean) as number[]);
+        const filteredItems = items.filter((i) => (i.itemType || '').toUpperCase() !== 'BEDDING');
+        const allowedItemIds = new Set(
+          filteredItems.map((i) => i.itemId).filter(Boolean) as number[],
+        );
         this.form = {
           feedSchedId: feedSched.feedSchedId,
           feedMorning: !!feedSched.feedMorning,
@@ -72,16 +74,18 @@ export class FeedSchedEditPage implements OnInit {
           feedEvening: !!feedSched.feedEvening,
           description: feedSched.description || '',
           horseIds: feedSched.horseIds || [],
-          itemIds: feedSched.itemIds || []
+          itemIds: feedSched.itemIds || [],
         };
 
         this.horses = horses;
         this.items = filteredItems;
         this.selectedHorseIds = new Set(feedSched.horseIds || []);
-        this.selectedItemIds = new Set((feedSched.itemIds || []).filter(id => allowedItemIds.has(id)));
+        this.selectedItemIds = new Set(
+          (feedSched.itemIds || []).filter((id) => allowedItemIds.has(id)),
+        );
         this.itemAmounts = {};
         if (feedSched.items && feedSched.items.length > 0) {
-          feedSched.items.forEach(item => {
+          feedSched.items.forEach((item) => {
             if (allowedItemIds.has(item.itemId)) {
               this.itemAmounts[item.itemId] = item.amount;
             }
@@ -92,7 +96,7 @@ export class FeedSchedEditPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni az etetési ütemtervet.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -126,7 +130,7 @@ export class FeedSchedEditPage implements OnInit {
 
   getItemsByType(type: string): ItemDTO[] {
     const key = (type || '').toUpperCase();
-    return this.items.filter(i => (i.itemType || '').toUpperCase() === key);
+    return this.items.filter((i) => (i.itemType || '').toUpperCase() === key);
   }
 
   onSubmit() {
@@ -143,8 +147,8 @@ export class FeedSchedEditPage implements OnInit {
 
     this.loading = true;
 
-    const horseIds = Array.from(this.selectedHorseIds).filter(id => Number.isFinite(id));
-    const itemIds = Array.from(this.selectedItemIds).filter(id => Number.isFinite(id));
+    const horseIds = Array.from(this.selectedHorseIds).filter((id) => Number.isFinite(id));
+    const itemIds = Array.from(this.selectedItemIds).filter((id) => Number.isFinite(id));
     const items: FeedSchedItemAmountDTO[] = [];
 
     for (const itemId of itemIds) {
@@ -165,7 +169,7 @@ export class FeedSchedEditPage implements OnInit {
       description: this.form.description || '',
       horseIds,
       itemIds,
-      items
+      items,
     };
 
     this.feedSchedService.update(this.feedSchedId, dto).subscribe({
@@ -174,16 +178,13 @@ export class FeedSchedEditPage implements OnInit {
         this.success = true;
 
         setTimeout(() => {
-          this.router.navigate(
-            ['/horses'],
-            { state: { fromEdit: true } }
-          );
+          this.router.navigate(['/horses'], { state: { fromEdit: true } });
         }, 800);
       },
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült frissíteni az etetési ütemtervet.';
-      }
+      },
     });
   }
 

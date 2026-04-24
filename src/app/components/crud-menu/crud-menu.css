@@ -21,12 +21,7 @@
   width: 45px;
   height: 40px;
   background: var(--app-accent);
-  clip-path: polygon(
-    25% 0%, 75% 0%,
-    100% 50%,
-    75% 100%, 25% 100%,
-    0% 50%
-  );
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,23 +52,19 @@
   animation: hexFadeIn 0.25s forwards ease-out;
 }
 
-
 .hex-item .hex-shape {
   width: 45px;
   height: 40px;
   background: var(--app-chip-bg);
-  clip-path: polygon(
-    25% 0%, 75% 0%,
-    100% 50%,
-    75% 100%, 25% 100%,
-    0% 50%
-  );
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--app-primary);
   font-size: 18px;
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .connector-line {

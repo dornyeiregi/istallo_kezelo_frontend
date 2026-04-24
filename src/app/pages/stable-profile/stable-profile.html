@@ -13,7 +13,6 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else if (stable) {
-
     <section class="profile-header">
       <h1>{{ stable.stableName }}</h1>
       <div class="quick-stats">
@@ -24,8 +23,14 @@
         <article class="stat-card">
           <span class="label">Szalmahasználat</span>
           <span class="value">
-            {{ stable.strawUsageKg != null ? (stable.strawUsageKg | number:'1.0-2') : 'Nincs megadva' }}
-            @if (stable.strawUsageKg != null) { kg }
+            {{
+              stable.strawUsageKg != null
+                ? (stable.strawUsageKg | number: '1.0-2')
+                : 'Nincs megadva'
+            }}
+            @if (stable.strawUsageKg != null) {
+              kg
+            }
           </span>
           <span class="hint">Istálló szintű adat</span>
         </article>
@@ -40,7 +45,7 @@
               @for (item of dailyFeedTotals; track item.itemId) {
                 <li>
                   <span class="item-name">{{ item.name }}</span>
-                  <span class="item-amount">{{ item.amount | number:'1.0-2' }} kg</span>
+                  <span class="item-amount">{{ item.amount | number: '1.0-2' }} kg</span>
                 </li>
               }
             </ul>
@@ -50,15 +55,15 @@
     </section>
 
     @if (deleteMode) {
-      <div class="delete-warning">
-        Törlés mód aktív — kattints a törölni kívánt lóra.
-      </div>
+      <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt lóra.</div>
     }
 
     @if (editMode) {
       <section class="stable-edit-card">
         <h2>Istálló szerkesztése</h2>
-        <p class="edit-hint-text">Add meg almonként a napi felhasználást. Az összes mennyiség automatikusan számolódik.</p>
+        <p class="edit-hint-text">
+          Add meg almonként a napi felhasználást. Az összes mennyiség automatikusan számolódik.
+        </p>
 
         <div class="form-row">
           <label>Alom típusok (kg/nap)</label>
@@ -78,14 +83,18 @@
                   placeholder="Napi mennyiség (kg)"
                   [(ngModel)]="row.usageKg"
                 />
-                <button type="button" class="link-button" (click)="removeStableBeddingRow($index)">Törlés</button>
+                <button type="button" class="link-button" (click)="removeStableBeddingRow($index)">
+                  Törlés
+                </button>
               </div>
             }
           </div>
           <div class="bedding-footer">
-            <button type="button" class="themed-button" (click)="addStableBeddingRow()">Új alom</button>
+            <button type="button" class="themed-button" (click)="addStableBeddingRow()">
+              Új alom
+            </button>
             <div class="bedding-total">
-              Összesen: <strong>{{ totalBeddingUsage | number:'1.0-2' }} kg/nap</strong>
+              Összesen: <strong>{{ totalBeddingUsage | number: '1.0-2' }} kg/nap</strong>
             </div>
           </div>
         </div>
@@ -106,7 +115,7 @@
       @if (activeHorses.length > 0) {
         <ul class="horse-list">
           @for (horse of activeHorses; track horse.id) {
-            <li 
+            <li
               class="horse-card"
               [class.edit-mode]="editMode"
               [class.delete-mode]="deleteMode"
@@ -116,7 +125,9 @@
               <div class="details">
                 <span class="detail"><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</span>
                 <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
-                <span class="detail"><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span>
+                <span class="detail"
+                  ><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span
+                >
               </div>
 
               @if (editMode) {
@@ -146,11 +157,18 @@
   <div class="modal-backdrop">
     <div class="modal">
       <h3>Biztosan törölni szeretnéd?</h3>
-      <p>Válaszd ki, hogyan szeretnéd eltávolítani a(z) <strong>{{ confirmDeleteHorse.horseName }}</strong> lovat.</p>
+      <p>
+        Válaszd ki, hogyan szeretnéd eltávolítani a(z)
+        <strong>{{ confirmDeleteHorse.horseName }}</strong> lovat.
+      </p>
 
       <div class="modal-actions">
-        <button class="themed-button" (click)="performDelete('deactivate')">Eltávolítás az istállóból</button>
-        <button class="themed-button danger" (click)="performDelete('delete')">Végleges törlés</button>
+        <button class="themed-button" (click)="performDelete('deactivate')">
+          Eltávolítás az istállóból
+        </button>
+        <button class="themed-button danger" (click)="performDelete('delete')">
+          Végleges törlés
+        </button>
         <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
       </div>
     </div>

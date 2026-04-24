@@ -2,7 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../services/admin.service';
 import { UserDTO } from '../../models/user.model';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -12,10 +18,9 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-users.html',
-  styleUrls: ['./admin-users.css']
+  styleUrls: ['./admin-users.css'],
 })
 export class AdminUsersPage implements OnInit, OnDestroy {
-
   private sub?: Subscription;
   users: UserDTO[] = [];
   loading = false;
@@ -32,7 +37,7 @@ export class AdminUsersPage implements OnInit, OnDestroy {
     username: new FormControl('', [Validators.required, Validators.minLength(3)]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required]),
-    userType: new FormControl('OWNER', Validators.required)
+    userType: new FormControl('OWNER', Validators.required),
   });
 
   get f() {
@@ -42,11 +47,11 @@ export class AdminUsersPage implements OnInit, OnDestroy {
   constructor(
     private adminService: AdminService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.sub = this.authService.currentUser$.subscribe(user => {
+    this.sub = this.authService.currentUser$.subscribe((user) => {
       this.currentUsername = user?.username || null;
 
       if (user) {
@@ -69,13 +74,13 @@ export class AdminUsersPage implements OnInit, OnDestroy {
     this.loading = true;
     this.adminService.getAllUsers().subscribe({
       next: (data) => {
-        this.users = data.filter(u => u.username !== this.currentUsername);
+        this.users = data.filter((u) => u.username !== this.currentUsername);
         this.loading = false;
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a felhasználókat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -94,11 +99,9 @@ export class AdminUsersPage implements OnInit, OnDestroy {
         alert(res);
       },
       error: (err) => {
-        const msg = typeof err?.error === 'string'
-          ? err.error
-          : 'Sikertelen módosítás.';
+        const msg = typeof err?.error === 'string' ? err.error : 'Sikertelen módosítás.';
         alert(msg);
-      }
+      },
     });
   }
 
@@ -119,7 +122,7 @@ export class AdminUsersPage implements OnInit, OnDestroy {
       phone: this.f['phone'].value,
       username: this.f['username'].value,
       password: this.f['password'].value,
-      userType: this.f['userType'].value
+      userType: this.f['userType'].value,
     };
 
     this.adminService.createUser(dto).subscribe({
@@ -127,11 +130,11 @@ export class AdminUsersPage implements OnInit, OnDestroy {
         alert(res);
         this.showCreatePopup = false;
         this.form.reset({
-          userType: 'OWNER'
+          userType: 'OWNER',
         });
         this.loadUsers();
       },
-      error: () => alert('Nem sikerült létrehozni a felhasználót.')
+      error: () => alert('Nem sikerült létrehozni a felhasználót.'),
     });
   }
 
@@ -143,28 +146,30 @@ export class AdminUsersPage implements OnInit, OnDestroy {
         alert(res);
         this.loadUsers();
       },
-      error: () => alert('Nem sikerült törölni a felhasználót.')
+      error: () => alert('Nem sikerült törölni a felhasználót.'),
     });
   }
 
   getFullName(user: UserDTO): string {
     if (user.fullName) return user.fullName;
 
-    const first = user.userFname
-      ?? user.fName
-      ?? user.firstName
-      ?? (user as any).firstname
-      ?? (user as any).f_name
-      ?? (user as any).user_fname
-      ?? '';
+    const first =
+      user.userFname ??
+      user.fName ??
+      user.firstName ??
+      (user as any).firstname ??
+      (user as any).f_name ??
+      (user as any).user_fname ??
+      '';
 
-    const last = user.userLname
-      ?? user.lName
-      ?? user.lastName
-      ?? (user as any).lastname
-      ?? (user as any).l_name
-      ?? (user as any).user_lname
-      ?? '';
+    const last =
+      user.userLname ??
+      user.lName ??
+      user.lastName ??
+      (user as any).lastname ??
+      (user as any).l_name ??
+      (user as any).user_lname ??
+      '';
 
     const full = [last, first].filter(Boolean).join(' ').trim();
     return full || user.username || '-';

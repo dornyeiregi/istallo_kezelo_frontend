@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { LoginPage } from './login';
 import { AuthService } from '../../services/auth.service';
@@ -7,29 +7,31 @@ import { AuthResponse } from '../../models/auth.model';
 
 const routeWithParams = (params: Record<string, string | null>) => ({
   snapshot: {
-    queryParamMap: convertToParamMap(params)
-  }
+    queryParamMap: convertToParamMap(params),
+  },
 });
 
 describe('LoginPage', () => {
   let fixture: ComponentFixture<LoginPage>;
   let component: LoginPage;
   let authService: jasmine.SpyObj<AuthService>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
+  let navigateByUrlSpy: jasmine.Spy;
 
   beforeEach(async () => {
     authService = jasmine.createSpyObj<AuthService>('AuthService', ['login', 'consumeReturnUrl']);
-    router = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 
     await TestBed.configureTestingModule({
       imports: [LoginPage],
       providers: [
+        provideRouter([]),
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: routeWithParams({}) }
-      ]
+        { provide: ActivatedRoute, useValue: routeWithParams({}) },
+      ],
     }).compileComponents();
 
+    router = TestBed.inject(Router);
+    navigateByUrlSpy = spyOn(router, 'navigateByUrl').and.resolveTo(true);
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -48,7 +50,7 @@ describe('LoginPage', () => {
     component.submit();
 
     expect(authService.login).toHaveBeenCalled();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/home');
+    expect(navigateByUrlSpy).toHaveBeenCalledWith('/home');
   });
 
   it('shows error on failed login', () => {
@@ -65,12 +67,14 @@ describe('LoginPage', () => {
     await TestBed.configureTestingModule({
       imports: [LoginPage],
       providers: [
+        provideRouter([]),
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: routeWithParams({ returnUrl: '/x' }) }
-      ]
+        { provide: ActivatedRoute, useValue: routeWithParams({ returnUrl: '/x' }) },
+      ],
     }).compileComponents();
 
+    router = TestBed.inject(Router);
+    navigateByUrlSpy = spyOn(router, 'navigateByUrl').and.resolveTo(true);
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -81,6 +85,6 @@ describe('LoginPage', () => {
     component.form.setValue({ username: 'u', password: 'p' });
     component.submit();
 
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/x');
+    expect(navigateByUrlSpy).toHaveBeenCalledWith('/x');
   });
 });

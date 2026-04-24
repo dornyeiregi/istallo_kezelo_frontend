@@ -15,7 +15,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* Header */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -120,7 +119,6 @@
   font-weight: 600;
 }
 
-/* Calendar wrapper */
 .calendar-wrapper {
   border-radius: 14px;
   background: var(--app-surface);
@@ -129,7 +127,6 @@
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
-/* FullCalendar overrides (light touch) */
 .fc {
   font-size: 0.9rem;
   color: var(--app-text);
@@ -346,8 +343,8 @@
   color: var(--app-primary);
 }
 
-.popup input[type="text"],
-.popup input[type="date"] {
+.popup input[type='text'],
+.popup input[type='date'] {
   padding: 0.55rem 0.7rem;
   border-radius: 10px;
   border: 1px solid var(--app-border);

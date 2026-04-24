@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './farrier-apps.html',
-  styleUrls: ['./farrier-apps.css']
+  styleUrls: ['./farrier-apps.css'],
 })
 export class FarrierAppsPage implements OnInit {
   farrierApps: FarrierAppDTO[] = [];
@@ -27,7 +27,7 @@ export class FarrierAppsPage implements OnInit {
   constructor(
     private farrierAppService: FarrierAppService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +39,8 @@ export class FarrierAppsPage implements OnInit {
 
     this.farrierAppService.getAll().subscribe({
       next: (data) => {
-        this.farrierApps = data.sort((a, b) =>
-          new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime()
+        this.farrierApps = data.sort(
+          (a, b) => new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime(),
         );
         this.loading = false;
         this.error = '';
@@ -48,7 +48,7 @@ export class FarrierAppsPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a patkolási időpontokat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -94,7 +94,9 @@ export class FarrierAppsPage implements OnInit {
     this.farrierAppService.delete(this.confirmDelete.farrierAppId).subscribe({
       next: () => {
         this.showToast(`A(z) ${this.confirmDelete!.farrierName} időpont törölve.`);
-        this.farrierApps = this.farrierApps.filter(a => a.farrierAppId !== this.confirmDelete!.farrierAppId);
+        this.farrierApps = this.farrierApps.filter(
+          (a) => a.farrierAppId !== this.confirmDelete!.farrierAppId,
+        );
         this.confirmDelete = null;
         this.deleteMode = false;
       },
@@ -102,7 +104,7 @@ export class FarrierAppsPage implements OnInit {
         this.showToast('Nem sikerült törölni az időpontot.');
         this.confirmDelete = null;
         this.deleteMode = false;
-      }
+      },
     });
   }
 
@@ -124,7 +126,7 @@ export class FarrierAppsPage implements OnInit {
       'ADMIN',
       'OWNER',
       'ROLE_ADMIN',
-      'ROLE_OWNER'
+      'ROLE_OWNER',
     ]);
 
     if (!isAdminOrOwner) {
@@ -140,12 +142,12 @@ export class FarrierAppsPage implements OnInit {
           this.deleteMode = false;
           this.confirmDelete = null;
           this.addFarrierApp();
-        }
+        },
       },
       {
         label: 'Szerkesztés',
         icon: 'fa-pen-to-square',
-        onClick: () => this.toggleEditMode()
+        onClick: () => this.toggleEditMode(),
       },
       {
         label: 'Törlés mód',
@@ -155,8 +157,8 @@ export class FarrierAppsPage implements OnInit {
           this.editMode = false;
           this.confirmDelete = null;
           this.toastVisible = false;
-        }
-      }
+        },
+      },
     ];
   }
 }

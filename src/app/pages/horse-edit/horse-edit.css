@@ -4,17 +4,12 @@
   padding: 24px;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .breadcrumb {
   margin-bottom: 16px;
 }
-
-
-
 
 h1 {
   margin-bottom: 24px;
@@ -22,8 +17,6 @@ h1 {
   font-weight: 700;
   color: var(--app-primary);
 }
-
-
 
 .form-group {
   margin-bottom: 18px;
@@ -45,7 +38,9 @@ textarea {
   border: 1px solid var(--app-border);
   font-size: 15px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 input:focus,
@@ -58,9 +53,6 @@ textarea:focus {
 textarea {
   resize: vertical;
 }
-
-
-
 
 .submit-button,
 .themed-button {
@@ -83,12 +75,9 @@ textarea {
   background-color: var(--app-accent-strong);
 }
 
-
-
-
 .info {
   padding: 12px;
-  background: var(--app-chip-bg); 
+  background: var(--app-chip-bg);
   border-left: 4px solid var(--app-primary);
   border-radius: 6px;
   color: var(--app-primary);
@@ -112,8 +101,6 @@ textarea {
   border-left: 5px solid #d9534f;
   color: #b52b27;
 }
-
-
 
 @media (max-width: 520px) {
   .form-container {

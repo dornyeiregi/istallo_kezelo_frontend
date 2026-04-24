@@ -12,7 +12,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './farrier-app-create.html',
-  styleUrls: ['./farrier-app-create.css']
+  styleUrls: ['./farrier-app-create.css'],
 })
 export class FarrierAppCreatePage implements OnInit {
   loading = false;
@@ -28,7 +28,7 @@ export class FarrierAppCreatePage implements OnInit {
     appointmentDate: '',
     frequencyUnit: '',
     frequencyValue: undefined,
-    horseIds: []
+    horseIds: [],
   };
 
   frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
@@ -36,14 +36,14 @@ export class FarrierAppCreatePage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   constructor(
     private farrierAppService: FarrierAppService,
     private horseService: HorseService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +66,7 @@ export class FarrierAppCreatePage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a lovakat.';
-      }
+      },
     });
   }
 
@@ -86,7 +86,7 @@ export class FarrierAppCreatePage implements OnInit {
         this.horseDetails.set(horseId, {
           horseId,
           shoeCount: 4,
-          note: ''
+          note: '',
         });
       }
     }
@@ -122,9 +122,9 @@ export class FarrierAppCreatePage implements OnInit {
         return {
           horseId,
           shoeCount: detail.shoeCount ?? 0,
-          note: detail.note ?? ''
+          note: detail.note ?? '',
         };
-      })
+      }),
     };
 
     this.farrierAppService.create(dto).subscribe({
@@ -139,7 +139,7 @@ export class FarrierAppCreatePage implements OnInit {
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült létrehozni a patkolási időpontot.';
-      }
+      },
     });
   }
 

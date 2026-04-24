@@ -5,19 +5,26 @@ import { HorseTreatmentDTO } from '../models/horse-treatment.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
+/**
+ * Handles API calls that connect horses with treatment records.
+ */
 export class HorseTreatmentService {
   private apiUrl = `${API_BASE_URL}/api/horseTreatments`;
 
   constructor(private http: HttpClient) {}
 
-  // Összes link lekérdezése
+  /**
+   * Loads all horse-treatment links.
+   */
   getAll(): Observable<HorseTreatmentDTO[]> {
     return this.http.get<HorseTreatmentDTO[]>(this.apiUrl);
   }
 
-  // Ló hozzáadása kezeléshez
+  /**
+   * Creates a link between a horse and a treatment.
+   */
   create(dto: HorseTreatmentDTO): Observable<HorseTreatmentDTO> {
     return this.http.post<HorseTreatmentDTO>(this.apiUrl, dto);
   }

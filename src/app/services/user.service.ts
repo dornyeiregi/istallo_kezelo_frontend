@@ -5,7 +5,7 @@ import { UserDTO } from '../models/user.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   private apiUrl = `${API_BASE_URL}/api/users`;

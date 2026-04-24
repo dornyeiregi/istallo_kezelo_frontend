@@ -1,5 +1,4 @@
 <div class="form-container">
-
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -14,95 +13,84 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else {
-
     @if (success) {
       <div class="success-msg">Időpont sikeresen frissítve!</div>
     }
 
     <form (ngSubmit)="onSubmit()" #farrierForm="ngForm">
-
       <div class="form-group">
         <label>Patkoló neve *</label>
-        <input type="text"
-               name="farrierName"
-               [(ngModel)]="form.farrierName"
-               required />
+        <input type="text" name="farrierName" [(ngModel)]="form.farrierName" required />
       </div>
 
       <div class="form-group">
         <label>Telefon</label>
-        <input type="text"
-               name="farrierPhone"
-               [(ngModel)]="form.farrierPhone" />
+        <input type="text" name="farrierPhone" [(ngModel)]="form.farrierPhone" />
       </div>
 
-    <div class="form-group">
-      <label>Dátum *</label>
-      <input type="date"
-             name="appointmentDate"
-             [(ngModel)]="form.appointmentDate"
-             required />
-    </div>
-
-    <div class="form-group">
-      <label>Gyakoriság</label>
-      <div class="inline-group">
-        <input
-          type="number"
-          name="frequencyValue"
-          min="1"
-          placeholder="Mennyiség"
-          [(ngModel)]="form.frequencyValue" />
-        <select
-          name="frequencyUnit"
-          [(ngModel)]="form.frequencyUnit">
-          <option [ngValue]="''">Nincs</option>
-          @for (unit of frequencyUnits; track unit) {
-            <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
-          }
-        </select>
+      <div class="form-group">
+        <label>Dátum *</label>
+        <input type="date" name="appointmentDate" [(ngModel)]="form.appointmentDate" required />
       </div>
-    </div>
 
-    <div class="form-group horse-list">
-      <label>Lovak hozzárendelése</label>
+      <div class="form-group">
+        <label>Gyakoriság</label>
+        <div class="inline-group">
+          <input
+            type="number"
+            name="frequencyValue"
+            min="1"
+            placeholder="Mennyiség"
+            [(ngModel)]="form.frequencyValue"
+          />
+          <select name="frequencyUnit" [(ngModel)]="form.frequencyUnit">
+            <option [ngValue]="''">Nincs</option>
+            @for (unit of frequencyUnits; track unit) {
+              <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group horse-list">
+        <label>Lovak hozzárendelése</label>
 
         @if (horses.length === 0) {
           <p>Nincs elérhető ló.</p>
         } @else {
-
           @for (horse of horses; track horse.id) {
-
-          <div class="horse-row" [attr.data-key]="horse.id">
-            <label class="horse-check">
-              <input
-                type="checkbox"
-                [checked]="selectedHorseIds.has(toNumber(horse.id!))"
-                (change)="toggleHorseSelection(toNumber(horse.id!))"
-              />
-              {{ horse.horseName }}
-            </label>
-
-            @if (selectedHorseIds.has(toNumber(horse.id!))) {
-              <div class="horse-details">
-                <select
-                  name="shoeCount-{{ horse.id }}"
-                  [(ngModel)]="getHorseDetail(toNumber(horse.id!)).shoeCount">
-                  <option [ngValue]="0">Nincs patkó</option>
-                  <option [ngValue]="2">2 patkó</option>
-                  <option [ngValue]="4">4 patkó</option>
-                </select>
+            <div class="horse-row" [attr.data-key]="horse.id">
+              <label class="horse-check">
                 <input
-                  type="text"
-                  name="horseNote-{{ horse.id }}"
-                  placeholder="Megjegyzés"
-                  [(ngModel)]="getHorseDetail(toNumber(horse.id!)).note" />
-              </div>
-            }
-          </div>
+                  type="checkbox"
+                  [checked]="selectedHorseIds.has(toNumber(horse.id!))"
+                  (change)="toggleHorseSelection(toNumber(horse.id!))"
+                />
+                {{ horse.horseName }}
+              </label>
+
+              @if (selectedHorseIds.has(toNumber(horse.id!))) {
+                <div class="horse-details">
+                  <select
+                    name="shoeCount-{{ horse.id }}"
+                    [(ngModel)]="getHorseDetail(toNumber(horse.id!)).shoeCount"
+                  >
+                    <option [ngValue]="0">Nincs patkó</option>
+                    <option [ngValue]="2">2 patkó</option>
+                    <option [ngValue]="4">4 patkó</option>
+                  </select>
+                  <input
+                    type="text"
+                    name="horseNote-{{ horse.id }}"
+                    placeholder="Megjegyzés"
+                    [(ngModel)]="getHorseDetail(toNumber(horse.id!)).note"
+                  />
+                </div>
+              }
+            </div>
+          }
         }
-      }
-    </div>
+      </div>
 
       <button type="submit" class="submit-button" [disabled]="loading || !farrierForm.form.valid">
         <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
@@ -112,8 +100,6 @@
       @if (loading) {
         <div class="info">Mentés folyamatban...</div>
       }
-
     </form>
   }
-
 </div>

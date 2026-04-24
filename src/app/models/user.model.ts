@@ -1,3 +1,6 @@
+/**
+ * User data returned by the backend for account and role management screens.
+ */
 export interface UserDTO {
   username: string;
   userLname?: string;
@@ -13,6 +16,9 @@ export interface UserDTO {
   user_lname?: string;
   email: string;
   phone?: string;
-  userType: 'ADMIN' | 'OWNER' | 'EMPLOYEE'; // Enum backendről
+  /**
+   * Backend role enum assigned to the user.
+   */
+  userType: 'ADMIN' | 'OWNER' | 'EMPLOYEE';
   userId?: number;
 }

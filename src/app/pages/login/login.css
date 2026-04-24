@@ -88,7 +88,9 @@ input[type='password'] {
   border-radius: 12px;
   border: 1px solid #d8b9c0;
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 input[type='text']:focus,
@@ -133,7 +135,9 @@ button[type='submit'] {
   background: linear-gradient(135deg, var(--app-accent), var(--app-accent-deep));
   color: white;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 button[type='submit']:hover:not(:disabled) {

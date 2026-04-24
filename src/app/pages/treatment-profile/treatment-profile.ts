@@ -13,7 +13,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './treatment-profile.html',
-  styleUrls: ['./treatment-profile.css']
+  styleUrls: ['./treatment-profile.css'],
 })
 export class TreatmentProfilePage implements OnInit {
   treatment?: TreatmentDTO;
@@ -35,7 +35,7 @@ export class TreatmentProfilePage implements OnInit {
     private route: ActivatedRoute,
     private treatmentService: TreatmentService,
     private horseService: HorseService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -74,20 +74,18 @@ export class TreatmentProfilePage implements OnInit {
           error: () => {
             this.error = 'Nem sikerült betölteni a lovakat.';
             this.loading = false;
-          }
+          },
         });
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a kezelést.';
         this.loading = false;
-      }
+      },
     });
   }
 
   private updateTreatedHorsesFromIds() {
-    this.treatedHorses = this.horses.filter(
-      h => this.selectedHorseIds.has(h.id!)
-    );
+    this.treatedHorses = this.horses.filter((h) => this.selectedHorseIds.has(h.id!));
   }
 
   goBack(): void {
@@ -104,14 +102,14 @@ export class TreatmentProfilePage implements OnInit {
   }
 
   getHorseNameById(id: number): string | null {
-    const horse = this.horses.find(h => h.id === id);
+    const horse = this.horses.find((h) => h.id === id);
     return horse ? horse.horseName : null;
   }
 
   getKnownHorseIds(ids?: number[] | null): number[] {
     if (!ids || ids.length === 0) return [];
-    const known = new Set(this.horses.map(h => h.id));
-    return ids.filter(id => known.has(id));
+    const known = new Set(this.horses.map((h) => h.id));
+    return ids.filter((id) => known.has(id));
   }
 
   deleteTreatment(): void {
@@ -125,7 +123,7 @@ export class TreatmentProfilePage implements OnInit {
       },
       error: () => {
         alert('Nem sikerült törölni a kezelést.');
-      }
+      },
     });
   }
 
@@ -145,7 +143,7 @@ export class TreatmentProfilePage implements OnInit {
       treatmentName: this.treatment?.treatmentName ?? '',
       description: this.treatment?.description ?? '',
       date: this.treatment?.date ?? '',
-      horseIds: Array.from(this.selectedHorseIds)
+      horseIds: Array.from(this.selectedHorseIds),
     };
 
     this.treatmentService.update(this.treatment.treatmentId, dto as TreatmentDTO).subscribe({
@@ -157,12 +155,12 @@ export class TreatmentProfilePage implements OnInit {
         this.saving = false;
         this.editHorsesMode = false;
 
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a lovakat.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -170,12 +168,14 @@ export class TreatmentProfilePage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   getFrequencyLabel(): string {
-    if (!this.treatment || !this.treatment.frequencyValue || !this.treatment.frequencyUnit) return '-';
-    const unitLabel = this.frequencyLabels[this.treatment.frequencyUnit] || this.treatment.frequencyUnit;
+    if (!this.treatment || !this.treatment.frequencyValue || !this.treatment.frequencyUnit)
+      return '-';
+    const unitLabel =
+      this.frequencyLabels[this.treatment.frequencyUnit] || this.treatment.frequencyUnit;
     return `${this.treatment.frequencyValue} ${unitLabel}`;
   }
 
@@ -193,7 +193,7 @@ export class TreatmentProfilePage implements OnInit {
       date: this.completedDate,
       frequencyUnit: this.treatment?.frequencyUnit ?? null,
       frequencyValue: this.treatment?.frequencyValue ?? null,
-      horseIds: this.treatment?.horseIds ?? []
+      horseIds: this.treatment?.horseIds ?? [],
     };
 
     this.saving = true;
@@ -205,12 +205,12 @@ export class TreatmentProfilePage implements OnInit {
         this.nextPlannedDates = this.buildNextPlannedDates(this.treatment!, 3);
         this.plannedDueDate = null;
         this.markDueCompleted = false;
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a kezelést.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -221,13 +221,13 @@ export class TreatmentProfilePage implements OnInit {
         icon: 'fa-pen-to-square',
         onClick: () => {
           this.editHorsesMode = true;
-        }
+        },
       },
       {
         label: 'Kezelés törlése',
         icon: 'fa-trash',
         onClick: () => this.deleteTreatment(),
-      }
+      },
     ];
   }
 
@@ -282,9 +282,12 @@ export class TreatmentProfilePage implements OnInit {
     const upper = (unit || '').toUpperCase();
     const normalized = upper.replace(/[ÁÉÍÓÖŐÚÜŰ]/g, (ch) => {
       switch (ch) {
-        case 'Á': return 'A';
-        case 'É': return 'E';
-        case 'Í': return 'I';
+        case 'Á':
+          return 'A';
+        case 'É':
+          return 'E';
+        case 'Í':
+          return 'I';
         case 'Ó':
         case 'Ö':
         case 'Ő':

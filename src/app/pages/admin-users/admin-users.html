@@ -8,9 +8,7 @@
 
   <h1>Felhasználók kezelése</h1>
 
-  <button class="new-user-btn" (click)="showCreatePopup = true">
-    + Új felhasználó
-  </button>
+  <button class="new-user-btn" (click)="showCreatePopup = true">+ Új felhasználó</button>
 
   <div *ngIf="loading" class="loading">Betöltés...</div>
   <div *ngIf="error" class="load-error">{{ error }}</div>
@@ -33,10 +31,7 @@
         <td>{{ user.email }}</td>
         <td>{{ user.phone || '-' }}</td>
         <td>
-          <select
-            [ngModel]="user.userType"
-            (ngModelChange)="updateRole(user, $event)"
-          >
+          <select [ngModel]="user.userType" (ngModelChange)="updateRole(user, $event)">
             <option value="OWNER">OWNER</option>
             <option value="EMPLOYEE">EMPLOYEE</option>
             <option value="ADMIN">ADMIN</option>
@@ -51,21 +46,15 @@
     </tbody>
   </table>
 
-  <p *ngIf="!loading && users.length === 0">
-    Nincsenek felhasználók az adatbázban.
-  </p>
+  <p *ngIf="!loading && users.length === 0">Nincsenek felhasználók az adatbázban.</p>
 </div>
 
-<!-- Új felhasználó popup -->
 <div class="popup-backdrop" *ngIf="showCreatePopup">
   <div class="popup-card">
-
     <h2>Új felhasználó létrehozása</h2>
     <p class="subtitle">Add meg az összes szükséges adatot a fiók létrehozásához.</p>
 
     <form [formGroup]="form" (ngSubmit)="createUser()">
-
-      <!-- Névpár -->
       <div class="field-row">
         <label class="field">
           <span class="field-label">Vezetéknév</span>
@@ -84,7 +73,6 @@
         </label>
       </div>
 
-      <!-- Email + telefon -->
       <div class="field-row">
         <label class="field">
           <span class="field-label">E-mail cím</span>
@@ -100,7 +88,6 @@
         </label>
       </div>
 
-      <!-- Felhasználónév -->
       <label class="field">
         <span class="field-label">Felhasználónév</span>
         <input type="text" formControlName="username" />
@@ -109,7 +96,6 @@
         </span>
       </label>
 
-      <!-- Jelszó pár -->
       <div class="field-row">
         <label class="field">
           <span class="field-label">Jelszó</span>
@@ -128,7 +114,6 @@
         </label>
       </div>
 
-      <!-- Felhasználói szerepkör -->
       <fieldset class="field usertype-field">
         <legend class="field-label">Felhasználói szerepkör</legend>
 
@@ -149,9 +134,7 @@
       </fieldset>
 
       <div class="btn-row">
-        <button type="button" class="secondary" (click)="showCreatePopup = false">
-          Mégse
-        </button>
+        <button type="button" class="secondary" (click)="showCreatePopup = false">Mégse</button>
 
         <button type="submit" class="primary">
           <i class="fa-solid fa-user-plus"></i>
@@ -159,6 +142,5 @@
         </button>
       </div>
     </form>
-
   </div>
 </div>

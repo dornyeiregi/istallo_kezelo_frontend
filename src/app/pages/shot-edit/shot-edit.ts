@@ -14,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './shot-edit.html',
-  styleUrls: ['./shot-edit.css']
+  styleUrls: ['./shot-edit.css'],
 })
 export class ShotEditPage implements OnInit {
   loading = false;
@@ -31,7 +31,7 @@ export class ShotEditPage implements OnInit {
     date: '',
     frequencyUnit: '',
     frequencyValue: undefined,
-    horseIds: []
+    horseIds: [],
   };
 
   frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
@@ -40,7 +40,7 @@ export class ShotEditPage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   constructor(
@@ -48,7 +48,7 @@ export class ShotEditPage implements OnInit {
     private router: Router,
     private shotService: ShotService,
     private horseService: HorseService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +67,7 @@ export class ShotEditPage implements OnInit {
 
     forkJoin({
       shot: this.shotService.getById(id),
-      horses: horses$
+      horses: horses$,
     }).subscribe({
       next: ({ shot, horses }) => {
         this.form = {
@@ -76,7 +76,7 @@ export class ShotEditPage implements OnInit {
           date: shot.date,
           frequencyUnit: shot.frequencyUnit ?? '',
           frequencyValue: shot.frequencyValue ?? undefined,
-          horseIds: shot.horseIds ?? []
+          horseIds: shot.horseIds ?? [],
         };
 
         this.horses = horses;
@@ -87,7 +87,7 @@ export class ShotEditPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni az oltást.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -121,7 +121,7 @@ export class ShotEditPage implements OnInit {
       date: this.form.date,
       frequencyUnit: this.form.frequencyUnit || null,
       frequencyValue: this.form.frequencyValue || null,
-      horseIds: Array.from(this.selectedHorseIds)
+      horseIds: Array.from(this.selectedHorseIds),
     };
 
     this.shotService.update(this.shotId, dto).subscribe({
@@ -130,16 +130,13 @@ export class ShotEditPage implements OnInit {
         this.success = true;
 
         setTimeout(() => {
-          this.router.navigate(
-            ['/shots', this.shotId],
-            { state: { fromEdit: true } }
-          );
+          this.router.navigate(['/shots', this.shotId], { state: { fromEdit: true } });
         }, 800);
       },
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült frissíteni az oltást.';
-      }
+      },
     });
   }
 

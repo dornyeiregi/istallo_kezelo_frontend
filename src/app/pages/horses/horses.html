@@ -52,15 +52,11 @@
   } @else if (error) {
     <div class="load-error">{{ error }}</div>
   } @else {
-
     @if (deleteMode) {
-    <div class="delete-warning">
-      Törlés mód aktív — kattints a törölni kívánt lóra.
-    </div>
+      <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt lóra.</div>
     }
 
     <section class="horse-grid" aria-label="Ló lista">
-
       @for (horse of horses; track horse.id) {
         <div
           class="horse-card"
@@ -79,12 +75,17 @@
           <div class="details">
             <span class="detail"><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</span>
             <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
-            <span class="detail"><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span>
+            <span class="detail"
+              ><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span
+            >
           </div>
 
           @if (activeView === 'INACTIVE' && canDelete) {
             <div class="inactive-actions">
-              <button class="themed-button" (click)="activateHorse(horse); $event.stopPropagation();">
+              <button
+                class="themed-button"
+                (click)="activateHorse(horse); $event.stopPropagation()"
+              >
                 Aktiválás
               </button>
             </div>
@@ -103,10 +104,8 @@
               <span>Kattints a törléshez</span>
             </div>
           }
-
         </div>
       }
-
     </section>
   }
 </div>
@@ -115,11 +114,18 @@
   <div class="modal-backdrop">
     <div class="modal">
       <h3>Biztosan törölni szeretnéd?</h3>
-      <p>Válaszd ki, hogyan szeretnéd eltávolítani a(z) <strong>{{ confirmDeleteHorse.horseName }}</strong> lovat.</p>
+      <p>
+        Válaszd ki, hogyan szeretnéd eltávolítani a(z)
+        <strong>{{ confirmDeleteHorse.horseName }}</strong> lovat.
+      </p>
 
       <div class="modal-actions">
-        <button class="themed-button" (click)="performDelete('deactivate')">Eltávolítás az istállóból</button>
-        <button class="themed-button danger" (click)="performDelete('delete')">Végleges törlés</button>
+        <button class="themed-button" (click)="performDelete('deactivate')">
+          Eltávolítás az istállóból
+        </button>
+        <button class="themed-button danger" (click)="performDelete('delete')">
+          Végleges törlés
+        </button>
         <button class="themed-button cancel" (click)="cancelDelete()">Mégse</button>
       </div>
     </div>

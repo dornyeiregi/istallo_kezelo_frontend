@@ -14,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './horse-edit.html',
-  styleUrls: ['./horse-edit.css']
+  styleUrls: ['./horse-edit.css'],
 })
 export class HorseEditPage implements OnInit {
   loading: boolean = false;
@@ -25,7 +25,7 @@ export class HorseEditPage implements OnInit {
     sex: 'M',
     microchipNum: '',
     passportNum: '',
-    additional: ''
+    additional: '',
   };
 
   stables: StableDTO[] = [];
@@ -41,7 +41,7 @@ export class HorseEditPage implements OnInit {
     private horseService: HorseService,
     private stableService: StableService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -50,14 +50,14 @@ export class HorseEditPage implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loading = true;
 
-    this.horseService.getById(id).subscribe(h => {
+    this.horseService.getById(id).subscribe((h) => {
       this.horse = h;
       this.loading = false;
     });
 
-    this.stableService.getAll().subscribe(st => (this.stables = st));
+    this.stableService.getAll().subscribe((st) => (this.stables = st));
     if (this.isAdmin) {
-      this.userService.getAll().subscribe(o => (this.owners = o));
+      this.userService.getAll().subscribe((o) => (this.owners = o));
     }
   }
 
@@ -75,7 +75,7 @@ export class HorseEditPage implements OnInit {
       stableId: this.horse.stableId,
       microchipNum: this.horse.microchipNum,
       passportNum: this.horse.passportNum,
-      additional: this.horse.additional
+      additional: this.horse.additional,
     };
 
     this.loading = true;
@@ -96,7 +96,7 @@ export class HorseEditPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült frissíteni a ló adatait.';
         this.loading = false;
-      }
+      },
     });
   }
 

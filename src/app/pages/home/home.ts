@@ -14,83 +14,86 @@ import { EmployeeAccessSettingsDTO } from '../../models/employee-access-settings
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  styleUrls: ['./home.css'],
 })
+/**
+ * Displays the role-aware home dashboard and notification badges.
+ */
 export class HomePage implements OnInit {
   userType: string | null = null;
   requestBadge = 0;
   storageWarningCount = 0;
   storageWarningLevel: 'NONE' | 'YELLOW' | 'RED' = 'NONE';
   employeeAccess: EmployeeAccessSettingsDTO | null = null;
-  
+
   tiles = [
     {
       icon: 'fa-house',
       title: 'Istállók',
       description: 'Kapacitás, állapot és feladatok áttekintése.',
       link: '/stables',
-      roles: ['ADMIN', 'EMPLOYEE']
+      roles: ['ADMIN', 'EMPLOYEE'],
     },
     {
       icon: 'fa-horse-head',
       title: 'Lovak',
       description: 'Lóadatok, állapot és tulajdonosi információk.',
-      link: '/horses'
+      link: '/horses',
     },
     {
       icon: 'fa-warehouse',
       title: 'Tárolók',
       description: 'Takarmány- és eszközkészletek naprakészen tartása.',
       link: '/storages',
-      roles: ['ADMIN', 'EMPLOYEE']
+      roles: ['ADMIN', 'EMPLOYEE'],
     },
     {
       icon: 'fa-syringe',
       title: 'Oltások',
       description: 'Megtörtént oltások archívuma',
       link: '/shots',
-      roles: ['ADMIN', 'OWNER']
+      roles: ['ADMIN', 'OWNER'],
     },
     {
       icon: 'fa-briefcase-medical',
       title: 'Kezelések',
       description: 'Rögzített kezelések áttekintése.',
       link: '/treatments',
-      roles: ['ADMIN', 'OWNER']
+      roles: ['ADMIN', 'OWNER'],
     },
     {
       icon: 'fa-hammer',
       title: 'Patkolási időpontok',
       description: 'Patkolások és karbantartások listája.',
       link: '/farrier-apps',
-      roles: ['ADMIN', 'EMPLOYEE', 'OWNER']
+      roles: ['ADMIN', 'EMPLOYEE', 'OWNER'],
     },
     {
       icon: 'fa-calendar-days',
       title: 'Naptár',
       description: 'Ütemezett oltások és kezelések megtekintése.',
-      link: '/calendar'
+      link: '/calendar',
     },
     {
       icon: 'fa-bell',
       title: 'Kérések',
       description: 'Ló- és etetési ütemterv kérelmek kezelése.',
       link: '/requests',
-      roles: ['ADMIN']
+      roles: ['ADMIN'],
     },
     {
       icon: 'fa-user-group',
       title: 'Tagok',
       description: 'Munkatársak és partnerek jogosultságainak kezelése.',
       link: '/admin/users',
-      roles: ['ADMIN']
+      roles: ['ADMIN'],
     },
     {
       icon: 'fa-gear',
       title: 'Beállítások',
       description: 'Szervezeti és rendszerbeállítások testreszabása.',
-      link: '/settings'
-    }
+      link: '/settings',
+    },
   ];
 
   constructor(
@@ -101,32 +104,38 @@ export class HomePage implements OnInit {
     private horseService: HorseService,
     private feedSchedService: FeedSchedService,
     private settingsService: SettingsService,
-    private storageService: StorageService
+    private storageService: StorageService,
   ) {}
 
   ngOnInit(): void {
-      this.authService.currentUser$.subscribe(user => {
-        this.userType = user?.userType || null;
-        if (this.userType === 'ADMIN') {
-          this.refreshRequestBadge();
-        }
-        if (this.userType === 'ADMIN' || this.userType === 'EMPLOYEE') {
-          this.refreshStorageWarnings();
-        }
-        if (this.userType === 'EMPLOYEE') {
-          this.settingsService.getEmployeeAccess().subscribe({
-            next: (settings) => {
-              this.employeeAccess = settings;
-            },
-            error: () => {
-              this.employeeAccess = { viewShots: false, viewTreatments: false, viewFarrierApps: false };
-            }
-          });
-        }
-      });
+    this.authService.currentUser$.subscribe((user) => {
+      this.userType = user?.userType || null;
+      if (this.userType === 'ADMIN') {
+        this.refreshRequestBadge();
+      }
+      if (this.userType === 'ADMIN' || this.userType === 'EMPLOYEE') {
+        this.refreshStorageWarnings();
+      }
+      if (this.userType === 'EMPLOYEE') {
+        this.settingsService.getEmployeeAccess().subscribe({
+          next: (settings) => {
+            this.employeeAccess = settings;
+          },
+          error: () => {
+            this.employeeAccess = {
+              viewShots: false,
+              viewTreatments: false,
+              viewFarrierApps: false,
+            };
+          },
+        });
+      }
+    });
   }
 
-  // segédfüggvény a felh. típus szerinti megjelenítéshez
+  /**
+   * Determines whether the current user can see the supplied dashboard tile.
+   */
   canViewTile(tile: any): boolean {
     if (!tile.roles || tile.roles.length === 0) return true;
     const roleMatch = tile.roles.includes(this.userType || '');
@@ -153,9 +162,9 @@ export class HomePage implements OnInit {
         this.feedSchedService.getChangeRequests().subscribe({
           next: (requests) => {
             this.requestBadge = horseCount + requests.length;
-          }
+          },
         });
-      }
+      },
     });
   }
 
@@ -163,7 +172,7 @@ export class HomePage implements OnInit {
     this.storageService.getAlerts().subscribe({
       next: (alerts) => {
         this.storageWarningCount = alerts.length;
-        if (alerts.some(a => a.warningLevel === 'RED')) {
+        if (alerts.some((a) => a.warningLevel === 'RED')) {
           this.storageWarningLevel = 'RED';
         } else if (alerts.length > 0) {
           this.storageWarningLevel = 'YELLOW';
@@ -174,7 +183,7 @@ export class HomePage implements OnInit {
       error: () => {
         this.storageWarningCount = 0;
         this.storageWarningLevel = 'NONE';
-      }
+      },
     });
   }
 }

@@ -12,33 +12,46 @@ import { StorageDTO } from '../../models/storage.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './storage-item-create.html',
-  styleUrls: ['./storage-item-create.css']
+  styleUrls: ['./storage-item-create.css'],
 })
+/**
+ * Handles creation of a new inventory item and its initial storage record.
+ */
 export class StorageItemCreatePage {
   loading = false;
   error: string | null = null;
   success = false;
 
-  // Backend enumok
+  /**
+   * Backend item type values available in the item creation form.
+   */
   itemTypes = ['HAY', 'FEED', 'SUPPLEMENT', 'MACHINE', 'ACCESSORY', 'BEDDING'];
+
+  /**
+   * Backend item category values available in the item creation form.
+   */
   itemCategories = ['CONSUMABLE', 'OBJECT'];
 
-  // Szűrt típuslista
+  /**
+   * Item types filtered by the currently selected category.
+   */
   filteredItemTypes: string[] = [];
 
-  // Feliratok
+  /**
+   * User-facing labels for backend item type values.
+   */
   itemTypeLabels: { [key: string]: string } = {
     HAY: 'Szálas takarmány',
     FEED: 'Abraktakarmány',
     SUPPLEMENT: 'Táplálékkiegészítő',
     MACHINE: 'Gép',
     ACCESSORY: 'Kellék',
-    BEDDING: 'Alom'
+    BEDDING: 'Alom',
   };
 
   itemCategoryLabels: { [key: string]: string } = {
     CONSUMABLE: 'Takarmány',
-    OBJECT: 'Eszköz'
+    OBJECT: 'Eszköz',
   };
 
   form = {
@@ -47,9 +60,12 @@ export class StorageItemCreatePage {
     itemCategory: '',
     feedUnitAmount: 1,
     packageCount: 0,
-    packageSize: 0
+    packageSize: 0,
   };
 
+  /**
+   * Calculates the initial stored amount from package count and package size.
+   */
   get totalStored(): number {
     const count = Number(this.form.packageCount) || 0;
     const size = Number(this.form.packageSize) || 0;
@@ -59,13 +75,16 @@ export class StorageItemCreatePage {
   constructor(
     private itemService: ItemService,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.filteredItemTypes = []; // kezdetben üres
+    this.filteredItemTypes = [];
   }
 
+  /**
+   * Refreshes the available item types when the selected category changes.
+   */
   onCategoryChange(): void {
     const category = this.form.itemCategory;
 
@@ -77,10 +96,12 @@ export class StorageItemCreatePage {
       this.filteredItemTypes = [];
     }
 
-    // Ha más kategóriára váltottunk, törölni kell az előző itemType-ot
     this.form.itemType = '';
   }
 
+  /**
+   * Validates the form, creates the item, and creates the matching storage row.
+   */
   onSubmit(): void {
     this.error = null;
 
@@ -105,7 +126,7 @@ export class StorageItemCreatePage {
       name: this.form.name,
       itemType: this.form.itemType,
       itemCategory: this.form.itemCategory,
-      feedUnitAmount: this.form.feedUnitAmount
+      feedUnitAmount: this.form.feedUnitAmount,
     };
 
     this.itemService.create(itemDto).subscribe({
@@ -119,7 +140,7 @@ export class StorageItemCreatePage {
         const storageDto: StorageDTO = {
           itemId: createdItem.itemId,
           amountStored: this.totalStored,
-          amountInUse: 0
+          amountInUse: 0,
         };
 
         this.storageService.create(storageDto).subscribe({
@@ -132,16 +153,19 @@ export class StorageItemCreatePage {
           error: () => {
             this.loading = false;
             this.error = 'A tároló létrehozása nem sikerült.';
-          }
+          },
         });
       },
       error: () => {
         this.loading = false;
         this.error = 'A tétel létrehozása nem sikerült.';
-      }
+      },
     });
   }
 
+  /**
+   * Returns to the previous screen or the storage overview.
+   */
   goBack(): void {
     if (window.history.length > 1) {
       window.history.back();

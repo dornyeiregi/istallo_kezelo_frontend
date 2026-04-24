@@ -5,7 +5,7 @@ import { CalendarEventDTO } from '../models/calendar-event.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CalendarEventService {
   private apiUrl = `${API_BASE_URL}/api/calendar-events`;

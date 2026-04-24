@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 export type AppTheme = 'rose' | 'sage';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private readonly storageKey = 'app.theme';

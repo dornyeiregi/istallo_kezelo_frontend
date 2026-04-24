@@ -9,16 +9,10 @@
       StableManager
     </a>
 
-    <!-- Navigáció, ha be van jelentkezve -->
-    <ng-container *ngIf="isAuthenticated$ | async">
-      <!-- <a routerLink="/" routerLinkActive="active">Kezdőlap</a> -->
-      <!-- <a routerLink="/stables" routerLinkActive="active">Istállók</a>
-      <a routerLink="/horses" routerLinkActive="active">Lovak</a> -->
-    </ng-container>
+    <ng-container *ngIf="isAuthenticated$ | async"> </ng-container>
   </div>
 
   <div class="nav-right">
-    <!-- Felhasználónév + kijelentkezés -->
     <ng-container *ngIf="user$ | async as user; else guest">
       <a class="user-chip" routerLink="/settings" routerLinkActive="active">
         {{ user.username }}
@@ -26,7 +20,6 @@
       <button type="button" class="logout-button" (click)="logout()">Kijelentkezés</button>
     </ng-container>
 
-    <!-- Vendégnézet -->
     <ng-template #guest>
       <a routerLink="/login" class="login-link" routerLinkActive="active"> Bejelentkezés </a>
     </ng-template>

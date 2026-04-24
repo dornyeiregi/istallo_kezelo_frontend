@@ -13,7 +13,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (!authService.isLoggedIn()) {
     authService.setReturnUrl(state.url);
     router.navigate(['/login'], {
-      queryParams: { returnUrl: state.url }
+      queryParams: { returnUrl: state.url },
     });
     return false;
   }
@@ -24,13 +24,15 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  const employeeSettingKey = route.data?.['employeeAccessSetting'] as keyof EmployeeAccessSettingsDTO | undefined;
+  const employeeSettingKey = route.data?.['employeeAccessSetting'] as
+    | keyof EmployeeAccessSettingsDTO
+    | undefined;
   if (employeeSettingKey && authService.hasAnyRole(['EMPLOYEE', 'ROLE_EMPLOYEE'])) {
     return settingsService.getEmployeeAccess().pipe(
       map((settings) => {
         const allowed = !!settings[employeeSettingKey];
         return allowed ? true : router.createUrlTree(['/']);
-      })
+      }),
     );
   }
 

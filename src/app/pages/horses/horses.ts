@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './horses.html',
-  styleUrls: ['./horses.css']
+  styleUrls: ['./horses.css'],
 })
 export class HorsesPage implements OnInit {
   horses: HorseDTO[] = [];
@@ -28,12 +28,14 @@ export class HorsesPage implements OnInit {
   pendingRequests: HorseDTO[] = [];
   pendingCount = 0;
 
-  constructor(private horseService: HorseService,
-              private router: Router,
-              private authService: AuthService) {}
+  constructor(
+    private horseService: HorseService,
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
-    this.activeView = (this.canToggleView || this.isEmployee) ? 'ALL' : 'MINE';
+    this.activeView = this.canToggleView || this.isEmployee ? 'ALL' : 'MINE';
     this.loadHorses();
 
     if (this.canToggleView) {
@@ -67,14 +69,19 @@ export class HorsesPage implements OnInit {
           this.loading = false;
           return;
         }
-        source$ = this.canToggleView ? this.horseService.getRequests() : this.horseService.getMyRequests();
+        source$ = this.canToggleView
+          ? this.horseService.getRequests()
+          : this.horseService.getMyRequests();
         break;
       case 'MINE':
         source$ = this.isEmployee ? this.horseService.getAll() : this.horseService.getMine();
         break;
       case 'ALL':
       default:
-        source$ = (this.isEmployee || this.canToggleView) ? this.horseService.getAll() : this.horseService.getMine();
+        source$ =
+          this.isEmployee || this.canToggleView
+            ? this.horseService.getAll()
+            : this.horseService.getMine();
         break;
     }
 
@@ -89,7 +96,7 @@ export class HorsesPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a lovakat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -97,7 +104,7 @@ export class HorsesPage implements OnInit {
     if (!this.authService.hasAnyRole(['OWNER', 'ROLE_OWNER'])) return;
     this.horseService.getMyRequests().subscribe({
       next: (requests) => {
-        const existingIds = new Set(this.horses.map(h => h.id));
+        const existingIds = new Set(this.horses.map((h) => h.id));
         const merged = [...this.horses];
         for (const req of requests) {
           if (req.id && !existingIds.has(req.id)) {
@@ -105,7 +112,7 @@ export class HorsesPage implements OnInit {
           }
         }
         this.horses = merged;
-      }
+      },
     });
   }
 
@@ -114,7 +121,7 @@ export class HorsesPage implements OnInit {
       next: (requests) => {
         this.pendingRequests = requests;
         this.pendingCount = requests.length;
-      }
+      },
     });
   }
 
@@ -175,11 +182,11 @@ export class HorsesPage implements OnInit {
     this.horseService.delete(horse.id).subscribe({
       next: () => {
         this.deleteSuccess = 'A(z) ${horse.horseName} sikeresen törölve.';
-        this.horses = this.horses.filter(h => h.id !== horse.id);
+        this.horses = this.horses.filter((h) => h.id !== horse.id);
       },
       error: () => {
         this.error = 'Nem sikerült törölni a lovat.';
-      }
+      },
     });
   }
 
@@ -190,15 +197,17 @@ export class HorsesPage implements OnInit {
   performDelete(mode: 'delete' | 'deactivate') {
     if (!this.confirmDeleteHorse) return;
 
-    const action$ = mode === 'deactivate'
-      ? this.horseService.deactivate(this.confirmDeleteHorse.id!)
-      : this.horseService.delete(this.confirmDeleteHorse.id!);
+    const action$ =
+      mode === 'deactivate'
+        ? this.horseService.deactivate(this.confirmDeleteHorse.id!)
+        : this.horseService.delete(this.confirmDeleteHorse.id!);
 
     action$.subscribe({
       next: () => {
-        const message = mode === 'deactivate'
-          ? `A(z) ${this.confirmDeleteHorse!.horseName} eltávolítva az istállóból.`
-          : `A(z) ${this.confirmDeleteHorse!.horseName} sikeresen törölve.`;
+        const message =
+          mode === 'deactivate'
+            ? `A(z) ${this.confirmDeleteHorse!.horseName} eltávolítva az istállóból.`
+            : `A(z) ${this.confirmDeleteHorse!.horseName} sikeresen törölve.`;
         this.showToast(message);
 
         this.loadHorses();
@@ -211,7 +220,7 @@ export class HorsesPage implements OnInit {
 
         this.confirmDeleteHorse = null;
         this.deleteMode = false;
-      }
+      },
     });
   }
 
@@ -224,10 +233,9 @@ export class HorsesPage implements OnInit {
       },
       error: () => {
         this.showToast('Nem sikerült aktiválni a lovat.');
-      }
+      },
     });
   }
-
 
   cancelDelete() {
     this.confirmDeleteHorse = null;
@@ -238,12 +246,12 @@ export class HorsesPage implements OnInit {
       {
         label: 'Új ló hozzáadása',
         icon: 'fa-circle-plus',
-        onClick: () => this.addHorse()
+        onClick: () => this.addHorse(),
       },
       {
         label: 'Szerkesztés',
         icon: 'fa-pen-to-square',
-        onClick: () => this.toggleEditMode()
+        onClick: () => this.toggleEditMode(),
       },
       {
         label: 'Törlés',
@@ -252,12 +260,12 @@ export class HorsesPage implements OnInit {
           this.deleteMode = !this.deleteMode;
           this.confirmDeleteHorse = null;
           this.deleteSuccess = '';
-        }
-      }
+        },
+      },
     ];
 
     if (!this.canDelete) {
-      return actions.filter(action => action.label !== 'Törlés');
+      return actions.filter((action) => action.label !== 'Törlés');
     }
 
     return actions;

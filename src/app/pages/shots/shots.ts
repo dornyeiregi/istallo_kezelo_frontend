@@ -12,8 +12,11 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './shots.html',
-  styleUrls: ['./shots.css']
+  styleUrls: ['./shots.css'],
 })
+/**
+ * Lists shot records and coordinates list-level CRUD actions.
+ */
 export class ShotsPage implements OnInit {
   shots: ShotDTO[] = [];
   loading = true;
@@ -28,7 +31,7 @@ export class ShotsPage implements OnInit {
   constructor(
     private shotService: ShotService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -40,9 +43,7 @@ export class ShotsPage implements OnInit {
 
     this.shotService.getAll().subscribe({
       next: (data) => {
-        this.shots = data.sort((a, b) =>
-          new Date(b.date!).getTime() - new Date(a.date!).getTime()
-        );
+        this.shots = data.sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime());
 
         this.loading = false;
         this.error = '';
@@ -50,7 +51,7 @@ export class ShotsPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni az oltásokat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -71,14 +72,15 @@ export class ShotsPage implements OnInit {
     }
   }
 
+  /**
+   * Handles shot card selection for delete, edit, and detail navigation modes.
+   */
   onCardClick(shot: ShotDTO): void {
-    // Törlés mód
     if (this.deleteMode) {
       this.confirmDelete(shot);
       return;
     }
 
-    // Szerkesztés mód
     if (this.editMode) {
       if (shot.shotId != null) {
         this.router.navigate(['/shots/edit', shot.shotId]);
@@ -87,7 +89,6 @@ export class ShotsPage implements OnInit {
       return;
     }
 
-    // Normál kattintás
     if (shot.shotId != null) {
       this.router.navigate(['/shots', shot.shotId]);
     }
@@ -103,7 +104,7 @@ export class ShotsPage implements OnInit {
     this.shotService.delete(this.confirmDeleteShot.shotId).subscribe({
       next: () => {
         this.showToast(`A(z) ${this.confirmDeleteShot!.shotName} oltás sikeresen törölve.`);
-        this.shots = this.shots.filter(s => s.shotId !== this.confirmDeleteShot!.shotId);
+        this.shots = this.shots.filter((s) => s.shotId !== this.confirmDeleteShot!.shotId);
         this.confirmDeleteShot = null;
         this.deleteMode = false;
       },
@@ -111,7 +112,7 @@ export class ShotsPage implements OnInit {
         this.showToast('Nem sikerült törölni az oltást.');
         this.confirmDeleteShot = null;
         this.deleteMode = false;
-      }
+      },
     });
   }
 
@@ -133,7 +134,7 @@ export class ShotsPage implements OnInit {
       'ADMIN',
       'OWNER',
       'ROLE_ADMIN',
-      'ROLE_OWNER'
+      'ROLE_OWNER',
     ]);
 
     if (!isAdminOrOwner) {
@@ -149,12 +150,12 @@ export class ShotsPage implements OnInit {
           this.deleteMode = false;
           this.confirmDeleteShot = null;
           this.addShot();
-        }
+        },
       },
       {
         label: 'Szerkesztés',
         icon: 'fa-pen-to-square',
-        onClick: () => this.toggleEditMode()
+        onClick: () => this.toggleEditMode(),
       },
       {
         label: 'Törlés mód',
@@ -164,8 +165,8 @@ export class ShotsPage implements OnInit {
           this.editMode = false;
           this.confirmDeleteShot = null;
           this.toastVisible = false;
-        }
-      }
+        },
+      },
     ];
   }
 
@@ -173,7 +174,7 @@ export class ShotsPage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   getFrequencyLabel(shot: ShotDTO): string {

@@ -10,7 +10,7 @@ import { RegisterPayload, UserType } from '../../models/auth.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
-  styleUrls: ['./register.css']
+  styleUrls: ['./register.css'],
 })
 export class RegisterPage implements OnInit {
   form!: FormGroup;
@@ -20,7 +20,7 @@ export class RegisterPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +32,7 @@ export class RegisterPage implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
-      userType: ['OWNER', Validators.required]
+      userType: ['OWNER', Validators.required],
     });
   }
 
@@ -81,15 +81,11 @@ export class RegisterPage implements OnInit {
       lName: trimmedLastName,
       l_name: trimmedLastName,
       email: trimmedEmail,
-      phone: this.form.value.phone
-        ? (this.form.value.phone as string).trim()
-        : '',
+      phone: this.form.value.phone ? (this.form.value.phone as string).trim() : '',
       username: trimmedUsername,
       password: this.form.value.password,
-      userType: 'OWNER'
+      userType: 'OWNER',
     };
-
-    console.debug('Register payload', payload);
 
     this.loading = true;
     this.error = '';
@@ -98,14 +94,14 @@ export class RegisterPage implements OnInit {
       next: () => {
         this.loading = false;
         this.router.navigate(['/login'], {
-          queryParams: { registered: 'true', username: payload.username }
+          queryParams: { registered: 'true', username: payload.username },
         });
       },
       error: (err) => {
         this.loading = false;
         this.error =
           err?.error?.message || 'Nem sikerült létrehozni a felhasználót. Próbáld meg később.';
-      }
+      },
     });
   }
 
@@ -132,9 +128,7 @@ export class RegisterPage implements OnInit {
   get confirmPasswordInvalid(): boolean {
     const control = this.form.get('confirmPassword');
     return (
-      !!control &&
-      (control.invalid || this.passwordsMismatch) &&
-      (control.dirty || control.touched)
+      !!control && (control.invalid || this.passwordsMismatch) && (control.dirty || control.touched)
     );
   }
 

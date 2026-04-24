@@ -10,7 +10,7 @@ import { AuthResponse } from '../../models/auth.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrls: ['./login.css'],
 })
 export class LoginPage implements OnInit {
   form!: FormGroup;
@@ -23,13 +23,13 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
 
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
@@ -62,14 +62,13 @@ export class LoginPage implements OnInit {
 
         const redirectTarget = this.returnUrl || this.authService.consumeReturnUrl() || '/home';
 
-      this.router.navigateByUrl(redirectTarget);
+        this.router.navigateByUrl(redirectTarget);
       },
       error: (err) => {
         this.loading = false;
         this.error =
-          err?.error?.message ||
-          'Sikertelen bejelentkezés. Kérlek ellenőrizd az adataid.';
-      }
+          err?.error?.message || 'Sikertelen bejelentkezés. Kérlek ellenőrizd az adataid.';
+      },
     });
   }
 

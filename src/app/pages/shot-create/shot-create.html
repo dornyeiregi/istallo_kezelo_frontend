@@ -1,5 +1,4 @@
 <div class="form-container">
-
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -18,34 +17,24 @@
   }
 
   <form (ngSubmit)="onSubmit()" #shotForm="ngForm">
-
     <div class="form-group">
       <label>Oltás neve *</label>
-      <input type="text"
-             name="shotName"
-             [(ngModel)]="form.shotName"
-             required />
+      <input type="text" name="shotName" [(ngModel)]="form.shotName" required />
     </div>
 
     <div class="form-group">
       <label>Dátum *</label>
-      <input type="date"
-             name="date"
-             [(ngModel)]="form.date"
-             required />
+      <input type="date" name="date" [(ngModel)]="form.date" required />
     </div>
 
     <div class="form-group">
       <label>Gyakoriság (érték)</label>
-      <input type="number"
-             name="frequencyValue"
-             [(ngModel)]="form.frequencyValue" />
+      <input type="number" name="frequencyValue" [(ngModel)]="form.frequencyValue" />
     </div>
 
     <div class="form-group">
       <label>Gyakoriság (egység)</label>
-      <select name="frequencyUnit"
-              [(ngModel)]="form.frequencyUnit">
+      <select name="frequencyUnit" [(ngModel)]="form.frequencyUnit">
         <option value="" disabled selected>Válassz egységet</option>
         @for (unit of frequencyUnits; track unit) {
           <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
@@ -59,9 +48,7 @@
       @if (horses.length === 0) {
         <p>Nincs elérhető ló.</p>
       } @else {
-
         @for (horse of horses; track horse.id) {
-
           <label class="horse-row" [attr.data-key]="horse.id">
             <input
               type="checkbox"
@@ -82,7 +69,5 @@
     @if (loading) {
       <div class="info">Mentés folyamatban...</div>
     }
-
   </form>
-
 </div>

@@ -1,26 +1,24 @@
 <div class="layout">
-
-    <!-- Kártyák -->
-    <section class="cards">
-      @for (tile of tiles; track tile.title) {
-        @if (canViewTile(tile)) {
-          <div class="card" [routerLink]="tile.link">
-            <i class="fa-solid fa-fw icon" [ngClass]="tile.icon" aria-hidden="true"></i>
-            <h3>{{ tile.title }}</h3>
-            <p>{{ tile.description }}</p>
-            @if (tile.link === '/requests' && requestBadge > 0) {
-              <span class="badge-dot" aria-hidden="true"></span>
-            }
-            @if (tile.link === '/storages' && storageWarningCount > 0) {
-              <span
-                class="badge-dot"
-                [class.badge-yellow]="storageWarningLevel === 'YELLOW'"
-                [class.badge-red]="storageWarningLevel === 'RED'"
-                aria-hidden="true"
-              ></span>
-            }
-          </div>
-        }
+  <section class="cards">
+    @for (tile of tiles; track tile.title) {
+      @if (canViewTile(tile)) {
+        <div class="card" [routerLink]="tile.link">
+          <i class="fa-solid fa-fw icon" [ngClass]="tile.icon" aria-hidden="true"></i>
+          <h3>{{ tile.title }}</h3>
+          <p>{{ tile.description }}</p>
+          @if (tile.link === '/requests' && requestBadge > 0) {
+            <span class="badge-dot" aria-hidden="true"></span>
+          }
+          @if (tile.link === '/storages' && storageWarningCount > 0) {
+            <span
+              class="badge-dot"
+              [class.badge-yellow]="storageWarningLevel === 'YELLOW'"
+              [class.badge-red]="storageWarningLevel === 'RED'"
+              aria-hidden="true"
+            ></span>
+          }
+        </div>
       }
-    </section>
+    }
+  </section>
 </div>

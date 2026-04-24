@@ -12,6 +12,9 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
+/**
+ * Displays the shared application header and handles account navigation actions.
+ */
 export class HeaderComponent {
   user$: Observable<AuthUser | null>;
   isAuthenticated$: Observable<boolean>;
@@ -24,6 +27,9 @@ export class HeaderComponent {
     this.isAuthenticated$ = this.authService.isAuthenticated$;
   }
 
+  /**
+   * Clears the active session and redirects the user to the login page.
+   */
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

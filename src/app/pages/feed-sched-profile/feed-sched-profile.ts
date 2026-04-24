@@ -18,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, CrudMenuComponent],
   templateUrl: './feed-sched-profile.html',
-  styleUrls: ['./feed-sched-profile.css']
+  styleUrls: ['./feed-sched-profile.css'],
 })
 export class FeedSchedProfilePage implements OnInit {
   feedSched?: FeedSchedDTO;
@@ -43,7 +43,7 @@ export class FeedSchedProfilePage implements OnInit {
     SUPPLEMENT: 'Táplálékkiegészítő',
     MACHINE: 'Gép',
     ACCESSORY: 'Kellék',
-    BEDDING: 'Alom'
+    BEDDING: 'Alom',
   };
 
   constructor(
@@ -53,7 +53,7 @@ export class FeedSchedProfilePage implements OnInit {
     private itemService: ItemService,
     private feedSchedItemService: FeedSchedItemService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -77,16 +77,16 @@ export class FeedSchedProfilePage implements OnInit {
         forkJoin([
           this.horseService.getAll(),
           this.itemService.getAll(),
-          this.feedSchedItemService.getAll()
+          this.feedSchedItemService.getAll(),
         ]).subscribe({
           next: ([horses, items, feedItems]) => {
             this.horses = horses;
             this.items = items;
-            this.feedItems = feedItems.filter(f => f.feedSchedId === id);
+            this.feedItems = feedItems.filter((f) => f.feedSchedId === id);
             this.amountByItemId = new Map(
               this.feedItems
-                .filter(f => f.itemId != null && f.amount != null)
-                .map(f => [Number(f.itemId), Number(f.amount)])
+                .filter((f) => f.itemId != null && f.amount != null)
+                .map((f) => [Number(f.itemId), Number(f.amount)]),
             );
 
             this.selectedHorseIds = new Set(this.feedSched!.horseIds || []);
@@ -100,25 +100,23 @@ export class FeedSchedProfilePage implements OnInit {
           error: () => {
             this.error = 'Nem sikerült betölteni az adatokat.';
             this.loading = false;
-          }
+          },
         });
       },
       error: () => {
         this.error = 'Nem sikerült betölteni az etetési ütemtervet.';
         this.loading = false;
-      }
+      },
     });
   }
 
   private updateAssignedHorses() {
-    this.assignedHorses = this.horses.filter(
-      h => this.selectedHorseIds.has(h.id!)
-    );
+    this.assignedHorses = this.horses.filter((h) => this.selectedHorseIds.has(h.id!));
   }
 
   private updateAssignedItems() {
     this.assignedItems = this.items.filter(
-      i => i.itemId != null && this.selectedItemIds.has(Number(i.itemId))
+      (i) => i.itemId != null && this.selectedItemIds.has(Number(i.itemId)),
     );
   }
 
@@ -136,14 +134,14 @@ export class FeedSchedProfilePage implements OnInit {
   }
 
   getHorseNameById(id: number): string | null {
-    const horse = this.horses.find(h => h.id === id);
+    const horse = this.horses.find((h) => h.id === id);
     return horse ? horse.horseName : null;
   }
 
   getKnownHorseIds(ids?: number[] | null): number[] {
     if (!ids || ids.length === 0) return [];
-    const known = new Set(this.horses.map(h => h.id));
-    return ids.filter(id => known.has(id));
+    const known = new Set(this.horses.map((h) => h.id));
+    return ids.filter((id) => known.has(id));
   }
 
   deleteFeedSched(): void {
@@ -157,7 +155,7 @@ export class FeedSchedProfilePage implements OnInit {
       },
       error: () => {
         alert('Nem sikerült törölni az ütemtervet.');
-      }
+      },
     });
   }
 
@@ -183,7 +181,7 @@ export class FeedSchedProfilePage implements OnInit {
 
     const dto: Partial<FeedSchedDTO> = {
       horseIds: Array.from(this.selectedHorseIds),
-      itemIds: Array.from(this.selectedItemIds)
+      itemIds: Array.from(this.selectedItemIds),
     };
 
     this.feedSchedService.update(this.feedSched.feedSchedId, dto as FeedSchedDTO).subscribe({
@@ -201,12 +199,12 @@ export class FeedSchedProfilePage implements OnInit {
         this.saving = false;
         this.editHorsesMode = false;
 
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a lovakat.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -233,7 +231,7 @@ export class FeedSchedProfilePage implements OnInit {
   }
 
   getItemNames(): string[] {
-    return this.assignedItems.map(i => this.getItemLabel(i));
+    return this.assignedItems.map((i) => this.getItemLabel(i));
   }
 
   getItemLabel(item: ItemDTO): string {
@@ -246,7 +244,7 @@ export class FeedSchedProfilePage implements OnInit {
 
   getItemsByType(type: string): ItemDTO[] {
     const key = (type || '').toUpperCase();
-    return this.items.filter(i => (i.itemType || '').toUpperCase() === key);
+    return this.items.filter((i) => (i.itemType || '').toUpperCase() === key);
   }
 
   get crudActions() {
@@ -256,13 +254,13 @@ export class FeedSchedProfilePage implements OnInit {
         icon: 'fa-pen-to-square',
         onClick: () => {
           this.editHorsesMode = true;
-        }
+        },
       },
       {
         label: 'Ütemterv törlése',
         icon: 'fa-trash',
         onClick: () => this.deleteFeedSched(),
-      }
+      },
     ];
   }
 }

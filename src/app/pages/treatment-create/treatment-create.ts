@@ -12,7 +12,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './treatment-create.html',
-  styleUrls: ['./treatment-create.css']
+  styleUrls: ['./treatment-create.css'],
 })
 export class TreatmentCreatePage implements OnInit {
   loading = false;
@@ -26,7 +26,7 @@ export class TreatmentCreatePage implements OnInit {
     description: '',
     frequencyUnit: '',
     frequencyValue: undefined,
-    date: ''
+    date: '',
   };
 
   frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
@@ -34,14 +34,14 @@ export class TreatmentCreatePage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   constructor(
     private treatmentService: TreatmentService,
     private horseService: HorseService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,7 @@ export class TreatmentCreatePage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a lovakat.';
-      }
+      },
     });
   }
 
@@ -97,7 +97,7 @@ export class TreatmentCreatePage implements OnInit {
       frequencyUnit: this.form.frequencyUnit || null,
       frequencyValue: this.form.frequencyValue || null,
       date: this.form.date,
-      horseIds: Array.from(this.selectedHorseIds)
+      horseIds: Array.from(this.selectedHorseIds),
     };
 
     this.treatmentService.create(dto).subscribe({
@@ -107,7 +107,7 @@ export class TreatmentCreatePage implements OnInit {
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült létrehozni a kezelést.';
-      }
+      },
     });
   }
 

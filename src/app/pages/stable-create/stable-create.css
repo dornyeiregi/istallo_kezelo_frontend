@@ -15,12 +15,10 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-/* Breadcrumb */
 .breadcrumb {
   margin-bottom: 1rem;
 }
 
-/* Form elemek */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -74,7 +72,6 @@ textarea:focus {
   cursor: not-allowed;
 }
 
-/* Üzenetek */
 .error-msg {
   color: #d14763;
   font-weight: 500;

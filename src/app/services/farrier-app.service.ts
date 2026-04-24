@@ -5,7 +5,7 @@ import { FarrierAppDTO } from '../models/farrier-app.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FarrierAppService {
   private apiUrl = `${API_BASE_URL}/api/farrierApps`;
@@ -29,11 +29,9 @@ export class FarrierAppService {
   }
 
   update(id: number, dto: FarrierAppDTO): Observable<string> {
-    return this.http.patch(
-      `${this.apiUrl}/${id}`,
-      dto,
-      { responseType: 'text' }
-    ) as Observable<string>;
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, {
+      responseType: 'text',
+    }) as Observable<string>;
   }
 
   delete(id: number): Observable<string> {

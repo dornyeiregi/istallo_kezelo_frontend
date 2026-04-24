@@ -6,7 +6,7 @@ import { FeedSchedChangeRequestDTO } from '../models/feed-sched-change-request.m
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FeedSchedService {
   private apiUrl = `${API_BASE_URL}/api/feedScheds`;
@@ -26,19 +26,13 @@ export class FeedSchedService {
   }
 
   create(dto: FeedSchedDTO): Observable<string> {
-    return this.http.post(
-      this.apiUrl,
-      dto,
-      { responseType: 'text' }
-    ) as Observable<string>;
+    return this.http.post(this.apiUrl, dto, { responseType: 'text' }) as Observable<string>;
   }
 
   update(id: number, dto: FeedSchedDTO): Observable<string> {
-    return this.http.patch(
-      `${this.apiUrl}/${id}`,
-      dto,
-      { responseType: 'text' }
-    ) as Observable<string>;
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, {
+      responseType: 'text',
+    }) as Observable<string>;
   }
 
   delete(id: number): Observable<string> {
@@ -57,11 +51,13 @@ export class FeedSchedService {
     return this.http.patch(
       `${this.apiUrl}/requests/${id}/approve`,
       {},
-      { responseType: 'text' }
+      { responseType: 'text' },
     ) as Observable<string>;
   }
 
   rejectChangeRequest(id: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/requests/${id}`, { responseType: 'text' }) as Observable<string>;
+    return this.http.delete(`${this.apiUrl}/requests/${id}`, {
+      responseType: 'text',
+    }) as Observable<string>;
   }
 }

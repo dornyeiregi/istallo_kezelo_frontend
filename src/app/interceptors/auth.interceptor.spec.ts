@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpErrorResponse, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpRequest, HttpResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { authInterceptor } from './auth.interceptor';
@@ -16,8 +16,8 @@ describe('authInterceptor', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router }
-      ]
+        { provide: Router, useValue: router },
+      ],
     });
   });
 
@@ -27,7 +27,7 @@ describe('authInterceptor', () => {
 
     const next = (r: HttpRequest<any>) => {
       expect(r.headers.get('Authorization')).toBe('Bearer tkn');
-      return of(null);
+      return of(new HttpResponse({ status: 200 }));
     };
 
     TestBed.runInInjectionContext(() => {
@@ -48,7 +48,7 @@ describe('authInterceptor', () => {
           expect(authService.logout).toHaveBeenCalled();
           expect(router.navigate).toHaveBeenCalledWith(['/login']);
           done();
-        }
+        },
       });
     });
   });

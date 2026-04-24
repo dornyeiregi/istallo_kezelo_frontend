@@ -14,8 +14,11 @@ import { ItemDTO } from '../../models/item.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './feed-sched-create.html',
-  styleUrls: ['./feed-sched-create.css']
+  styleUrls: ['./feed-sched-create.css'],
 })
+/**
+ * Creates feeding schedules and links them to selected horses and inventory items.
+ */
 export class FeedSchedCreatePage implements OnInit {
   loading = false;
   error: string | null = null;
@@ -33,7 +36,7 @@ export class FeedSchedCreatePage implements OnInit {
     feedEvening: false,
     description: '',
     horseIds: [],
-    itemIds: []
+    itemIds: [],
   };
 
   constructor(
@@ -41,7 +44,7 @@ export class FeedSchedCreatePage implements OnInit {
     private horseService: HorseService,
     private itemService: ItemService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -65,18 +68,18 @@ export class FeedSchedCreatePage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a lovakat.';
-      }
+      },
     });
   }
 
   loadItems() {
     this.itemService.getAll().subscribe({
       next: (items) => {
-        this.items = items.filter(i => (i.itemType || '').toUpperCase() !== 'BEDDING');
+        this.items = items.filter((i) => (i.itemType || '').toUpperCase() !== 'BEDDING');
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a tételeket.';
-      }
+      },
     });
   }
 
@@ -88,13 +91,14 @@ export class FeedSchedCreatePage implements OnInit {
       },
       error: () => {
         this.nextFeedSchedId = null;
-      }
+      },
     });
   }
 
-  onFeedTimeChange() {
-    // no-op (kept for template binding)
-  }
+  /**
+   * Preserves the template binding for feed-time checkbox changes.
+   */
+  onFeedTimeChange() {}
 
   toNumber(id: any): number {
     return Number(id);
@@ -126,7 +130,7 @@ export class FeedSchedCreatePage implements OnInit {
 
   getItemsByType(type: string): ItemDTO[] {
     const key = (type || '').toUpperCase();
-    return this.items.filter(i => (i.itemType || '').toUpperCase() === key);
+    return this.items.filter((i) => (i.itemType || '').toUpperCase() === key);
   }
 
   onSubmit() {
@@ -139,8 +143,8 @@ export class FeedSchedCreatePage implements OnInit {
 
     this.loading = true;
 
-    const horseIds = Array.from(this.selectedHorseIds).filter(id => Number.isFinite(id));
-    const itemIds = Array.from(this.selectedItemIds).filter(id => Number.isFinite(id));
+    const horseIds = Array.from(this.selectedHorseIds).filter((id) => Number.isFinite(id));
+    const itemIds = Array.from(this.selectedItemIds).filter((id) => Number.isFinite(id));
     const items: FeedSchedItemAmountDTO[] = [];
 
     for (const itemId of itemIds) {
@@ -160,7 +164,7 @@ export class FeedSchedCreatePage implements OnInit {
       description: this.form.description || '',
       horseIds,
       itemIds,
-      items
+      items,
     };
 
     this.feedSchedService.create(dto).subscribe({
@@ -170,7 +174,7 @@ export class FeedSchedCreatePage implements OnInit {
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült létrehozni az etetési ütemtervet.';
-      }
+      },
     });
   }
 
@@ -207,7 +211,7 @@ export class FeedSchedCreatePage implements OnInit {
             },
             error: () => {
               this.router.navigate(['/horses']);
-            }
+            },
           });
           return;
         }

@@ -20,7 +20,7 @@ import { forkJoin, Observable } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './requests.html',
-  styleUrls: ['./requests.css']
+  styleUrls: ['./requests.css'],
 })
 export class RequestsPage implements OnInit {
   loading = true;
@@ -46,7 +46,7 @@ export class RequestsPage implements OnInit {
     private feedSchedItemService: FeedSchedItemService,
     private itemService: ItemService,
     private stableService: StableService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +70,7 @@ export class RequestsPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a ló kéréseket.';
         this.loading = false;
-      }
+      },
     });
 
     this.horseService.getAll().subscribe({
@@ -79,7 +79,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.horses = [];
-      }
+      },
     });
 
     this.itemService.getAll().subscribe({
@@ -88,7 +88,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.items = [];
-      }
+      },
     });
 
     this.feedSchedService.getChangeRequests().subscribe({
@@ -98,7 +98,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni az etetési kéréseket.';
-      }
+      },
     });
 
     this.stableService.getAll().subscribe({
@@ -107,7 +107,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni az istállókat.';
-      }
+      },
     });
 
     this.feedSchedService.getAll().subscribe({
@@ -116,7 +116,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni az etetési ütemterveket.';
-      }
+      },
     });
 
     this.feedSchedItemService.getAll().subscribe({
@@ -125,7 +125,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.feedSchedItemsById = new Map();
-      }
+      },
     });
   }
 
@@ -143,10 +143,10 @@ export class RequestsPage implements OnInit {
     }
     this.horseService.approveRequest(horse.id, { stableId, feedSchedId }).subscribe({
       next: () => {
-        this.horseRequests = this.horseRequests.filter(h => h.id !== horse.id);
+        this.horseRequests = this.horseRequests.filter((h) => h.id !== horse.id);
         this.showToast(`A(z) ${horse.horseName} jóváhagyva.`);
       },
-      error: () => this.showToast('Nem sikerült jóváhagyni a kérést.')
+      error: () => this.showToast('Nem sikerült jóváhagyni a kérést.'),
     });
   }
 
@@ -154,10 +154,10 @@ export class RequestsPage implements OnInit {
     if (!horse.id) return;
     this.horseService.rejectRequest(horse.id).subscribe({
       next: () => {
-        this.horseRequests = this.horseRequests.filter(h => h.id !== horse.id);
+        this.horseRequests = this.horseRequests.filter((h) => h.id !== horse.id);
         this.showToast(`A(z) ${horse.horseName} elutasítva.`);
       },
-      error: () => this.showToast('Nem sikerült elutasítani a kérést.')
+      error: () => this.showToast('Nem sikerült elutasítani a kérést.'),
     });
   }
 
@@ -165,11 +165,11 @@ export class RequestsPage implements OnInit {
     if (!request.id) return;
     this.feedSchedService.approveChangeRequest(request.id).subscribe({
       next: () => {
-        this.feedSchedRequests = this.feedSchedRequests.filter(r => r.id !== request.id);
+        this.feedSchedRequests = this.feedSchedRequests.filter((r) => r.id !== request.id);
         this.showToast('Etetési kérés jóváhagyva.');
         this.refreshAndNormalizeApprovedFeedSched(request);
       },
-      error: () => this.showToast('Nem sikerült jóváhagyni a kérést.')
+      error: () => this.showToast('Nem sikerült jóváhagyni a kérést.'),
     });
   }
 
@@ -177,10 +177,10 @@ export class RequestsPage implements OnInit {
     if (!request.id) return;
     this.feedSchedService.rejectChangeRequest(request.id).subscribe({
       next: () => {
-        this.feedSchedRequests = this.feedSchedRequests.filter(r => r.id !== request.id);
+        this.feedSchedRequests = this.feedSchedRequests.filter((r) => r.id !== request.id);
         this.showToast('Etetési kérés elutasítva.');
       },
-      error: () => this.showToast('Nem sikerült elutasítani a kérést.')
+      error: () => this.showToast('Nem sikerült elutasítani a kérést.'),
     });
   }
 
@@ -199,7 +199,9 @@ export class RequestsPage implements OnInit {
     return `${timeLabel}${idPart}`;
   }
 
-  private getFeedTimesLabel(feed: Pick<FeedSchedDTO, 'feedMorning' | 'feedNoon' | 'feedEvening'>): string {
+  private getFeedTimesLabel(
+    feed: Pick<FeedSchedDTO, 'feedMorning' | 'feedNoon' | 'feedEvening'>,
+  ): string {
     const parts: string[] = [];
     if (feed.feedMorning) parts.push('REGGEL');
     if (feed.feedNoon) parts.push('DÉL');
@@ -211,7 +213,7 @@ export class RequestsPage implements OnInit {
     const base = this.getFeedSchedDisplayName(feed);
     const items = this.feedSchedItemsById.get(feed.feedSchedId || -1) || [];
     if (!items.length) return base;
-    const labels = items.map(item => this.formatItemLabel(item));
+    const labels = items.map((item) => this.formatItemLabel(item));
     return `${base} — ${labels.join(', ')}`;
   }
 
@@ -224,7 +226,7 @@ export class RequestsPage implements OnInit {
       return this.getFeedTimesLabel({
         feedMorning: !!request.requestedMorning,
         feedNoon: !!request.requestedNoon,
-        feedEvening: !!request.requestedEvening
+        feedEvening: !!request.requestedEvening,
       });
     }
     const feed = this.getFeedSchedById(request.feedSchedId);
@@ -242,35 +244,35 @@ export class RequestsPage implements OnInit {
   getFeedItemLabelsForRequest(request: FeedSchedChangeRequestDTO): string[] {
     const items = this.feedSchedItemsById.get(request.feedSchedId || -1) || [];
     if (request.items && request.items.length > 0) {
-      return request.items.map(item => this.formatRequestedItemLabel(item.itemId, item.amount));
+      return request.items.map((item) => this.formatRequestedItemLabel(item.itemId, item.amount));
     }
     if (request.itemIds && request.itemIds.length > 0) {
-      return request.itemIds.map(itemId => {
-        const withAmount = items.find(item => item.itemId === itemId);
+      return request.itemIds.map((itemId) => {
+        const withAmount = items.find((item) => item.itemId === itemId);
         if (withAmount) return this.formatItemLabel(withAmount);
         return this.getItemNameById(itemId);
       });
     }
     if (!items.length) return [];
-    return items.map(item => this.formatItemLabel(item));
+    return items.map((item) => this.formatItemLabel(item));
   }
 
   getHorseNamesForRequest(request: FeedSchedChangeRequestDTO): string[] {
     if (!request.horseIds || request.horseIds.length === 0) return [];
-    return request.horseIds.map(id => this.getHorseNameById(id));
+    return request.horseIds.map((id) => this.getHorseNameById(id));
   }
 
   private getFeedSchedById(feedSchedId: number): FeedSchedDTO | undefined {
-    return this.feedScheds.find(fs => fs.feedSchedId === feedSchedId);
+    return this.feedScheds.find((fs) => fs.feedSchedId === feedSchedId);
   }
 
   private getHorseNameById(horseId: number): string {
-    const found = this.horses.find(h => h.id === horseId);
+    const found = this.horses.find((h) => h.id === horseId);
     return found?.horseName || `Ló #${horseId}`;
   }
 
   private getItemNameById(itemId: number): string {
-    const found = this.items.find(i => i.itemId === itemId);
+    const found = this.items.find((i) => i.itemId === itemId);
     return found?.name || `Tétel #${itemId}`;
   }
 
@@ -291,13 +293,13 @@ export class RequestsPage implements OnInit {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 
   private groupItemsByFeed(feedItems: FeedSchedItemDTO[]): Map<number, FeedSchedItemDTO[]> {
     const map = new Map<number, FeedSchedItemDTO[]>();
-    feedItems.forEach(fi => {
+    feedItems.forEach((fi) => {
       const list = map.get(fi.feedSchedId) || [];
       list.push(fi);
       map.set(fi.feedSchedId, list);
@@ -316,7 +318,7 @@ export class RequestsPage implements OnInit {
   private refreshAndNormalizeApprovedFeedSched(request: FeedSchedChangeRequestDTO): void {
     forkJoin({
       feedScheds: this.feedSchedService.getAll(),
-      feedItems: this.feedSchedItemService.getAll()
+      feedItems: this.feedSchedItemService.getAll(),
     }).subscribe({
       next: ({ feedScheds, feedItems }) => {
         this.feedScheds = feedScheds;
@@ -325,7 +327,7 @@ export class RequestsPage implements OnInit {
       },
       error: () => {
         this.showToast('Nem sikerült frissíteni az etetési ütemterveket.');
-      }
+      },
     });
   }
 
@@ -333,9 +335,8 @@ export class RequestsPage implements OnInit {
     const approved = this.getFeedSchedById(request.feedSchedId);
     if (!approved) return;
 
-    const horseIds = (request.horseIds && request.horseIds.length > 0)
-      ? request.horseIds
-      : (approved.horseIds || []);
+    const horseIds =
+      request.horseIds && request.horseIds.length > 0 ? request.horseIds : approved.horseIds || [];
 
     const hasRequestedFlags =
       request.requestedMorning != null ||
@@ -346,12 +347,12 @@ export class RequestsPage implements OnInit {
       ? {
           feedMorning: !!request.requestedMorning,
           feedNoon: !!request.requestedNoon,
-          feedEvening: !!request.requestedEvening
+          feedEvening: !!request.requestedEvening,
         }
       : {
           feedMorning: !!approved.feedMorning,
           feedNoon: !!approved.feedNoon,
-          feedEvening: !!approved.feedEvening
+          feedEvening: !!approved.feedEvening,
         };
 
     const tasks: Array<Observable<unknown>> = [];
@@ -359,23 +360,33 @@ export class RequestsPage implements OnInit {
     const ensureApprovedHasHorseIds = () => {
       const mergedHorseIds = Array.from(new Set([...(approved.horseIds || []), ...horseIds]));
       if (mergedHorseIds.length === (approved.horseIds || []).length) return;
-      tasks.push(this.feedSchedService.update(approved.feedSchedId!, this.buildFeedSchedDto(approved, mergedHorseIds)));
+      tasks.push(
+        this.feedSchedService.update(
+          approved.feedSchedId!,
+          this.buildFeedSchedDto(approved, mergedHorseIds),
+        ),
+      );
     };
 
     const removeHorseFromOtherFeeds = (timeKey: keyof typeof flags) => {
       if (!flags[timeKey]) return;
-      this.feedScheds.forEach(feed => {
+      this.feedScheds.forEach((feed) => {
         if (feed.feedSchedId === approved.feedSchedId) return;
         if (!feed[timeKey]) return;
         if (!feed.horseIds || feed.horseIds.length === 0) return;
 
-        const remainingHorseIds = feed.horseIds.filter(id => !horseIds.includes(id));
+        const remainingHorseIds = feed.horseIds.filter((id) => !horseIds.includes(id));
         if (remainingHorseIds.length === feed.horseIds.length) return;
 
         if (remainingHorseIds.length === 0) {
           tasks.push(this.feedSchedService.delete(feed.feedSchedId!));
         } else {
-          tasks.push(this.feedSchedService.update(feed.feedSchedId!, this.buildFeedSchedDto(feed, remainingHorseIds)));
+          tasks.push(
+            this.feedSchedService.update(
+              feed.feedSchedId!,
+              this.buildFeedSchedDto(feed, remainingHorseIds),
+            ),
+          );
         }
       });
     };
@@ -387,19 +398,20 @@ export class RequestsPage implements OnInit {
 
     if (!tasks.length) return;
     forkJoin(tasks).subscribe({
-      error: () => this.showToast('Nem sikerült az etetési ütemtervek szinkronizálása.')
+      error: () => this.showToast('Nem sikerült az etetési ütemtervek szinkronizálása.'),
     });
   }
 
   private buildFeedSchedDto(feed: FeedSchedDTO, horseIds: number[]): FeedSchedDTO {
     const feedItems = this.feedSchedItemsById.get(feed.feedSchedId || -1) || [];
-    const items = feedItems.map(item => ({
+    const items = feedItems.map((item) => ({
       itemId: item.itemId,
-      amount: Number.isFinite(item.amount) ? Number(item.amount) : 0
+      amount: Number.isFinite(item.amount) ? Number(item.amount) : 0,
     }));
-    const itemIds = (feed.itemIds && feed.itemIds.length > 0)
-      ? [...feed.itemIds]
-      : items.map(item => item.itemId);
+    const itemIds =
+      feed.itemIds && feed.itemIds.length > 0
+        ? [...feed.itemIds]
+        : items.map((item) => item.itemId);
 
     return {
       feedMorning: !!feed.feedMorning,
@@ -408,7 +420,7 @@ export class RequestsPage implements OnInit {
       description: feed.description || '',
       horseIds,
       itemIds,
-      items: items.length ? items : undefined
+      items: items.length ? items : undefined,
     };
   }
 }

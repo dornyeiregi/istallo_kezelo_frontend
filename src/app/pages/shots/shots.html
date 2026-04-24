@@ -21,11 +21,8 @@
   } @else if (error) {
     <div class="load-error">{{ error }}</div>
   } @else {
-
     @if (deleteMode) {
-      <div class="delete-warning">
-        Törlés mód aktív — kattints a törölni kívánt oltásra.
-      </div>
+      <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt oltásra.</div>
     }
     @if (editMode) {
       <div class="delete-warning">
@@ -34,7 +31,6 @@
     }
 
     <section class="shot-grid" aria-label="Oltás lista">
-
       @for (shot of shots; track shot.shotId) {
         <div
           class="shot-card"
@@ -42,7 +38,6 @@
           [class.delete-mode]="deleteMode"
           (click)="onCardClick(shot)"
         >
-
           <div class="shot-card-header">
             <h3>{{ shot.shotName }}</h3>
             <span class="date-label">
@@ -65,10 +60,8 @@
               <span>Kattints a törléshez</span>
             </div>
           }
-
         </div>
       }
-
     </section>
   }
 </div>

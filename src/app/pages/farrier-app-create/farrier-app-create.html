@@ -1,5 +1,4 @@
 <div class="form-container">
-
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -18,28 +17,19 @@
   }
 
   <form (ngSubmit)="onSubmit()" #farrierForm="ngForm">
-
     <div class="form-group">
       <label>Patkoló neve *</label>
-      <input type="text"
-             name="farrierName"
-             [(ngModel)]="form.farrierName"
-             required />
+      <input type="text" name="farrierName" [(ngModel)]="form.farrierName" required />
     </div>
 
     <div class="form-group">
       <label>Telefon</label>
-      <input type="text"
-             name="farrierPhone"
-             [(ngModel)]="form.farrierPhone" />
+      <input type="text" name="farrierPhone" [(ngModel)]="form.farrierPhone" />
     </div>
 
     <div class="form-group">
       <label>Dátum *</label>
-      <input type="date"
-             name="appointmentDate"
-             [(ngModel)]="form.appointmentDate"
-             required />
+      <input type="date" name="appointmentDate" [(ngModel)]="form.appointmentDate" required />
     </div>
 
     <div class="form-group">
@@ -50,10 +40,9 @@
           name="frequencyValue"
           min="1"
           placeholder="Mennyiség"
-          [(ngModel)]="form.frequencyValue" />
-        <select
-          name="frequencyUnit"
-          [(ngModel)]="form.frequencyUnit">
+          [(ngModel)]="form.frequencyValue"
+        />
+        <select name="frequencyUnit" [(ngModel)]="form.frequencyUnit">
           <option [ngValue]="''">Nincs</option>
           @for (unit of frequencyUnits; track unit) {
             <option [ngValue]="unit">{{ frequencyLabels[unit] }}</option>
@@ -68,9 +57,7 @@
       @if (horses.length === 0) {
         <p>Nincs elérhető ló.</p>
       } @else {
-
         @for (horse of horses; track horse.id) {
-
           <div class="horse-row" [attr.data-key]="horse.id">
             <label class="horse-check">
               <input
@@ -85,7 +72,8 @@
               <div class="horse-details">
                 <select
                   name="shoeCount-{{ horse.id }}"
-                  [(ngModel)]="getHorseDetail(toNumber(horse.id!)).shoeCount">
+                  [(ngModel)]="getHorseDetail(toNumber(horse.id!)).shoeCount"
+                >
                   <option [ngValue]="0">Nincs patkó</option>
                   <option [ngValue]="2">2 patkó</option>
                   <option [ngValue]="4">4 patkó</option>
@@ -94,7 +82,8 @@
                   type="text"
                   name="horseNote-{{ horse.id }}"
                   placeholder="Megjegyzés"
-                  [(ngModel)]="getHorseDetail(toNumber(horse.id!)).note" />
+                  [(ngModel)]="getHorseDetail(toNumber(horse.id!)).note"
+                />
               </div>
             }
           </div>
@@ -110,7 +99,5 @@
     @if (loading) {
       <div class="info">Mentés folyamatban...</div>
     }
-
   </form>
-
 </div>

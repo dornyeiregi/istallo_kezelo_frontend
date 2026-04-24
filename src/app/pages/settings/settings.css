@@ -124,7 +124,10 @@ input {
   text-align: left;
   background: var(--app-surface);
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   color: var(--app-text);
 }
 
@@ -165,7 +168,7 @@ input {
   color: var(--app-primary);
 }
 
-.access-row input[type="checkbox"] {
+.access-row input[type='checkbox'] {
   transform: scale(1.1);
 }
 

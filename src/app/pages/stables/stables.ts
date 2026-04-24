@@ -17,7 +17,7 @@ import { forkJoin, of } from 'rxjs';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent, RouterLink],
   templateUrl: './stables.html',
-  styleUrls: ['./stables.css']
+  styleUrls: ['./stables.css'],
 })
 export class StablesPage implements OnInit {
   stables: StableDTO[] = [];
@@ -39,7 +39,7 @@ export class StablesPage implements OnInit {
     private stableService: StableService,
     private router: Router,
     private feedSchedService: FeedSchedService,
-    private itemService: ItemService
+    private itemService: ItemService,
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +58,7 @@ export class StablesPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni az istállókat.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -74,14 +74,20 @@ export class StablesPage implements OnInit {
     this.editMode = !this.editMode;
 
     if (this.editMode) {
-      this.editedNames = this.stables.reduce((acc, s) => {
-        acc[s.stableName] = s.stableName;
-        return acc;
-      }, {} as { [name: string]: string });
-      this.editedStrawUsage = this.stables.reduce((acc, s) => {
-        acc[s.stableName] = s.strawUsageKg ?? null;
-        return acc;
-      }, {} as { [name: string]: number | null });
+      this.editedNames = this.stables.reduce(
+        (acc, s) => {
+          acc[s.stableName] = s.stableName;
+          return acc;
+        },
+        {} as { [name: string]: string },
+      );
+      this.editedStrawUsage = this.stables.reduce(
+        (acc, s) => {
+          acc[s.stableName] = s.strawUsageKg ?? null;
+          return acc;
+        },
+        {} as { [name: string]: number | null },
+      );
     }
   }
 
@@ -98,7 +104,7 @@ export class StablesPage implements OnInit {
 
     const dto: Partial<StableDTO> = {
       stableName: newName,
-      strawUsageKg: newStrawUsage ?? null
+      strawUsageKg: newStrawUsage ?? null,
     };
 
     this.stableService.update(stable.stableId, dto).subscribe({
@@ -109,7 +115,7 @@ export class StablesPage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült módosítani az istálló nevét.';
-      }
+      },
     });
   }
 
@@ -142,7 +148,7 @@ export class StablesPage implements OnInit {
         this.showToast('Nem sikerült törölni az istállót.');
         this.confirmDeleteStable = null;
         this.deleteMode = false;
-      }
+      },
     });
   }
 
@@ -176,14 +182,14 @@ export class StablesPage implements OnInit {
     return [
       { label: 'Hozzáadás', icon: 'fa-plus', onClick: () => this.addStable() },
       { label: 'Szerkesztés', icon: 'fa-pen-to-square', onClick: () => this.toggleEditMode() },
-      { label: 'Törlés', icon: 'fa-trash', onClick: () => this.deleteStable() }
+      { label: 'Törlés', icon: 'fa-trash', onClick: () => this.deleteStable() },
     ];
   }
 
   private get activeHorses(): HorseDTO[] {
     return this.stables
-      .flatMap(stable => stable.horses ?? [])
-      .filter(horse => horse.isActive !== false);
+      .flatMap((stable) => stable.horses ?? [])
+      .filter((horse) => horse.isActive !== false);
   }
 
   private loadDailyFeedTotals(): void {
@@ -195,11 +201,11 @@ export class StablesPage implements OnInit {
     }
 
     this.dailyFeedLoading = true;
-    const feedRequests = horses.map(h => this.feedSchedService.getAllOfHorseById(h.id!));
+    const feedRequests = horses.map((h) => this.feedSchedService.getAllOfHorseById(h.id!));
 
     forkJoin({
       items: this.itemService.getAll(),
-      feeds: feedRequests.length ? forkJoin(feedRequests) : of([])
+      feeds: feedRequests.length ? forkJoin(feedRequests) : of([]),
     }).subscribe({
       next: ({ items, feeds }) => {
         const totals = this.buildDailyTotals(items, feeds as FeedSchedDTO[][]);
@@ -209,13 +215,13 @@ export class StablesPage implements OnInit {
       error: () => {
         this.dailyFeedTotals = [];
         this.dailyFeedLoading = false;
-      }
+      },
     });
   }
 
   private buildDailyTotals(items: ItemDTO[], feedsByHorse: FeedSchedDTO[][]) {
     const itemNameById = new Map<number, string>();
-    items.forEach(item => {
+    items.forEach((item) => {
       if (item.itemId != null) itemNameById.set(item.itemId, item.name);
     });
 
@@ -234,7 +240,7 @@ export class StablesPage implements OnInit {
     const addFeed = (feed: FeedSchedDTO | null) => {
       if (!feed) return;
       if (feed.items && feed.items.length > 0) {
-        feed.items.forEach(item => {
+        feed.items.forEach((item) => {
           const id = item.itemId;
           if (id == null) return;
           const amount = Number.isFinite(item.amount) ? item.amount : 0;
@@ -243,16 +249,16 @@ export class StablesPage implements OnInit {
         return;
       }
       if (feed.itemIds && feed.itemIds.length > 0) {
-        feed.itemIds.forEach(id => {
+        feed.itemIds.forEach((id) => {
           totals.set(id, (totals.get(id) || 0) + 1);
         });
       }
     };
 
     feedsByHorse.forEach((feeds) => {
-      const morning = pickLatest(feeds, f => !!f.feedMorning);
-      const noon = pickLatest(feeds, f => !!f.feedNoon);
-      const evening = pickLatest(feeds, f => !!f.feedEvening);
+      const morning = pickLatest(feeds, (f) => !!f.feedMorning);
+      const noon = pickLatest(feeds, (f) => !!f.feedNoon);
+      const evening = pickLatest(feeds, (f) => !!f.feedEvening);
       addFeed(morning);
       addFeed(noon);
       addFeed(evening);
@@ -262,7 +268,7 @@ export class StablesPage implements OnInit {
       .map(([itemId, amount]) => ({
         itemId,
         name: itemNameById.get(itemId) || `Tétel #${itemId}`,
-        amount
+        amount,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }

@@ -5,7 +5,7 @@ import { TreatmentDTO } from '../models/treatment.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TreatmentService {
   private apiUrl = `${API_BASE_URL}/api/treatments`;
@@ -29,16 +29,12 @@ export class TreatmentService {
   }
 
   update(id: number, dto: TreatmentDTO): Observable<string> {
-    return this.http.patch(
-      `${this.apiUrl}/${id}`,
-      dto,
-      { responseType: 'text' }
-    ) as Observable<string>;
+    return this.http.patch(`${this.apiUrl}/${id}`, dto, {
+      responseType: 'text',
+    }) as Observable<string>;
   }
 
   delete(id: number): Observable<string> {
-    return this.http.delete(`${this.apiUrl}/${id}`,
-      { responseType: 'text'}
-    ) as Observable<string>;
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' }) as Observable<string>;
   }
 }

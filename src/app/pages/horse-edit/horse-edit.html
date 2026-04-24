@@ -4,7 +4,6 @@
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       Vissza
     </button>
-
   </nav>
 
   <h1>Ló szerkesztése</h1>
@@ -14,18 +13,10 @@
   } @else if (error) {
     <div class="error">{{ error }}</div>
   } @else if (horse) {
-
     <form (ngSubmit)="onSubmit()" #editForm="ngForm" novalidate>
-
       <div class="form-group">
         <label for="horseName">Név</label>
-        <input
-          id="horseName"
-          name="horseName"
-          type="text"
-          [(ngModel)]="horse.horseName"
-          required
-        />
+        <input id="horseName" name="horseName" type="text" [(ngModel)]="horse.horseName" required />
       </div>
 
       <div class="form-group">
@@ -76,11 +67,7 @@
 
       <div class="form-group">
         <label for="additional">Megjegyzések</label>
-        <textarea
-          id="additional"
-          name="additional"
-          [(ngModel)]="horse.additional"
-          rows="4">
+        <textarea id="additional" name="additional" [(ngModel)]="horse.additional" rows="4">
         </textarea>
       </div>
 
@@ -92,7 +79,6 @@
       @if (success) {
         <div class="success-msg">Ló sikeresen frissítve!</div>
       }
-
     </form>
   }
 </div>

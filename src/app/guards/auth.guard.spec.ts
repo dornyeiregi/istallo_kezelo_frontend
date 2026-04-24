@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, UrlTree } from '@angular/router';
-import { of } from 'rxjs';
+import { GuardResult, Router, UrlTree } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import { authGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
 import { SettingsService } from '../services/settings.service';
@@ -15,17 +15,19 @@ describe('authGuard', () => {
     authService = jasmine.createSpyObj<AuthService>('AuthService', [
       'isLoggedIn',
       'setReturnUrl',
-      'hasAnyRole'
+      'hasAnyRole',
     ]);
     router = jasmine.createSpyObj<Router>('Router', ['navigate', 'createUrlTree']);
-    settingsService = jasmine.createSpyObj<SettingsService>('SettingsService', ['getEmployeeAccess']);
+    settingsService = jasmine.createSpyObj<SettingsService>('SettingsService', [
+      'getEmployeeAccess',
+    ]);
 
     TestBed.configureTestingModule({
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
-        { provide: SettingsService, useValue: settingsService }
-      ]
+        { provide: SettingsService, useValue: settingsService },
+      ],
     });
   });
 
@@ -33,12 +35,12 @@ describe('authGuard', () => {
     authService.isLoggedIn.and.returnValue(false);
 
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({} as any, { url: '/protected' } as any)
+      authGuard({} as any, { url: '/protected' } as any),
     );
 
     expect(authService.setReturnUrl).toHaveBeenCalledWith('/protected');
     expect(router.navigate).toHaveBeenCalledWith(['/login'], {
-      queryParams: { returnUrl: '/protected' }
+      queryParams: { returnUrl: '/protected' },
     });
     expect(result).toBeFalse();
   });
@@ -48,7 +50,7 @@ describe('authGuard', () => {
     authService.hasAnyRole.and.returnValue(false);
 
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({ data: { roles: ['ADMIN'] } } as any, { url: '/admin' } as any)
+      authGuard({ data: { roles: ['ADMIN'] } } as any, { url: '/admin' } as any),
     );
 
     expect(router.navigate).toHaveBeenCalledWith(['/stables']);
@@ -57,8 +59,8 @@ describe('authGuard', () => {
 
   it('checks employee access setting for employees', (done) => {
     authService.isLoggedIn.and.returnValue(true);
-    authService.hasAnyRole.and.callFake((roles?: string[]) =>
-      Array.isArray(roles) && roles.includes('EMPLOYEE')
+    authService.hasAnyRole.and.callFake(
+      (roles?: string[]) => Array.isArray(roles) && roles.includes('EMPLOYEE'),
     );
     const tree = {} as UrlTree;
     router.createUrlTree.and.returnValue(tree);
@@ -69,15 +71,15 @@ describe('authGuard', () => {
     const result$ = TestBed.runInInjectionContext(() =>
       authGuard(
         { data: { employeeAccessSetting: 'calendar' } } as any,
-        { url: '/calendar' } as any
-      )
+        { url: '/calendar' } as any,
+      ),
     );
 
     if (result$ instanceof UrlTree || typeof result$ === 'boolean') {
       fail('Expected observable');
     }
 
-    result$.subscribe((result) => {
+    (result$ as Observable<GuardResult>).subscribe((result) => {
       expect(router.createUrlTree).toHaveBeenCalledWith(['/']);
       expect(result).toBe(tree);
       done();
@@ -89,7 +91,7 @@ describe('authGuard', () => {
     authService.hasAnyRole.and.returnValue(true);
 
     const result = TestBed.runInInjectionContext(() =>
-      authGuard({ data: { roles: ['ADMIN'] } } as any, { url: '/admin' } as any)
+      authGuard({ data: { roles: ['ADMIN'] } } as any, { url: '/admin' } as any),
     );
 
     expect(result).toBeTrue();

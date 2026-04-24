@@ -5,7 +5,7 @@ import { ItemDTO } from '../models/item.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ItemService {
   private apiUrl = `${API_BASE_URL}/api/items`;
@@ -17,8 +17,8 @@ export class ItemService {
   }
 
   getItemById(id: number): Observable<ItemDTO> {
-    return this.http.get<ItemDTO>(`${this.apiUrl}/${id}`)
-  } 
+    return this.http.get<ItemDTO>(`${this.apiUrl}/${id}`);
+  }
 
   create(dto: ItemDTO): Observable<ItemDTO> {
     return this.http.post<ItemDTO>(this.apiUrl, dto);
@@ -26,13 +26,13 @@ export class ItemService {
 
   update(id: number, dto: ItemDTO): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}`, dto, {
-      responseType: 'text' as 'json'
+      responseType: 'text' as 'json',
     });
   }
 
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, {
-      responseType: 'text'
+      responseType: 'text',
     });
   }
 }

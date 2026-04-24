@@ -1,5 +1,4 @@
 <div class="hex-crud-menu">
-
   <button class="hex-button" (click)="toggleMenu()">
     <div class="hex-shape">
       <i class="fa-solid fa-bars"></i>
@@ -13,7 +12,6 @@
       [style.animationDelay]="i * 70 + 'ms'"
       (click)="execute(action)"
     >
-
       <div class="hex-shape">
         <i class="fa-solid" [ngClass]="action.icon"></i>
       </div>
@@ -25,5 +23,4 @@
       </div>
     </div>
   </div>
-
 </div>

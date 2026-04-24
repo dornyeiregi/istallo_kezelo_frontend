@@ -11,9 +11,7 @@
   <header class="page-header">
     <div>
       <h1>Istállók</h1>
-      <p class="subtitle">
-        Gyors áttekintés az aktuális kapacitásról és a napi szükségletekről.
-      </p>
+      <p class="subtitle">Gyors áttekintés az aktuális kapacitásról és a napi szükségletekről.</p>
     </div>
   </header>
 
@@ -22,11 +20,8 @@
   } @else if (error) {
     <div class="load-error">{{ error }}</div>
   } @else {
-
     @if (deleteMode) {
-      <div class="delete-warning">
-        Törlés mód aktív — kattints a törölni kívánt istállóra.
-      </div>
+      <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt istállóra.</div>
     }
 
     <section class="overview">
@@ -62,12 +57,11 @@
 
     <section class="stable-grid" aria-label="Istálló lista">
       @for (stable of stables; track stable.stableId) {
-        <div 
+        <div
           class="stable-card"
           [class.delete-mode]="deleteMode"
           (click)="deleteMode ? confirmDelete(stable) : null"
         >
-
           @if (!editMode) {
             <a
               class="stable-card-link"
@@ -87,14 +81,11 @@
                 </ul>
 
                 @if (stable.horses.length > 3) {
-                  <p class="more">
-                    +{{ stable.horses.length - 3 }} további ló
-                  </p>
+                  <p class="more">+{{ stable.horses.length - 3 }} további ló</p>
                 }
               } @else {
                 <p class="no-horses">Nincs ló ebben az istállóban.</p>
               }
-
             </a>
           } @else {
             <input
@@ -123,7 +114,6 @@
               Kattints a törléshez
             </div>
           }
-
         </div>
       }
     </section>
@@ -134,7 +124,9 @@
   <div class="modal-backdrop">
     <div class="modal">
       <h3>Biztosan törölni szeretnéd?</h3>
-      <p>A(z) <strong>{{ confirmDeleteStable!.stableName }}</strong> törlésre kerül.</p>
+      <p>
+        A(z) <strong>{{ confirmDeleteStable!.stableName }}</strong> törlésre kerül.
+      </p>
 
       <div class="modal-actions">
         <button class="delete-button" (click)="performDelete()">

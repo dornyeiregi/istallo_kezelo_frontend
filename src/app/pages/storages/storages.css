@@ -28,8 +28,6 @@
   font-size: 0.95rem;
 }
 
-/* ÖSSZESÍTŐ KÁRTYÁK */
-
 .overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -61,15 +59,11 @@
   color: var(--app-primary);
 }
 
-/* INFO */
-
 .info {
   font-size: 1rem;
   margin-top: 1rem;
   color: var(--app-accent);
 }
-
-/* TÁROLÓ GRID */
 
 .storage-grid {
   display: grid;
@@ -98,8 +92,6 @@
   border-color: var(--app-accent);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
-
-/* HEADER */
 
 .storage-card-header {
   display: flex;
@@ -133,8 +125,6 @@
   font-size: 0.85rem;
   color: var(--app-muted);
 }
-
-/* STATISZTIKÁK */
 
 .storage-stats p {
   margin: 0.15rem 0;
@@ -171,8 +161,6 @@
   border-color: #7ad59a;
 }
 
-/* SZERKESZTŐ MEZŐK */
-
 .edit-fields {
   display: flex;
   gap: 0.75rem;
@@ -193,8 +181,6 @@
   border: 1px solid var(--app-border);
   font-size: 0.95rem;
 }
-
-/* SZERKESZTÉS GOMBOK */
 
 .edit-buttons {
   display: flex;
@@ -230,8 +216,6 @@
   color: var(--app-chip-text);
 }
 
-/* DELETE MODE */
-
 .storage-card.delete-mode {
   cursor: pointer;
   border-color: var(--app-accent);
@@ -247,8 +231,6 @@
   gap: 4px;
 }
 
-/* FIGYELMEZTETŐ BOX */
-
 .delete-warning {
   margin-bottom: 1rem;
   padding: 12px;
@@ -258,12 +240,10 @@
   color: var(--app-primary);
 }
 
-/* MODAL */
-
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -277,7 +257,7 @@
   width: 90%;
   max-width: 380px;
   text-align: center;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .form-group {
@@ -313,8 +293,6 @@
   gap: 10px;
   justify-content: center;
 }
-
-/* MODAL GOMBOK */
 
 .delete-button {
   background-color: var(--app-accent);
@@ -354,8 +332,6 @@
   background-color: var(--app-accent-deep);
 }
 
-/* TOAST */
-
 .toast {
   position: fixed;
   bottom: 30px;
@@ -367,14 +343,20 @@
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   animation: toastIn 0.3s ease-out;
   z-index: 2000;
 }
 
 @keyframes toastIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 @media (min-width: 1000px) {

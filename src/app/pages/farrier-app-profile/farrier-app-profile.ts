@@ -13,7 +13,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './farrier-app-profile.html',
-  styleUrls: ['./farrier-app-profile.css']
+  styleUrls: ['./farrier-app-profile.css'],
 })
 export class FarrierAppProfilePage implements OnInit {
   farrierApp?: FarrierAppDTO;
@@ -36,7 +36,7 @@ export class FarrierAppProfilePage implements OnInit {
     private route: ActivatedRoute,
     private farrierAppService: FarrierAppService,
     private horseService: HorseService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +71,7 @@ export class FarrierAppProfilePage implements OnInit {
               horseId: detail.horseId,
               horseName: detail.horseName,
               shoeCount: detail.shoeCount ?? 0,
-              note: detail.note ?? ''
+              note: detail.note ?? '',
             });
           }
         });
@@ -91,20 +91,18 @@ export class FarrierAppProfilePage implements OnInit {
           error: () => {
             this.error = 'Nem sikerült betölteni a lovakat.';
             this.loading = false;
-          }
+          },
         });
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a patkolási időpontot.';
         this.loading = false;
-      }
+      },
     });
   }
 
   private updateAssignedHorses() {
-    this.assignedHorses = this.horses.filter(
-      h => this.selectedHorseIds.has(h.id!)
-    );
+    this.assignedHorses = this.horses.filter((h) => this.selectedHorseIds.has(h.id!));
   }
 
   goBack(): void {
@@ -121,14 +119,14 @@ export class FarrierAppProfilePage implements OnInit {
   }
 
   getHorseNameById(id: number): string | null {
-    const horse = this.horses.find(h => h.id === id);
+    const horse = this.horses.find((h) => h.id === id);
     return horse ? horse.horseName : null;
   }
 
   getKnownHorseIds(ids?: number[] | null): number[] {
     if (!ids || ids.length === 0) return [];
-    const known = new Set(this.horses.map(h => h.id));
-    return ids.filter(id => known.has(id));
+    const known = new Set(this.horses.map((h) => h.id));
+    return ids.filter((id) => known.has(id));
   }
 
   deleteFarrierApp(): void {
@@ -142,7 +140,7 @@ export class FarrierAppProfilePage implements OnInit {
       },
       error: () => {
         alert('Nem sikerült törölni az időpontot.');
-      }
+      },
     });
   }
 
@@ -173,9 +171,9 @@ export class FarrierAppProfilePage implements OnInit {
         return {
           horseId,
           shoeCount: detail.shoeCount ?? 0,
-          note: detail.note ?? ''
+          note: detail.note ?? '',
         };
-      })
+      }),
     };
 
     this.farrierAppService.update(this.farrierApp.farrierAppId, dto as FarrierAppDTO).subscribe({
@@ -189,7 +187,7 @@ export class FarrierAppProfilePage implements OnInit {
               horseId: detail.horseId,
               horseName: detail.horseName,
               shoeCount: detail.shoeCount ?? 0,
-              note: detail.note ?? ''
+              note: detail.note ?? '',
             });
           }
         });
@@ -199,12 +197,12 @@ export class FarrierAppProfilePage implements OnInit {
         this.saving = false;
         this.editHorsesMode = false;
 
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a lovakat.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -212,12 +210,14 @@ export class FarrierAppProfilePage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   getFrequencyLabel(): string {
-    if (!this.farrierApp || !this.farrierApp.frequencyValue || !this.farrierApp.frequencyUnit) return '-';
-    const unitLabel = this.frequencyLabels[this.farrierApp.frequencyUnit] || this.farrierApp.frequencyUnit;
+    if (!this.farrierApp || !this.farrierApp.frequencyValue || !this.farrierApp.frequencyUnit)
+      return '-';
+    const unitLabel =
+      this.frequencyLabels[this.farrierApp.frequencyUnit] || this.farrierApp.frequencyUnit;
     return `${this.farrierApp.frequencyValue} ${unitLabel}`;
   }
 
@@ -237,7 +237,7 @@ export class FarrierAppProfilePage implements OnInit {
       frequencyValue: this.farrierApp?.frequencyValue ?? null,
       shoes: null,
       horseIds: this.farrierApp?.horseIds ?? [],
-      horseDetails: this.farrierApp?.horseDetails ?? []
+      horseDetails: this.farrierApp?.horseDetails ?? [],
     };
 
     this.saving = true;
@@ -249,12 +249,12 @@ export class FarrierAppProfilePage implements OnInit {
         this.nextPlannedDates = this.buildNextPlannedDates(this.farrierApp!, 3);
         this.plannedDueDate = null;
         this.markDueCompleted = false;
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a patkolást.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -265,13 +265,13 @@ export class FarrierAppProfilePage implements OnInit {
         icon: 'fa-pen-to-square',
         onClick: () => {
           this.editHorsesMode = true;
-        }
+        },
       },
       {
         label: 'Időpont törlése',
         icon: 'fa-trash',
         onClick: () => this.deleteFarrierApp(),
-      }
+      },
     ];
   }
 
@@ -290,7 +290,8 @@ export class FarrierAppProfilePage implements OnInit {
   }
 
   private buildNextPlannedDates(farrierApp: FarrierAppDTO, count: number): string[] {
-    if (!farrierApp.appointmentDate || !farrierApp.frequencyValue || !farrierApp.frequencyUnit) return [];
+    if (!farrierApp.appointmentDate || !farrierApp.frequencyValue || !farrierApp.frequencyUnit)
+      return [];
     const base = new Date(farrierApp.appointmentDate);
     if (Number.isNaN(base.getTime())) return [];
 
@@ -340,9 +341,12 @@ export class FarrierAppProfilePage implements OnInit {
     const upper = (unit || '').toUpperCase();
     const normalized = upper.replace(/[ÁÉÍÓÖŐÚÜŰ]/g, (ch) => {
       switch (ch) {
-        case 'Á': return 'A';
-        case 'É': return 'E';
-        case 'Í': return 'I';
+        case 'Á':
+          return 'A';
+        case 'É':
+          return 'E';
+        case 'Í':
+          return 'I';
         case 'Ó':
         case 'Ö':
         case 'Ő':

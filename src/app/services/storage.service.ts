@@ -5,7 +5,7 @@ import { StorageDTO } from '../models/storage.model';
 import { API_BASE_URL } from '../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
   private apiUrl = `${API_BASE_URL}/api/storages`;
@@ -26,14 +26,13 @@ export class StorageService {
 
   update(id: number, dto: StorageDTO): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}`, dto, {
-      responseType: 'text'
+      responseType: 'text',
     });
   }
 
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, {
-      responseType: 'text'
+      responseType: 'text',
     });
   }
-
 }

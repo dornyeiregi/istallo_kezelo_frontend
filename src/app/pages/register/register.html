@@ -2,9 +2,7 @@
   <section class="showcase">
     <div class="overlay">
       <h1>Csatlakozz a StableManagerhez</h1>
-      <p>
-        Hozz létre fiókot, és kezeld az istállók mindennapi működését digitálisan.
-      </p>
+      <p>Hozz létre fiókot, és kezeld az istállók mindennapi működését digitálisan.</p>
     </div>
   </section>
 
@@ -19,7 +17,12 @@
         <div class="field-row">
           <label class="field">
             <span class="field-label">Vezetéknév</span>
-            <input type="text" formControlName="lName" placeholder="pl. Kovács" autocomplete="family-name" />
+            <input
+              type="text"
+              formControlName="lName"
+              placeholder="pl. Kovács"
+              autocomplete="family-name"
+            />
             @if (lastNameInvalid) {
               <span class="field-error">Legalább 2 karakter szükséges.</span>
             }
@@ -27,7 +30,12 @@
 
           <label class="field">
             <span class="field-label">Keresztnév</span>
-            <input type="text" formControlName="fName" placeholder="pl. Lilla" autocomplete="given-name" />
+            <input
+              type="text"
+              formControlName="fName"
+              placeholder="pl. Lilla"
+              autocomplete="given-name"
+            />
             @if (firstNameInvalid) {
               <span class="field-error">Legalább 2 karakter szükséges.</span>
             }
@@ -37,7 +45,12 @@
         <div class="field-row">
           <label class="field">
             <span class="field-label">E-mail cím</span>
-            <input type="email" formControlName="email" placeholder="pl. lilla@example.com" autocomplete="email" />
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="pl. lilla@example.com"
+              autocomplete="email"
+            />
             @if (emailInvalid) {
               <span class="field-error">Adj meg érvényes e-mail címet.</span>
             }
@@ -45,13 +58,23 @@
 
           <label class="field">
             <span class="field-label">Telefonszám (opcionális)</span>
-            <input type="tel" formControlName="phone" placeholder="pl. +36 30 123 4567" autocomplete="tel" />
+            <input
+              type="tel"
+              formControlName="phone"
+              placeholder="pl. +36 30 123 4567"
+              autocomplete="tel"
+            />
           </label>
         </div>
 
         <label class="field">
           <span class="field-label">Felhasználónév</span>
-          <input type="text" formControlName="username" placeholder="pl. lillakovacs" autocomplete="username" />
+          <input
+            type="text"
+            formControlName="username"
+            placeholder="pl. lillakovacs"
+            autocomplete="username"
+          />
           @if (usernameInvalid) {
             <span class="field-error">Legalább 3 karakter szükséges.</span>
           }
@@ -67,13 +90,19 @@
               autocomplete="new-password"
             />
             @if (passwordInvalid) {
-              <span class="field-error">A jelszónak legalább 8 karakter hosszúnak kell lennie.</span>
+              <span class="field-error"
+                >A jelszónak legalább 8 karakter hosszúnak kell lennie.</span
+              >
             }
           </label>
 
           <label class="field">
             <span class="field-label">Jelszó megerősítése</span>
-            <input type="password" formControlName="confirmPassword" placeholder="Írd be újra a jelszót" />
+            <input
+              type="password"
+              formControlName="confirmPassword"
+              placeholder="Írd be újra a jelszót"
+            />
             @if (confirmPasswordInvalid) {
               <span class="field-error">
                 {{ passwordsMismatch ? 'A jelszavak nem egyeznek.' : 'A megerősítés kötelező.' }}

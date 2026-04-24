@@ -1,5 +1,4 @@
 <div class="calendar-page">
-
   <nav class="breadcrumb">
     <a (click)="goBack()" class="back-link">
       <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -33,9 +32,7 @@
         <span class="loading">Loading…</span>
       }
       @if (canCreateAppointments) {
-        <button class="themed-button" (click)="toggleAddMenu()">
-          Új időpont
-        </button>
+        <button class="themed-button" (click)="toggleAddMenu()">Új időpont</button>
         @if (showAddMenu) {
           <div class="add-menu">
             <button class="menu-button" (click)="createAppointment('treatment')">Kezelés</button>
@@ -51,7 +48,6 @@
   <div class="calendar-wrapper">
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
-
 </div>
 
 @if (showCustomPopup) {

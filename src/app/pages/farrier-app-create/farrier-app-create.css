@@ -4,7 +4,7 @@
   margin: auto;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -22,7 +22,9 @@ label {
   display: block;
 }
 
-input:not([type="checkbox"]), select, textarea {
+input:not([type='checkbox']),
+select,
+textarea {
   width: 100%;
   padding: 0.6rem;
   border: 2px solid var(--app-border);
@@ -55,7 +57,7 @@ textarea {
   width: fit-content;
 }
 
-.checkbox-row input[type="checkbox"] {
+.checkbox-row input[type='checkbox'] {
   width: auto;
   transform: scale(1.1);
 }
@@ -85,7 +87,7 @@ textarea {
   cursor: pointer;
 }
 
-.horse-row input[type="checkbox"] {
+.horse-row input[type='checkbox'] {
   width: auto;
 }
 
@@ -105,7 +107,7 @@ textarea {
   max-width: 140px;
 }
 
-.horse-details input[type="text"] {
+.horse-details input[type='text'] {
   flex: 1;
 }
 

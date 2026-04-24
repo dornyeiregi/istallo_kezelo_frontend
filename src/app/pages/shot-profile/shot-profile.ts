@@ -14,7 +14,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule, CrudMenuComponent],
   templateUrl: './shot-profile.html',
-  styleUrls: ['./shot-profile.css']
+  styleUrls: ['./shot-profile.css'],
 })
 export class ShotProfilePage implements OnInit {
   shot?: ShotDTO;
@@ -36,7 +36,7 @@ export class ShotProfilePage implements OnInit {
     private route: ActivatedRoute,
     private shotService: ShotService,
     private horseService: HorseService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +69,7 @@ export class ShotProfilePage implements OnInit {
           next: (horses) => {
             this.horses = horses;
 
-            this.treatedHorses = horses.filter(
-              h => this.shot!.horseIds?.includes(h.id!)
-            );
+            this.treatedHorses = horses.filter((h) => this.shot!.horseIds?.includes(h.id!));
 
             this.selectedHorseIds = new Set(this.shot!.horseIds || []);
 
@@ -80,14 +78,14 @@ export class ShotProfilePage implements OnInit {
           error: () => {
             this.error = 'Nem sikerült betölteni a lovakat.';
             this.loading = false;
-          }
+          },
         });
         this.loading = false;
       },
       error: () => {
         this.error = 'Nem sikerült betölteni az oltást.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -95,7 +93,7 @@ export class ShotProfilePage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   getFrequencyLabel(): string {
@@ -106,14 +104,14 @@ export class ShotProfilePage implements OnInit {
   }
 
   getHorseNameById(id: number): string | null {
-    const horse = this.horses.find(h => h.id === id);
+    const horse = this.horses.find((h) => h.id === id);
     return horse ? horse.horseName : null;
   }
 
   getKnownHorseIds(ids?: number[] | null): number[] {
     if (!ids || ids.length === 0) return [];
-    const known = new Set(this.horses.map(h => h.id));
-    return ids.filter(id => known.has(id));
+    const known = new Set(this.horses.map((h) => h.id));
+    return ids.filter((id) => known.has(id));
   }
 
   goBack(): void {
@@ -148,7 +146,7 @@ export class ShotProfilePage implements OnInit {
       },
       error: () => {
         alert('Nem sikerült törölni az oltást.');
-      }
+      },
     });
   }
 
@@ -169,7 +167,7 @@ export class ShotProfilePage implements OnInit {
       date: this.shot?.date ?? '',
       frequencyUnit: this.shot?.frequencyUnit ?? null,
       frequencyValue: this.shot?.frequencyValue ?? null,
-      horseIds: Array.from(this.selectedHorseIds)
+      horseIds: Array.from(this.selectedHorseIds),
     };
 
     this.shotService.update(this.shot.shotId, dto as ShotDTO).subscribe({
@@ -179,16 +177,14 @@ export class ShotProfilePage implements OnInit {
         this.editHorsesMode = false;
 
         this.shot!.horseIds = Array.from(this.selectedHorseIds);
-        this.treatedHorses = this.horses.filter(h =>
-          this.selectedHorseIds.has(h.id!)
-        );
+        this.treatedHorses = this.horses.filter((h) => this.selectedHorseIds.has(h.id!));
 
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni a lovakat.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -205,7 +201,7 @@ export class ShotProfilePage implements OnInit {
       date: this.completedDate,
       frequencyUnit: this.shot?.frequencyUnit ?? null,
       frequencyValue: this.shot?.frequencyValue ?? null,
-      horseIds: this.shot?.horseIds ?? []
+      horseIds: this.shot?.horseIds ?? [],
     };
 
     this.saving = true;
@@ -217,12 +213,12 @@ export class ShotProfilePage implements OnInit {
         this.nextPlannedDates = this.buildNextPlannedDates(this.shot!, 3);
         this.plannedDueDate = null;
         this.markDueCompleted = false;
-        setTimeout(() => this.successMessage = '', 2000);
+        setTimeout(() => (this.successMessage = ''), 2000);
       },
       error: () => {
         this.error = 'Nem sikerült frissíteni az oltást.';
         this.saving = false;
-      }
+      },
     });
   }
 
@@ -233,13 +229,13 @@ export class ShotProfilePage implements OnInit {
         icon: 'fa-pen-to-square',
         onClick: () => {
           this.editHorsesMode = true;
-        }
+        },
       },
       {
         label: 'Oltás törlése',
         icon: 'fa-trash',
         onClick: () => this.deleteShot(),
-      }
+      },
     ];
   }
 
@@ -294,9 +290,12 @@ export class ShotProfilePage implements OnInit {
     const upper = (unit || '').toUpperCase();
     const normalized = upper.replace(/[ÁÉÍÓÖŐÚÜŰ]/g, (ch) => {
       switch (ch) {
-        case 'Á': return 'A';
-        case 'É': return 'E';
-        case 'Í': return 'I';
+        case 'Á':
+          return 'A';
+        case 'É':
+          return 'E';
+        case 'Í':
+          return 'I';
         case 'Ó':
         case 'Ö':
         case 'Ő':

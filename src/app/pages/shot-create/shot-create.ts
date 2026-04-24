@@ -12,10 +12,9 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './shot-create.html',
-  styleUrls: ['./shot-create.css']
+  styleUrls: ['./shot-create.css'],
 })
 export class ShotCreatePage implements OnInit {
-
   loading = false;
   error: string | null = null;
   success = false;
@@ -28,7 +27,7 @@ export class ShotCreatePage implements OnInit {
     date: '',
     frequencyUnit: '',
     frequencyValue: undefined,
-    horseIds: []
+    horseIds: [],
   };
 
   frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
@@ -37,7 +36,7 @@ export class ShotCreatePage implements OnInit {
     private shotService: ShotService,
     private horseService: HorseService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +58,7 @@ export class ShotCreatePage implements OnInit {
       },
       error: () => {
         this.error = 'Nem sikerült betölteni a lovakat.';
-      }
+      },
     });
   }
 
@@ -92,7 +91,7 @@ export class ShotCreatePage implements OnInit {
       date: this.form.date,
       frequencyUnit: this.form.frequencyUnit || null,
       frequencyValue: this.form.frequencyValue || null,
-      horseIds: Array.from(this.selectedHorseIds)
+      horseIds: Array.from(this.selectedHorseIds),
     };
 
     this.shotService.create(dto).subscribe({
@@ -107,7 +106,7 @@ export class ShotCreatePage implements OnInit {
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült létrehozni az oltást.';
-      }
+      },
     });
   }
 
@@ -123,6 +122,6 @@ export class ShotCreatePage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 }

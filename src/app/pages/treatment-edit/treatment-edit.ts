@@ -13,7 +13,7 @@ import { HorseDTO } from '../../models/horse.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './treatment-edit.html',
-  styleUrls: ['./treatment-edit.css']
+  styleUrls: ['./treatment-edit.css'],
 })
 export class TreatmentEditPage implements OnInit {
   loading = false;
@@ -31,7 +31,7 @@ export class TreatmentEditPage implements OnInit {
     frequencyUnit: '',
     frequencyValue: undefined,
     date: '',
-    horseIds: []
+    horseIds: [],
   };
 
   frequencyUnits = ['DAYS', 'WEEKS', 'MONTHS', 'YEARS'];
@@ -39,14 +39,14 @@ export class TreatmentEditPage implements OnInit {
     DAYS: 'Nap',
     WEEKS: 'Hét',
     MONTHS: 'Hónap',
-    YEARS: 'Év'
+    YEARS: 'Év',
   };
 
   constructor(
     private treatmentService: TreatmentService,
     private horseService: HorseService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +61,7 @@ export class TreatmentEditPage implements OnInit {
 
     forkJoin({
       treatment: this.treatmentService.getById(id),
-      horses: this.horseService.getAll()
+      horses: this.horseService.getAll(),
     }).subscribe({
       next: ({ treatment, horses }) => {
         this.form = {
@@ -71,7 +71,7 @@ export class TreatmentEditPage implements OnInit {
           frequencyUnit: treatment.frequencyUnit ?? '',
           frequencyValue: treatment.frequencyValue ?? undefined,
           date: treatment.date,
-          horseIds: treatment.horseIds || []
+          horseIds: treatment.horseIds || [],
         };
 
         this.horses = horses;
@@ -81,7 +81,7 @@ export class TreatmentEditPage implements OnInit {
       error: () => {
         this.error = 'Nem sikerült betölteni a kezelést.';
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -116,7 +116,7 @@ export class TreatmentEditPage implements OnInit {
       frequencyUnit: this.form.frequencyUnit || null,
       frequencyValue: this.form.frequencyValue || null,
       date: this.form.date,
-      horseIds: Array.from(this.selectedHorseIds)
+      horseIds: Array.from(this.selectedHorseIds),
     };
 
     this.treatmentService.update(this.treatmentId, dto).subscribe({
@@ -125,16 +125,13 @@ export class TreatmentEditPage implements OnInit {
         this.success = true;
 
         setTimeout(() => {
-          this.router.navigate(
-            ['/treatments', this.treatmentId],
-            { state: { fromEdit: true } }
-          );
+          this.router.navigate(['/treatments', this.treatmentId], { state: { fromEdit: true } });
         }, 800);
       },
       error: () => {
         this.loading = false;
         this.error = 'Nem sikerült frissíteni a kezelést.';
-      }
+      },
     });
   }
 

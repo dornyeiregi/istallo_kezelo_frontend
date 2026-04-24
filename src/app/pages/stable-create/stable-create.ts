@@ -10,21 +10,23 @@ import { StableDTO } from '../../models/stable.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './stable-create.html',
-  styleUrls: ['./stable-create.css']
+  styleUrls: ['./stable-create.css'],
 })
-
 export class StableCreatePage {
   stable: StableDTO = {
     stableName: '',
     strawUsageKg: null,
-    horses: []
+    horses: [],
   } as StableDTO;
 
   loading = false;
   error = '';
   success = false;
 
-  constructor(private stableService: StableService, private router: Router) {}
+  constructor(
+    private stableService: StableService,
+    private router: Router,
+  ) {}
 
   goBack(): void {
     if (window.history.length > 1) {
@@ -50,7 +52,7 @@ export class StableCreatePage {
         console.error('Mentési hiba:', err);
         this.error = 'Nem sikerült létrehozni az istállót.';
         this.loading = false;
-      }
+      },
     });
   }
 }

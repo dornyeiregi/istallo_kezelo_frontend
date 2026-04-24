@@ -2,22 +2,16 @@
   <section class="showcase">
     <div class="overlay">
       <h1>StableManager</h1>
-      <p>
-        Adminisztráld az istállóidat, a lovakat és a napi üzemeltetési
-        feladatokat egy helyen.
-      </p>
+      <p>Adminisztráld az istállóidat, a lovakat és a napi üzemeltetési feladatokat egy helyen.</p>
     </div>
   </section>
 
   <section class="form-panel">
     <div class="form-wrapper">
       <h2>Bejelentkezés</h2>
-      <p class="subtitle">
-        Jelentkezz be a rendszergazdai felület eléréséhez.
-      </p>
+      <p class="subtitle">Jelentkezz be a rendszergazdai felület eléréséhez.</p>
 
       <form [formGroup]="form" (ngSubmit)="submit()">
-        <!-- Felhasználónév -->
         <label class="field">
           <span class="field-label">Felhasználónév</span>
           <input
@@ -26,12 +20,9 @@
             placeholder="pl. admin"
             autocomplete="username"
           />
-          <span class="field-error" *ngIf="usernameInvalid"
-            >Kötelező mező.</span
-          >
+          <span class="field-error" *ngIf="usernameInvalid">Kötelező mező.</span>
         </label>
 
-        <!-- Jelszó -->
         <label class="field">
           <span class="field-label">Jelszó</span>
           <input
@@ -40,16 +31,12 @@
             placeholder="••••••••"
             autocomplete="current-password"
           />
-          <span class="field-error" *ngIf="passwordInvalid"
-            >Kötelező mező.</span
-          >
+          <span class="field-error" *ngIf="passwordInvalid">Kötelező mező.</span>
         </label>
 
-        <!-- Hibajelzés -->
         <div class="error" *ngIf="error">{{ error }}</div>
         <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
 
-        <!-- Bejelentkezés gomb -->
         <button type="submit" [disabled]="loading">
           <ng-container *ngIf="loading; else loginBtn">
             <span class="spinner"></span> Bejelentkezés folyamatban...
