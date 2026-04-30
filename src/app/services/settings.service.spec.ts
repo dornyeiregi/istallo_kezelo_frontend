@@ -61,4 +61,19 @@ describe('SettingsService', () => {
     expect(newReq.request.method).toBe('GET');
     newReq.flush(updated);
   });
+
+  it('exposes cached employee access after load and update', () => {
+    const initial: EmployeeAccessSettingsDTO = { calendar: true } as any;
+    const updated: EmployeeAccessSettingsDTO = { calendar: false } as any;
+
+    expect(service.getCachedEmployeeAccess()).toBeUndefined();
+
+    service.getEmployeeAccess().subscribe();
+    httpMock.expectOne(API_URL).flush(initial);
+    expect(service.getCachedEmployeeAccess()).toEqual(initial);
+
+    service.updateEmployeeAccess(updated).subscribe();
+    httpMock.expectOne(API_URL).flush(updated);
+    expect(service.getCachedEmployeeAccess()).toEqual(updated);
+  });
 });

@@ -44,6 +44,26 @@ describe('HorseService', () => {
     req.flush([horse]);
   });
 
+  it('gets current user horses', () => {
+    service.getMine().subscribe((data) => {
+      expect(data).toEqual([horse]);
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/mine`);
+    expect(req.request.method).toBe('GET');
+    req.flush([horse]);
+  });
+
+  it('gets inactive horses', () => {
+    service.getInactive().subscribe((data) => {
+      expect(data).toEqual([horse]);
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/inactive`);
+    expect(req.request.method).toBe('GET');
+    req.flush([horse]);
+  });
+
   it('gets horse by id', () => {
     service.getById(1).subscribe((data) => {
       expect(data).toEqual(horse);
@@ -95,6 +115,48 @@ describe('HorseService', () => {
     expect(req.request.method).toBe('DELETE');
     expect(req.request.responseType).toBe('text');
     req.flush('deleted');
+  });
+
+  it('deactivates horse', () => {
+    service.deactivate(1).subscribe((data) => {
+      expect(data).toEqual(horse);
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/1/deactivate`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({});
+    req.flush(horse);
+  });
+
+  it('activates horse', () => {
+    service.activate(1).subscribe((data) => {
+      expect(data).toEqual(horse);
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/1/activate`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({});
+    req.flush(horse);
+  });
+
+  it('gets all horse requests', () => {
+    service.getRequests().subscribe((data) => {
+      expect(data).toEqual([horse]);
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/requests`);
+    expect(req.request.method).toBe('GET');
+    req.flush([horse]);
+  });
+
+  it('gets current user horse requests', () => {
+    service.getMyRequests().subscribe((data) => {
+      expect(data).toEqual([horse]);
+    });
+
+    const req = httpMock.expectOne(`${API_URL}/requests/mine`);
+    expect(req.request.method).toBe('GET');
+    req.flush([horse]);
   });
 
   it('approves horse request with payload', () => {

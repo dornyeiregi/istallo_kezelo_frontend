@@ -45,19 +45,46 @@ export class HorseEditPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.returnToStable = history.state['returnToStable'] || null;
+    this.returnToStable = history.state?.['returnToStable'] || null;
 
     const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!Number.isFinite(id) || id <= 0) {
+      this.error = 'Érvénytelen ló azonosító.';
+      this.loading = false;
+      return;
+    }
+
     this.loading = true;
 
-    this.horseService.getById(id).subscribe((h) => {
-      this.horse = h;
-      this.loading = false;
+    this.horseService.getById(id).subscribe({
+      next: (h) => {
+        this.horse = h;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Nem sikerült betölteni a ló adatait.';
+        this.loading = false;
+      },
     });
 
-    this.stableService.getAll().subscribe((st) => (this.stables = st));
+    this.stableService.getAll().subscribe({
+      next: (st) => {
+        this.stables = st;
+      },
+      error: () => {
+        this.error ??= 'Nem sikerült betölteni az istállókat.';
+      },
+    });
+
     if (this.isAdmin) {
-      this.userService.getAll().subscribe((o) => (this.owners = o));
+      this.userService.getAll().subscribe({
+        next: (o) => {
+          this.owners = o;
+        },
+        error: () => {
+          this.error ??= 'Nem sikerült betölteni a tulajdonosokat.';
+        },
+      });
     }
   }
 

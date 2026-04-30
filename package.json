@@ -9,6 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:chrome": "ng test --watch=false --browsers=ChromeHeadless --reporters=progress",
+    "test:firefox": "ng test --watch=false --browsers=FirefoxHeadless --reporters=progress",
     "test:safari": "ng test --watch=false --browsers=Safari --reporters=progress"
   },
   "prettier": {
@@ -48,9 +50,11 @@
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
+    "karma-firefox-launcher": "^2.1.3",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "karma-safari-launcher": "^1.0.0",
+    "puppeteer": "^24.29.0",
     "typescript": "~5.9.2"
   }
 }

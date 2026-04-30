@@ -55,7 +55,7 @@ export class HorseCreatePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.preselectStableName = history.state['preselectStableName'] || null;
+    this.preselectStableName = history.state?.['preselectStableName'] || null;
 
     if (this.preselectStableName) {
       this.horse.stableName = this.preselectStableName;

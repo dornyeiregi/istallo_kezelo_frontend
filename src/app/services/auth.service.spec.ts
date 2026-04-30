@@ -51,6 +51,36 @@ describe('AuthService', () => {
     expect(service.isLoggedIn()).toBeTrue();
   });
 
+  it('sends register payload without mutating auth state', () => {
+    const payload = {
+      fName: 'Anna',
+      f_name: 'Anna',
+      lName: 'Nagy',
+      l_name: 'Nagy',
+      email: 'anna@example.com',
+      phone: '',
+      username: 'anna',
+      password: 'secret123',
+      userType: 'OWNER' as const,
+    };
+    const response: AuthResponse = {
+      token: 'signup-token',
+      user: { id: 1, username: 'anna' } as AuthUser,
+    };
+
+    service.register(payload).subscribe((data) => {
+      expect(data).toEqual(response);
+    });
+
+    const req = httpMock.expectOne(`${API_BASE_URL}/api/auth/signup`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(payload);
+    req.flush(response);
+
+    expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
+    expect(localStorage.getItem(USER_KEY)).toBeNull();
+  });
+
   it('logout clears storage and current user', () => {
     localStorage.setItem(TOKEN_KEY, 'tkn');
     localStorage.setItem(USER_KEY, JSON.stringify({ id: 1, username: 'u' }));
@@ -86,10 +116,45 @@ describe('AuthService', () => {
     expect(service.hasAnyRole(['EMPLOYEE'])).toBeFalse();
   });
 
+  it('updates stored user with a partial patch', () => {
+    const user = { id: 1, username: 'u', email: 'old@example.com' } as AuthUser;
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+
+    service = new AuthService(TestBed.inject(HttpClient));
+    service.updateStoredUser({ email: 'new@example.com', fullName: 'Updated User' });
+
+    expect(JSON.parse(localStorage.getItem(USER_KEY) || '{}')).toEqual({
+      id: 1,
+      username: 'u',
+      email: 'new@example.com',
+      fullName: 'Updated User',
+    });
+  });
+
   it('consumeReturnUrl returns value once', () => {
     localStorage.setItem(RETURN_URL_KEY, '/home');
     expect(service.consumeReturnUrl()).toBe('/home');
     expect(service.consumeReturnUrl()).toBeNull();
+  });
+
+  it('sets return url explicitly', () => {
+    service.setReturnUrl('/settings');
+    expect(localStorage.getItem(RETURN_URL_KEY)).toBe('/settings');
+  });
+
+  it('changes password as text response', () => {
+    service.changePassword('old-pass', 'new-pass').subscribe((data) => {
+      expect(data).toBe('ok');
+    });
+
+    const req = httpMock.expectOne(`${API_BASE_URL}/api/auth/change-password`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      currentPassword: 'old-pass',
+      newPassword: 'new-pass',
+    });
+    expect(req.request.responseType).toBe('text');
+    req.flush('ok');
   });
 
   it('loadStoredUser clears invalid JSON', () => {
