@@ -52,7 +52,7 @@ StableManager/istallo_kezelo_frontend/.env
 A legfontosabb sorok:
 
 ```env
-APP_HOST_IP=192.168.0.61
+APP_HOST_IP=192.0.2.10
 JWT_SECRET=change-this-to-a-long-random-secret
 APP_MAIL_ENABLED=true
 APP_MAIL_FROM=your-email@example.com
@@ -65,7 +65,7 @@ SPRING_MAIL_PASSWORD=your-smtp-or-app-password
 
 Mit kell átírni?
 
-- `APP_HOST_IP`: annak a gépnek a helyi IP-címe, amelyen a Docker fut
+- `APP_HOST_IP`: annak a gépnek a helyi IP-címe, amelyen a Docker fut. A `192.0.2.10` csak példa, ezt mindenképp írd át.
 - `JWT_SECRET`: saját hosszú titok
 - `APP_MAIL_FROM`: a saját email címed
 - `SPRING_MAIL_USERNAME`: ugyanaz legyen, mint az `APP_MAIL_FROM`
@@ -80,8 +80,17 @@ Ezek általában maradhatnak így:
 - `FRONTEND_BIND_HOST=0.0.0.0`
 - `BACKEND_BIND_HOST=0.0.0.0`
 - `DB_BIND_HOST=127.0.0.1`
+- `DB_HOST_PORT=5432`
 
 Ha nem Gmailt használsz, akkor a `SPRING_MAIL_HOST` és `SPRING_MAIL_PORT` értékét is írd át.
+
+Ha a `5432` port már foglalt a gépeden, akkor a `.env` fájlban ezt például átírhatod erre:
+
+```env
+DB_HOST_PORT=5433
+```
+
+Ez csak a gépeden megnyitott portot változtatja meg, a konténereken belüli működést nem.
 
 ### 5. Indítsd el a rendszert
 
@@ -185,3 +194,10 @@ Ellenőrizd ezeket:
 `Port already in use`
 
 Valami más program már használja a `4200`, `8080` vagy `5432` portot.
+
+Ha a hiba a `127.0.0.1:5432` portra vonatkozik, akkor általában egy helyben futó PostgreSQL használja azt.
+
+Ilyenkor két megoldás van:
+
+- állítsd le a helyi PostgreSQL-t
+- vagy írd át a `.env` fájlban a `DB_HOST_PORT` értékét például `5433`-ra, majd futtasd újra a `docker compose up --build` parancsot
