@@ -1,28 +1,28 @@
 # Istálló Kezelő Frontend
 
-Az `istallo_kezelo_frontend` projekt az Istálló Kezelő rendszer Angular alapú kliensalkalmazása. A frontend önállóan nem futtatható teljes funkcionalitással, mert a bejelentkezéshez, az adatok lekéréséhez és a módosítások mentéséhez szüksége van a Spring Boot backend szolgáltatásra és a PostgreSQL adatbázisra is.
+Ez a projekt indítja el a teljes rendszert Dockerrel. Innen fog elindulni:
 
-Ebben a projektben a teljes rendszer Docker Compose segítségével indítható el.
+- a frontend
+- a backend
+- a PostgreSQL adatbázis
 
-## Mire szolgál ez a README?
+## Mire lesz szükséged?
 
-Ez a leírás a teljes alkalmazás Docker-alapú indítását mutatja be:
+- Docker Desktop
+- Git
+- a backend projekt a frontend mellett legyen
 
-- frontend konténer
-- backend konténer
-- PostgreSQL adatbázis konténer
+Elvárt mappaszerkezet:
 
-## Előfeltételek
+```text
+StableManager/
+  istallo_kezelo/
+  istallo_kezelo_frontend/
+```
 
-Az indításhoz az alábbiak szükségesek:
+## Lépésről lépésre
 
-- Docker Desktop telepítve és elindítva
-- Git telepítve
-- a backend projekt elérhető legyen a frontend mellett, testvérkönyvtárként
-
-## Projektek klónozása
-
-Javasolt létrehozni egy közös mappát, például `StableManager` néven, és ebbe klónozni mindkét projektet:
+### 1. Klónozd le a két projektet
 
 ```bash
 mkdir StableManager
@@ -31,134 +31,128 @@ git clone https://github.com/dornyeiregi/istallo_kezelo_frontend.git
 git clone https://github.com/dornyeiregi/istallo_kezelo.git
 ```
 
-Elvárt könyvtárstruktúra:
-
-```text
-StableManager/
-  istallo_kezelo/
-  istallo_kezelo_frontend/
-```
-
-Ennek oka, hogy a [docker-compose.yml](./docker-compose.yml) a backendet a `../istallo_kezelo` útvonalról buildeli.
-
-## A rendszer indítása
-
-Nyiss terminált a frontend projekt gyökerében:
+### 2. Menj a frontend mappába
 
 ```bash
 cd StableManager/istallo_kezelo_frontend
-docker compose up --build
 ```
 
-Ez az alapértelmezett indítási mód. A frontend és a backend LAN-on is elérhető lesz, ezért a rendszer a helyi hálózat más gépeiről is megnyitható.
+### 3. Nyisd meg a `.env` fájlt
 
-Ha háttérben szeretnéd futtatni:
+A projektben már van egy kész `.env` fájl mintaadatokkal. Ezt nem kell létrehozni, csak meg kell nyitni és át kell írni.
 
-```bash
-docker compose up --build -d
+Fájl helye:
+
+```text
+StableManager/istallo_kezelo_frontend/.env
 ```
 
-Az első indítás hosszabb ideig tarthat, mert a Docker letölti az alap image-eket és felépíti a frontend és backend image-eket.
+### 4. Írd át a `.env` fájlt
 
-## .env beállítása
-
-A Docker Compose automatikusan beolvassa a projekt gyökerében található `.env` fájlt. Ebben kell megadni a futtató gép helyi IP-címét.
-
-Ha szükséges, a minta alapján újra létrehozható:
-
-```bash
-cp .env.example .env
-```
-
-A `.env` fájl legfontosabb sora:
+A legfontosabb sorok:
 
 ```env
 APP_HOST_IP=192.168.0.61
+JWT_SECRET=change-this-to-a-long-random-secret
+APP_MAIL_ENABLED=true
+APP_MAIL_FROM=your-email@example.com
+APP_MAIL_TO=
+SPRING_MAIL_HOST=smtp.gmail.com
+SPRING_MAIL_PORT=587
+SPRING_MAIL_USERNAME=your-email@example.com
+SPRING_MAIL_PASSWORD=your-app-password
 ```
 
-Ezt az értéket mindig a futtató gép aktuális helyi IP-címére kell átírni. A Compose ezt használja arra, hogy a backend CORS beállítása engedélyezze a frontend elérését LAN-on keresztül is.
+Mit kell átírni?
 
-A `.env` fájlban a portkötések is szabályozhatók:
+- `APP_HOST_IP`: annak a gépnek a helyi IP-címe, amelyen a Docker fut
+- `JWT_SECRET`: saját hosszú titok
+- `APP_MAIL_FROM`: a saját email címed
+- `SPRING_MAIL_USERNAME`: ugyanaz legyen, mint az `APP_MAIL_FROM`
+- `SPRING_MAIL_PASSWORD`: a saját app jelszó vagy SMTP jelszó
 
-```env
-FRONTEND_BIND_HOST=0.0.0.0
-BACKEND_BIND_HOST=0.0.0.0
-DB_BIND_HOST=127.0.0.1
+Ezek általában maradhatnak így:
+
+- `APP_MAIL_ENABLED=true`
+- `APP_MAIL_TO=`
+- `SPRING_MAIL_HOST=smtp.gmail.com`
+- `SPRING_MAIL_PORT=587`
+- `FRONTEND_BIND_HOST=0.0.0.0`
+- `BACKEND_BIND_HOST=0.0.0.0`
+- `DB_BIND_HOST=127.0.0.1`
+
+Ha nem Gmailt használsz, akkor a `SPRING_MAIL_HOST` és `SPRING_MAIL_PORT` értékét is írd át.
+
+### 5. Indítsd el a rendszert
+
+Terminálból:
+
+```bash
+docker compose up --build
 ```
 
-Az alapértelmezett beállítás szerint:
+Docker Desktopból:
 
-- a frontend LAN-on is elérhető
-- a backend LAN-on is elérhető
-- az adatbázis csak helyben érhető el
+1. Nyisd meg a Docker Desktop alkalmazást.
+2. Menj a `Containers` vagy `Containers / Apps` részre.
+3. Ha a projekt már egyszer el lett indítva, keresd meg az `istallo_kezelo_frontend` compose appot vagy a hozzá tartozó konténereket.
+4. Kattints a `Start` vagy `Run` gombra.
 
-## Elérési pontok
+Az első buildet általában egyszerűbb terminálból elindítani. Utána a következő indítások és leállítások már kényelmesen kezelhetők Docker Desktopból is.
 
-Sikeres indulás után a szolgáltatások az alábbi címeken érhetők el:
+### 6. Nyisd meg a böngészőben
 
-- Frontend: `http://localhost:4200`
-- Backend API: `http://localhost:8080`
-- PostgreSQL: `localhost:5432`
+Normál használatnál mindig a frontendet kell megnyitni.
 
-LAN-on keresztüli elérés esetén a frontend például ezen a címen nyitható meg:
+Ha ugyanazon a gépen használod, ahol a Docker fut:
 
 ```text
-http://192.168.0.61:4200
+http://localhost:4200
 ```
 
-## Mit indít el a Compose?
+Ha másik gépről, ugyanazon a helyi hálózaton használod:
 
-A [docker-compose.yml](./docker-compose.yml) három szolgáltatást indít:
+```text
+http://APP_HOST_IP:4200
+```
 
-- `frontend`: Angular alkalmazás production buildből, Nginx-szel kiszolgálva
-- `backend`: Spring Boot alkalmazás Docker konténerben
-- `db`: PostgreSQL adatbázis konténer
+A backendet általában nem kell külön megnyitni böngészőben. Az API-ként fut a frontend mögött.
 
-A backend automatikusan a Dockeres PostgreSQL adatbázishoz csatlakozik, ezért a kliensgépen nem szükséges külön PostgreSQL telepítés az alap működéshez.
+### 7. Alapértelmezett admin belépés
 
-## Adatbázis és adatok megőrzése
+- Felhasználónév: `admin`
+- Jelszó: `admin123`
 
-A PostgreSQL konténer adatai Docker volume-ban tárolódnak, ezért a sima leállítás nem törli az adatokat.
+## Leállítás
 
-Normál leállítás:
+Terminálból:
 
 ```bash
 docker compose down
 ```
 
-Ez leállítja és eltávolítja a konténereket, de az adatbázis adatai megmaradnak.
+Docker Desktopból:
 
-Teljes törlés adatbázissal együtt:
+1. Nyisd meg a Docker Desktop alkalmazást.
+2. Menj a `Containers` vagy `Containers / Apps` részre.
+3. Keresd meg az alkalmazás compose appját vagy konténereit.
+4. Kattints a `Stop` gombra.
+
+Ha az adatbázis adatait is törölni akarod:
 
 ```bash
 docker compose down -v
 ```
 
-Ez a parancs a PostgreSQL volume-ot is törli, tehát a Dockeres adatbázis teljes tartalma elveszik.
+## Hasznos parancsok
 
-## Meglévő image-ek frissítése
-
-Ha a forráskód változott, futtasd újra a buildet:
-
-```bash
-docker compose up --build
-```
-
-Ha már fut a rendszer háttérben:
-
-```bash
-docker compose up --build -d
-```
-
-## Állapot és naplók ellenőrzése
-
-Futó szolgáltatások listázása:
+Futó konténerek:
 
 ```bash
 docker compose ps
 ```
 
-Összes szolgáltatás naplója:
+Összes napló:
 
 ```bash
 docker compose logs -f
@@ -176,41 +170,26 @@ Csak a frontend naplója:
 docker compose logs -f frontend
 ```
 
-## Bejelentkezés
-
-Az alkalmazás alapértelmezett admin felhasználót hoz létre a migráció során:
-
-- Felhasználónév: `admin`
-- Jelszó: `admin123`
-
-Ha a Dockeres adatbázisba később saját adatok kerülnek betöltésre, akkor természetesen a tényleges felhasználók és jogosultságok az importált adatoktól függenek.
-
-## Használat másik gépről
-
-Ha a rendszer ezen a gépen fut, másik gépről is elérhető ugyanazon a helyi hálózaton keresztül.
-
-Ebben az esetben a másik gépen a frontendet nem `localhost`, hanem a futtató gép helyi IP-címével kell megnyitni, például:
-
-```text
-http://192.168.0.61:4200
-```
-
-A frontend a böngésző címsorában lévő hosztnév alapján keresi a backendet, ezért ugyanazon a gépen a backend is ezen az IP-n, `8080` porton lesz elérve.
-
 ## Gyakori hibák
 
 `A backend nem buildelődik`
 
-Ennek tipikus oka, hogy a `../istallo_kezelo` mappa nem a frontend mellett található.
+Ellenőrizd, hogy a `../istallo_kezelo` mappa valóban a frontend mellett van-e.
 
-`A frontend üres adatokat mutat`
+`A frontend nem érhető el másik gépről`
 
-Ilyenkor jellemzően a Dockeres PostgreSQL adatbázis üres, és nem a korábban helyben használt PostgreSQL példányhoz kapcsolódsz.
+Nézd meg, jól van-e beírva az `APP_HOST_IP` a `.env` fájlban.
+
+`Email nem működik`
+
+Ellenőrizd ezeket:
+
+- `APP_MAIL_FROM`
+- `SPRING_MAIL_USERNAME`
+- `SPRING_MAIL_PASSWORD`
+- `SPRING_MAIL_HOST`
+- `SPRING_MAIL_PORT`
 
 `Port already in use`
 
-Valamelyik helyi szolgáltatás már használja a `4200`, `8080` vagy `5432` portot. Ilyenkor vagy le kell állítani a foglaló folyamatot, vagy módosítani kell a compose portkiosztását.
-
-`LAN-on a frontend megnyílik, de az API-hívások hibára futnak`
-
-Ilyenkor általában az `.env` fájlban az `APP_HOST_IP` értéke nem megfelelő. Ellenőrizni kell a futtató gép aktuális LAN IP-címét, majd ezt be kell írni a `.env` fájlba.
+Valami más program már használja a `4200`, `8080` vagy `5432` portot.
