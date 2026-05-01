@@ -60,7 +60,7 @@ APP_MAIL_TO=
 SPRING_MAIL_HOST=smtp.gmail.com
 SPRING_MAIL_PORT=587
 SPRING_MAIL_USERNAME=your-email@example.com
-SPRING_MAIL_PASSWORD=your-app-password
+SPRING_MAIL_PASSWORD=your-smtp-or-app-password
 ```
 
 Mit kell átírni?
@@ -69,7 +69,7 @@ Mit kell átírni?
 - `JWT_SECRET`: saját hosszú titok
 - `APP_MAIL_FROM`: a saját email címed
 - `SPRING_MAIL_USERNAME`: ugyanaz legyen, mint az `APP_MAIL_FROM`
-- `SPRING_MAIL_PASSWORD`: a saját app jelszó vagy SMTP jelszó
+- `SPRING_MAIL_PASSWORD`: az `APP_MAIL_FROM` email-címhez tartozó, alkalmazás számára használt SMTP jelszó vagy app password
 
 Ezek általában maradhatnak így:
 
@@ -103,14 +103,6 @@ Az első buildet általában egyszerűbb terminálból elindítani. Utána a kö
 ### 6. Nyisd meg a böngészőben
 
 Normál használatnál mindig a frontendet kell megnyitni.
-
-Ha ugyanazon a gépen használod, ahol a Docker fut:
-
-```text
-http://localhost:4200
-```
-
-Ha másik gépről, ugyanazon a helyi hálózaton használod:
 
 ```text
 http://APP_HOST_IP:4200

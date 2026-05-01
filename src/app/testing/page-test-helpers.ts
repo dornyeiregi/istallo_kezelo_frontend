@@ -350,20 +350,3 @@ export async function configurePageTest<T>(
     providers: [provideRouter([]), ...buildPageTestProviders(options)],
   }).compileComponents();
 }
-
-export function describePageCreation<T>(
-  name: string,
-  component: Type<T>,
-  options: PageTestOptions = {},
-): void {
-  describe(name, () => {
-    beforeEach(async () => {
-      await configurePageTest(component, options);
-    });
-
-    it('creates the page component', () => {
-      const fixture = TestBed.createComponent(component);
-      expect(fixture.componentInstance).toBeTruthy();
-    });
-  });
-}
