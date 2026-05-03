@@ -67,7 +67,6 @@ describe('StorageItemCreatePage', () => {
       name: 'Szena',
       itemType: 'HAY',
       itemCategory: 'CONSUMABLE',
-      feedUnitAmount: 1,
       packageCount: 2,
       packageSize: 5,
     };
@@ -87,7 +86,6 @@ describe('StorageItemCreatePage', () => {
       name: 'Szena',
       itemType: 'HAY',
       itemCategory: 'CONSUMABLE',
-      feedUnitAmount: 1,
       packageCount: 2,
       packageSize: 5,
     };
@@ -105,7 +103,6 @@ describe('StorageItemCreatePage', () => {
       name: 'Szena',
       itemType: 'HAY',
       itemCategory: 'CONSUMABLE',
-      feedUnitAmount: 1,
       packageCount: 2,
       packageSize: 5,
     };
@@ -113,6 +110,9 @@ describe('StorageItemCreatePage', () => {
     component.onSubmit();
     tick(1000);
 
+    expect(itemService.create).toHaveBeenCalledWith(
+      jasmine.objectContaining({ feedUnitAmount: 1 }),
+    );
     expect(storageService.create).toHaveBeenCalledWith(
       jasmine.objectContaining({ itemId: 5, amountStored: 10 }),
     );

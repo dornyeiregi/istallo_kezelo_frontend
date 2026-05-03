@@ -12,11 +12,11 @@
       <div class="filter-group">
         <label for="eventTypeFilter">Típus</label>
         <select id="eventTypeFilter" [(ngModel)]="selectedEventType" (change)="onFilterChange()">
-          <option value="all">Összes</option>
-          <option value="SHOT">Oltás</option>
-          <option value="TREATMENT">Kezelés</option>
-          <option value="FARRIER_APP">Patkolás</option>
-          <option value="CUSTOM">Egyéb</option>
+          @for (type of availableEventTypes; track type) {
+            <option [value]="type">
+              {{ type === 'all' ? 'Összes' : eventTypeLabels[type] }}
+            </option>
+          }
         </select>
       </div>
       <div class="filter-group">

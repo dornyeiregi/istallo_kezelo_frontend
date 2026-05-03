@@ -84,6 +84,14 @@ export class StableProfilePage implements OnInit {
     return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
+  get canCreateHorse(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
+  }
+
+  get canManageStable(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
+  }
+
   goBack(): void {
     if (window.history.length > 1) {
       window.history.back();
@@ -379,8 +387,8 @@ export class StableProfilePage implements OnInit {
       },
     ];
 
-    if (!this.canDelete) {
-      return actions.filter((action) => action.label !== 'Törlés');
+    if (!this.canManageStable) {
+      return [];
     }
 
     return actions;

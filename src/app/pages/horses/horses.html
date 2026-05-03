@@ -12,36 +12,19 @@
     <div class="header-left">
       <h1>Lovak</h1>
 
-      <div class="view-toggle">
-        <button
-          class="themed-button view-button"
-          [class.active]="activeView === 'ALL'"
-          (click)="setView('ALL')"
-        >
-          Összes ló
-        </button>
-        <button
-          class="themed-button view-button"
-          [class.active]="activeView === 'MINE'"
-          (click)="setView('MINE')"
-        >
-          Saját lovak
-        </button>
-        <button
-          class="themed-button view-button"
-          [class.active]="activeView === 'PENDING'"
-          (click)="setView('PENDING')"
-        >
-          Függőben lévő lovak
-        </button>
-        <button
-          class="themed-button view-button"
-          [class.active]="activeView === 'INACTIVE'"
-          (click)="setView('INACTIVE')"
-        >
-          Inaktív lovak
-        </button>
-      </div>
+      @if (availableViews.length > 1) {
+        <div class="view-toggle">
+          @for (view of availableViews; track view) {
+            <button
+              class="themed-button view-button"
+              [class.active]="activeView === view"
+              (click)="setView(view)"
+            >
+              {{ viewLabels[view] }}
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <p class="subtitle">A rendszerben jelen lévő lovak listája</p>
@@ -56,57 +39,73 @@
       <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt lóra.</div>
     }
 
-    <section class="horse-grid" aria-label="Ló lista">
-      @for (horse of horses; track horse.id) {
-        <div
-          class="horse-card"
-          [class.edit-mode]="editMode"
-          [class.delete-mode]="deleteMode"
-          (click)="deleteMode ? confirmDelete(horse) : onCardClick(horse)"
-        >
-          <h3>{{ horse.horseName }}</h3>
+    <div class="search-bar">
+      <label class="search-label" for="horse-search">Keresés név alapján</label>
+      <input
+        id="horse-search"
+        name="horseSearch"
+        type="search"
+        class="search-input"
+        [(ngModel)]="searchTerm"
+        placeholder="Ló neve"
+      />
+    </div>
 
-          @if (horse.isPending) {
-            <div class="pending-badge">Függőben</div>
-          } @else if (horse.isActive === false) {
-            <div class="inactive-badge">Inaktív</div>
-          }
+    @if (filteredHorses.length === 0) {
+      <p class="empty-text">Nincs a keresésnek megfelelő ló.</p>
+    } @else {
+      <section class="horse-grid" aria-label="Ló lista">
+        @for (horse of filteredHorses; track horse.id) {
+          <div
+            class="horse-card"
+            [class.edit-mode]="editMode"
+            [class.delete-mode]="deleteMode"
+            (click)="deleteMode ? confirmDelete(horse) : onCardClick(horse)"
+          >
+            <h3>{{ horse.horseName }}</h3>
 
-          <div class="details">
-            <span class="detail"><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</span>
-            <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
-            <span class="detail"
-              ><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span
-            >
-          </div>
+            @if (horse.isPending) {
+              <div class="pending-badge">Függőben</div>
+            } @else if (horse.isActive === false) {
+              <div class="inactive-badge">Inaktív</div>
+            }
 
-          @if (activeView === 'INACTIVE' && canDelete) {
-            <div class="inactive-actions">
-              <button
-                class="themed-button"
-                (click)="activateHorse(horse); $event.stopPropagation()"
+            <div class="details">
+              <span class="detail"><strong>Nem:</strong> {{ getSexLabel(horse.sex) }}</span>
+              <span class="detail"><strong>Tulajdonos:</strong> {{ horse.ownerName }}</span>
+              <span class="detail"
+                ><strong>Születési idő:</strong> {{ horse.dob || 'Nincs megadva' }}</span
               >
-                Aktiválás
-              </button>
             </div>
-          }
 
-          @if (editMode) {
-            <div class="edit-hint">
-              <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
-              <span>Kattints a szerkesztéshez</span>
-            </div>
-          }
+            @if (activeView === 'INACTIVE' && canDelete) {
+              <div class="inactive-actions">
+                <button
+                  class="themed-button"
+                  (click)="activateHorse(horse); $event.stopPropagation()"
+                >
+                  Aktiválás
+                </button>
+              </div>
+            }
 
-          @if (deleteMode) {
-            <div class="delete-hint">
-              <i class="fa-solid fa-trash" aria-hidden="true"></i>
-              <span>Kattints a törléshez</span>
-            </div>
-          }
-        </div>
-      }
-    </section>
+            @if (editMode) {
+              <div class="edit-hint">
+                <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                <span>Kattints a szerkesztéshez</span>
+              </div>
+            }
+
+            @if (deleteMode) {
+              <div class="delete-hint">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                <span>Kattints a törléshez</span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
   }
 </div>
 

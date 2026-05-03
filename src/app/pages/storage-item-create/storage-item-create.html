@@ -48,26 +48,9 @@
       </select>
     </div>
 
-    <div class="form-group">
-      <label for="feedUnitAmount">
-        Etetési adag (kg) *
-        <span
-          class="hint-icon"
-          data-tooltip="Egy etetéshez felhasznált mennyiség. Pl. 1 kg/adag."
-          aria-label="Etetési adag súgó"
-          >?</span
-        >
-      </label>
-      <input
-        id="feedUnitAmount"
-        name="feedUnitAmount"
-        type="number"
-        min="0.01"
-        step="0.01"
-        [(ngModel)]="form.feedUnitAmount"
-        required
-      />
-    </div>
+    @if (form.itemCategory === 'CONSUMABLE') {
+      <p class="hint">Az etetési adag automatikusan {{ defaultFeedUnitAmount }} kg.</p>
+    }
 
     <div class="form-group">
       <label>
@@ -80,26 +63,32 @@
         >
       </label>
       <div class="inline-group">
-        <input
-          id="packageCount"
-          name="packageCount"
-          type="number"
-          min="0"
-          step="1"
-          placeholder="Darab"
-          [(ngModel)]="form.packageCount"
-          required
-        />
-        <input
-          id="packageSize"
-          name="packageSize"
-          type="number"
-          min="0"
-          step="0.1"
-          placeholder="Egy zsák (kg)"
-          [(ngModel)]="form.packageSize"
-          required
-        />
+        <div class="inline-field">
+          <label for="packageCount" class="inline-label">Darabszám (db)</label>
+          <input
+            id="packageCount"
+            name="packageCount"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Pl. 12"
+            [(ngModel)]="form.packageCount"
+            required
+          />
+        </div>
+        <div class="inline-field">
+          <label for="packageSize" class="inline-label">Egység súlya (kg)</label>
+          <input
+            id="packageSize"
+            name="packageSize"
+            type="number"
+            min="0"
+            step="0.1"
+            placeholder="Pl. 25"
+            [(ngModel)]="form.packageSize"
+            required
+          />
+        </div>
       </div>
       <div class="hint">Összesen: {{ totalStored | number: '1.0-2' }} kg</div>
     </div>

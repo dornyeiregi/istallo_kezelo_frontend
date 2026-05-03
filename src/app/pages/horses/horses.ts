@@ -7,6 +7,8 @@ import { HorseService } from '../../services/horse.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
+type HorseView = 'ALL' | 'MINE' | 'PENDING' | 'INACTIVE';
+
 @Component({
   selector: 'app-horses',
   standalone: true,
@@ -16,10 +18,11 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HorsesPage implements OnInit {
   horses: HorseDTO[] = [];
+  searchTerm = '';
   loading = true;
   error = '';
   editMode = false;
-  activeView: 'ALL' | 'MINE' | 'PENDING' | 'INACTIVE' = 'ALL';
+  activeView: HorseView = 'ALL';
   deleteMode = false;
   deleteSuccess = '';
   confirmDeleteHorse: HorseDTO | null = null;
@@ -27,6 +30,12 @@ export class HorsesPage implements OnInit {
   toastVisible: boolean = false;
   pendingRequests: HorseDTO[] = [];
   pendingCount = 0;
+  readonly viewLabels: Record<HorseView, string> = {
+    ALL: 'Összes ló',
+    MINE: 'Saját lovak',
+    PENDING: 'Függőben lévő lovak',
+    INACTIVE: 'Inaktív lovak',
+  };
 
   constructor(
     private horseService: HorseService,
@@ -35,7 +44,7 @@ export class HorsesPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activeView = this.canToggleView || this.isEmployee ? 'ALL' : 'MINE';
+    this.activeView = this.availableViews[0];
     this.loadHorses();
 
     if (this.canToggleView) {
@@ -133,6 +142,10 @@ export class HorsesPage implements OnInit {
     return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
   }
 
+  get canManageHorses(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN', 'OWNER', 'ROLE_OWNER']);
+  }
+
   get isEmployee(): boolean {
     return this.authService.hasAnyRole(['EMPLOYEE', 'ROLE_EMPLOYEE']);
   }
@@ -141,9 +154,36 @@ export class HorsesPage implements OnInit {
     return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN', 'OWNER', 'ROLE_OWNER']);
   }
 
-  setView(view: 'ALL' | 'MINE' | 'PENDING' | 'INACTIVE'): void {
+  get availableViews(): HorseView[] {
+    if (this.canToggleView) {
+      return ['ALL', 'MINE', 'PENDING', 'INACTIVE'];
+    }
+
+    if (this.isEmployee) {
+      return ['ALL'];
+    }
+
+    return ['MINE'];
+  }
+
+  setView(view: HorseView): void {
+    if (!this.availableViews.includes(view)) {
+      return;
+    }
+
     this.activeView = view;
     this.loadHorses();
+  }
+
+  get filteredHorses(): HorseDTO[] {
+    const query = this.searchTerm.trim().toLocaleLowerCase();
+    if (!query) {
+      return this.horses;
+    }
+
+    return this.horses.filter((horse) =>
+      (horse.horseName || '').toLocaleLowerCase().includes(query),
+    );
   }
 
   onCardClick(horse: HorseDTO): void {
@@ -264,11 +304,17 @@ export class HorsesPage implements OnInit {
       },
     ];
 
-    if (!this.canDelete) {
-      return actions.filter((action) => action.label !== 'Törlés');
-    }
+    return actions.filter((action) => {
+      if (action.label === 'Törlés') {
+        return this.canDelete;
+      }
 
-    return actions;
+      if (action.label === 'Új ló hozzáadása' || action.label === 'Szerkesztés') {
+        return this.canManageHorses;
+      }
+
+      return true;
+    });
   }
 
   getSexLabel(sex: string): string {

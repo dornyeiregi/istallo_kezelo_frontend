@@ -21,6 +21,7 @@ import { ItemService } from '../../services/item.service';
  * Displays inventory storage records and supports stock, edit, and delete actions.
  */
 export class StoragesPage implements OnInit {
+  stockActionMode: 'add' | 'remove' | null = null;
   storages: StorageDTO[] = [];
   consumableStorages: StorageDTO[] = [];
   objectStorages: StorageDTO[] = [];
@@ -122,6 +123,12 @@ export class StoragesPage implements OnInit {
    * Switches name editing mode and prepares editable values for every storage row.
    */
   toggleEditMode(): void {
+    if (this.stockActionMode) {
+      this.stockActionMode = null;
+      this.showAddStockModal = false;
+      this.showRemoveStockModal = false;
+    }
+
     this.editMode = !this.editMode;
 
     if (this.editMode) {
@@ -148,7 +155,10 @@ export class StoragesPage implements OnInit {
     this.deleteMode = !this.deleteMode;
     if (this.deleteMode) {
       this.editMode = false;
+      this.stockActionMode = null;
       this.selectedStorage = null;
+      this.showAddStockModal = false;
+      this.showRemoveStockModal = false;
     }
     this.confirmDeleteStorage = null;
   }
@@ -239,6 +249,9 @@ export class StoragesPage implements OnInit {
   closeAddStockModal(): void {
     this.showAddStockModal = false;
     this.modalError = null;
+    if (this.stockActionMode === 'add') {
+      this.finishStockActionMode();
+    }
   }
 
   /**
@@ -268,6 +281,7 @@ export class StoragesPage implements OnInit {
     this.storageService.update(this.selectedStorage.storageId!, dto).subscribe({
       next: () => {
         this.selectedStorage!.amountStored = newStored;
+        this.finishStockActionMode();
         this.closeAddStockModal();
         this.showToast('Készlet sikeresen hozzáadva.');
       },
@@ -293,6 +307,9 @@ export class StoragesPage implements OnInit {
   closeRemoveStockModal(): void {
     this.showRemoveStockModal = false;
     this.modalError = null;
+    if (this.stockActionMode === 'remove') {
+      this.finishStockActionMode();
+    }
   }
 
   /**
@@ -322,6 +339,7 @@ export class StoragesPage implements OnInit {
     this.storageService.update(this.selectedStorage.storageId!, dto).subscribe({
       next: () => {
         this.selectedStorage!.amountStored = newStored;
+        this.finishStockActionMode();
         this.closeRemoveStockModal();
         this.showToast('Készlet sikeresen levonva.');
       },
@@ -366,6 +384,33 @@ export class StoragesPage implements OnInit {
   }
 
   /**
+   * Returns the currently available amount, never below zero.
+   */
+  getAvailableAmount(storage: StorageDTO): number {
+    const stored = Number(storage.amountStored) || 0;
+    const inUse = Number(storage.amountInUse) || 0;
+    return Math.max(stored - inUse, 0);
+  }
+
+  /**
+   * Returns whether inline name editing is currently active.
+   */
+  get isNameEditMode(): boolean {
+    return this.editMode && this.stockActionMode === null;
+  }
+
+  /**
+   * Sums daily in-use amounts by backend item type.
+   */
+  getDailyInUseByType(itemType: string): number {
+    const key = (itemType || '').toUpperCase();
+    return this.storages.reduce((sum, storage) => {
+      const type = (this.itemsMap[storage.itemId]?.itemType || '').toUpperCase();
+      return type === key ? sum + (Number(storage.amountInUse) || 0) : sum;
+    }, 0);
+  }
+
+  /**
    * Returns the display name of the currently selected storage row.
    */
   getSelectedItemName(): string {
@@ -393,22 +438,56 @@ export class StoragesPage implements OnInit {
   }
 
   /**
-   * Counts all loaded storage rows.
-   */
-  get totalItems(): number {
-    return this.storages.length;
-  }
-
-  /**
    * Handles card selection based on normal, edit, or delete mode.
    */
   onStorageClick(storage: StorageDTO): void {
-    if (this.editMode) return;
     if (this.deleteMode) {
       this.confirmDelete(storage);
       return;
     }
-    this.selectedStorage = storage;
+
+    if (this.stockActionMode === 'add') {
+      this.selectedStorage = storage;
+      this.openAddStockModal();
+      return;
+    }
+
+    if (this.stockActionMode === 'remove') {
+      this.selectedStorage = storage;
+      this.openRemoveStockModal();
+      return;
+    }
+
+    if (this.editMode) return;
+  }
+
+  /**
+   * Toggles stock action mode for add/remove flows from the CRUD menu.
+   */
+  toggleStockActionMode(mode: 'add' | 'remove'): void {
+    if (this.stockActionMode === mode) {
+      this.finishStockActionMode();
+      return;
+    }
+
+    this.editMode = true;
+    this.deleteMode = false;
+    this.confirmDeleteStorage = null;
+    this.selectedStorage = null;
+    this.stockActionMode = mode;
+    this.showAddStockModal = false;
+    this.showRemoveStockModal = false;
+    this.modalError = null;
+
+    if (this.selectedStorage) {
+      mode === 'add' ? this.openAddStockModal() : this.openRemoveStockModal();
+    } else {
+      this.showToast(
+        mode === 'add'
+          ? 'Készlet hozzáadás mód aktív. Válassz ki egy tételt.'
+          : 'Készlet levonás mód aktív. Válassz ki egy tételt.',
+      );
+    }
   }
 
   /**
@@ -418,18 +497,18 @@ export class StoragesPage implements OnInit {
     return [
       {
         label: 'Tétel hozzáadása',
-        icon: 'fa-plus',
+        icon: 'fa-boxes-stacked',
         onClick: () => this.addItemWithStorage(),
       },
       {
         label: 'Készlet hozzáadása',
-        icon: 'fa-boxes-stacked',
-        onClick: () => this.openAddStockModal(),
+        icon: 'fa-plus',
+        onClick: () => this.toggleStockActionMode('add'),
       },
       {
         label: 'Készlet levonása',
         icon: 'fa-minus',
-        onClick: () => this.openRemoveStockModal(),
+        onClick: () => this.toggleStockActionMode('remove'),
       },
       {
         label: 'Szerkesztés',
@@ -442,5 +521,12 @@ export class StoragesPage implements OnInit {
         onClick: () => this.deleteStorageMode(),
       },
     ];
+  }
+
+  private finishStockActionMode(): void {
+    this.stockActionMode = null;
+    this.editMode = false;
+    this.modalError = null;
+    this.selectedStorage = null;
   }
 }

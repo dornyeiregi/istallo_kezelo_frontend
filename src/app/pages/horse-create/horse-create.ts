@@ -22,6 +22,7 @@ import { FeedSchedItemDTO } from '../../models/feed-sched-item.model';
   styleUrls: ['./horse-create.css'],
 })
 export class HorseCreatePage implements OnInit {
+  readonly maxDob = this.getTodayDateString();
   horse: Partial<HorseDTO> = {
     horseName: '',
     dob: '',
@@ -55,7 +56,8 @@ export class HorseCreatePage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.preselectStableName = history.state?.['preselectStableName'] || null;
+    const navState = this.router.getCurrentNavigation()?.extras.state;
+    this.preselectStableName = navState?.['preselectStableName'] || null;
 
     if (this.preselectStableName) {
       this.horse.stableName = this.preselectStableName;
@@ -105,6 +107,12 @@ export class HorseCreatePage implements OnInit {
   onSubmit(): void {
     this.error = '';
     this.success = false;
+
+    if (this.horse.dob && this.horse.dob > this.maxDob) {
+      this.error = 'A születési idő nem lehet jövőbeli dátum.';
+      return;
+    }
+
     this.loading = true;
 
     this.horseService.create(this.horse as HorseDTO).subscribe({
@@ -113,6 +121,16 @@ export class HorseCreatePage implements OnInit {
         this.loading = false;
 
         setTimeout(() => {
+          if (this.preselectStableName) {
+            this.router.navigate(['/stables', this.preselectStableName]);
+            return;
+          }
+
+          if (this.isAdmin) {
+            this.router.navigate(['/horses']);
+            return;
+          }
+
           this.router.navigate(['/horses'], { state: { requestSent: true } });
         }, 1200);
       },
@@ -161,5 +179,13 @@ export class HorseCreatePage implements OnInit {
       return item.itemName;
     }
     return `${item.itemName} (${amount})`;
+  }
+
+  private getTodayDateString(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }

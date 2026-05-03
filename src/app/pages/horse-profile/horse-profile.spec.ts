@@ -172,6 +172,27 @@ describe('HorseProfilePage', () => {
     expect(component.horse?.ownerPhone).toBe('123');
   });
 
+  it('does not load owner phone for employees but keeps horse profile visible', async () => {
+    authService.hasAnyRole.and.callFake((roles: string[]) =>
+      roles.includes('EMPLOYEE') || roles.includes('ROLE_EMPLOYEE'),
+    );
+
+    await createComponent();
+
+    expect(userService.getById).not.toHaveBeenCalled();
+    expect(component.horse?.horseName).toBe('Csillag');
+    expect(component.horse?.ownerPhone).toBe('');
+  });
+
+  it('ignores owner phone lookup failures', async () => {
+    userService.getById.and.returnValue(throwError(() => new Error('forbidden')));
+
+    await createComponent();
+
+    expect(component.horse?.horseName).toBe('Csillag');
+    expect(component.horse?.ownerPhone).toBe('');
+  });
+
   it('updates pending feed notice for owner change requests', async () => {
     authService.hasAnyRole.and.callFake((roles: string[]) =>
       roles.includes('OWNER') || roles.includes('ROLE_OWNER'),

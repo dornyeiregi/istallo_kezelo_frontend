@@ -32,6 +32,7 @@ label {
 }
 
 input,
+select,
 textarea {
   padding: 0.6rem 0.8rem;
   border: 1px solid var(--app-border);
@@ -42,9 +43,76 @@ textarea {
 }
 
 input:focus,
+select:focus,
 textarea:focus {
   border-color: var(--app-accent-strong);
   outline: none;
+}
+
+.field-hint {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.bedding-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bedding-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.bedding-select {
+  width: 100%;
+}
+
+.bedding-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bedding-total {
+  color: var(--app-text);
+}
+
+.secondary-button,
+.link-button {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.secondary-button {
+  padding: 0.65rem 1rem;
+  background: #f3e5d8;
+  color: var(--app-primary);
+  font-weight: 600;
+}
+
+.secondary-button:hover {
+  background: #ead7c5;
+}
+
+.link-button {
+  padding: 0.65rem 0.9rem;
+  background: #fbe4e8;
+  color: #b03a53;
+  font-weight: 600;
+}
+
+.link-button:hover {
+  background: #f6d2da;
 }
 
 .submit-button {
@@ -83,4 +151,15 @@ textarea:focus {
   font-weight: 500;
   margin-top: 0.5rem;
   text-align: center;
+}
+
+@media (max-width: 640px) {
+  .bedding-row {
+    grid-template-columns: 1fr;
+  }
+
+  .link-button,
+  .secondary-button {
+    width: 100%;
+  }
 }

@@ -11,6 +11,7 @@ import { ItemDTO } from '../../models/item.model';
 import { FeedSchedDTO } from '../../models/feed-sched.model';
 import { HorseDTO } from '../../models/horse.model';
 import { forkJoin, of } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-stables',
@@ -40,6 +41,7 @@ export class StablesPage implements OnInit {
     private router: Router,
     private feedSchedService: FeedSchedService,
     private itemService: ItemService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -167,7 +169,7 @@ export class StablesPage implements OnInit {
 
   get totalHorseCount(): number {
     return this.stables.reduce((sum, stable) => {
-      return sum + (stable.horses ? stable.horses.length : 0);
+      return sum + this.getActiveHorsesForStable(stable).length;
     }, 0);
   }
 
@@ -178,12 +180,24 @@ export class StablesPage implements OnInit {
     }, 0);
   }
 
+  get canManageStables(): boolean {
+    return this.authService.hasAnyRole(['ADMIN', 'ROLE_ADMIN']);
+  }
+
   get crudActions() {
+    if (!this.canManageStables) {
+      return [];
+    }
+
     return [
       { label: 'Hozzáadás', icon: 'fa-plus', onClick: () => this.addStable() },
       { label: 'Szerkesztés', icon: 'fa-pen-to-square', onClick: () => this.toggleEditMode() },
       { label: 'Törlés', icon: 'fa-trash', onClick: () => this.deleteStable() },
     ];
+  }
+
+  getActiveHorsesForStable(stable: StableDTO): HorseDTO[] {
+    return (stable.horses ?? []).filter((horse) => horse.isActive !== false);
   }
 
   private get activeHorses(): HorseDTO[] {

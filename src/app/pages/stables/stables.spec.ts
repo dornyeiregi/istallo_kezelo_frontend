@@ -6,6 +6,7 @@ import { StablesPage } from './stables';
 import { StableService } from '../../services/stable.service';
 import { FeedSchedService } from '../../services/feed-sched.service';
 import { ItemService } from '../../services/item.service';
+import { AuthService } from '../../services/auth.service';
 import { configurePageTest } from '../../testing/page-test-helpers';
 
 describe('StablesPage', () => {
@@ -14,6 +15,7 @@ describe('StablesPage', () => {
   let stableService: jasmine.SpyObj<StableService>;
   let feedSchedService: jasmine.SpyObj<FeedSchedService>;
   let itemService: jasmine.SpyObj<ItemService>;
+  let authService: jasmine.SpyObj<AuthService>;
   let router: jasmine.SpyObj<Router>;
   let stable: any;
 
@@ -24,6 +26,7 @@ describe('StablesPage', () => {
         { provide: StableService, useValue: stableService },
         { provide: FeedSchedService, useValue: feedSchedService },
         { provide: ItemService, useValue: itemService },
+        { provide: AuthService, useValue: authService },
         { provide: Router, useValue: router },
       ],
     });
@@ -50,6 +53,7 @@ describe('StablesPage', () => {
       'getAllOfHorseById',
     ]);
     itemService = jasmine.createSpyObj<ItemService>('ItemService', ['getAll']);
+    authService = jasmine.createSpyObj<AuthService>('AuthService', ['hasAnyRole']);
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     stableService.getAll.and.returnValue(of([stable] as any));
@@ -57,6 +61,7 @@ describe('StablesPage', () => {
     stableService.delete.and.returnValue(of('ok'));
     feedSchedService.getAllOfHorseById.and.returnValue(of([]));
     itemService.getAll.and.returnValue(of([]));
+    authService.hasAnyRole.and.returnValue(true);
   });
 
   it('shows error when stables cannot be loaded', async () => {
@@ -76,6 +81,14 @@ describe('StablesPage', () => {
 
     expect(router.navigate).toHaveBeenCalledWith(['/stables/new']);
     expect(router.navigate).toHaveBeenCalledWith(['/']);
+  });
+
+  it('hides stable management actions without admin permission', async () => {
+    authService.hasAnyRole.and.returnValue(false);
+
+    await createComponent();
+
+    expect(component.crudActions).toEqual([]);
   });
 
   it('populates editable values when edit mode is enabled', async () => {
@@ -226,6 +239,31 @@ describe('StablesPage', () => {
     expect(component.dailyFeedTotals).toEqual([]);
     expect(component.dailyFeedLoading).toBeFalse();
     expect(feedSchedService.getAllOfHorseById).not.toHaveBeenCalled();
+  });
+
+  it('counts and lists only active horses for a stable', async () => {
+    stableService.getAll.and.returnValue(
+      of([
+        {
+          stableId: 1,
+          stableName: 'Main',
+          strawUsageKg: 5,
+          horses: [
+            { id: 1, horseName: 'Csillag', isActive: true },
+            { id: 2, horseName: 'Arnyek', isActive: false },
+            { id: 3, horseName: 'Villam', isActive: true },
+          ],
+        },
+      ] as any),
+    );
+
+    await createComponent();
+
+    expect(component.totalHorseCount).toBe(2);
+    expect(component.getActiveHorsesForStable(component.stables[0]).map((horse) => horse.horseName)).toEqual([
+      'Csillag',
+      'Villam',
+    ]);
   });
 
   it('builds sorted daily feed totals from item-based and id-based schedules', async () => {

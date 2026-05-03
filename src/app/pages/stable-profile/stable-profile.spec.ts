@@ -200,6 +200,6 @@ describe('StableProfilePage', () => {
 
     await createComponent();
 
-    expect(component.crudActions.map((action) => action.label)).not.toContain('Törlés');
+    expect(component.crudActions).toEqual([]);
   });
 });

@@ -18,6 +18,8 @@ import { StorageDTO } from '../../models/storage.model';
  * Handles creation of a new inventory item and its initial storage record.
  */
 export class StorageItemCreatePage {
+  readonly defaultFeedUnitAmount = 1;
+
   loading = false;
   error: string | null = null;
   success = false;
@@ -58,7 +60,6 @@ export class StorageItemCreatePage {
     name: '',
     itemType: '',
     itemCategory: '',
-    feedUnitAmount: 1,
     packageCount: 0,
     packageSize: 0,
   };
@@ -115,18 +116,13 @@ export class StorageItemCreatePage {
       return;
     }
 
-    if (this.form.feedUnitAmount <= 0) {
-      this.error = 'Az etetési adag mennyiségnek pozitívnak kell lennie.';
-      return;
-    }
-
     this.loading = true;
 
     const itemDto: ItemDTO = {
       name: this.form.name,
       itemType: this.form.itemType,
       itemCategory: this.form.itemCategory,
-      feedUnitAmount: this.form.feedUnitAmount,
+      feedUnitAmount: this.defaultFeedUnitAmount,
     };
 
     this.itemService.create(itemDto).subscribe({

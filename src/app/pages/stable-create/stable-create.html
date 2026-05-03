@@ -26,16 +26,43 @@
     </div>
 
     <div class="form-group">
-      <label for="strawUsage">Napi szalmahasználat (kg)</label>
-      <input
-        type="number"
-        id="strawUsage"
-        name="strawUsageKg"
-        min="0"
-        step="0.1"
-        [(ngModel)]="stable.strawUsageKg"
-        placeholder="Pl. 25"
-      />
+      <label>Napi alomhasználat</label>
+      <p class="field-hint">Nem kötelező. Később az istálló szerkesztésénél is megadható.</p>
+
+      <div class="bedding-list">
+        @for (row of stableBeddingItems; track $index) {
+          <div class="bedding-row">
+            <select class="bedding-select" [(ngModel)]="row.itemId" [ngModelOptions]="{ standalone: true }">
+              <option [ngValue]="null">Válassz alom tételt...</option>
+              @for (item of beddingItems; track item.itemId) {
+                <option [ngValue]="item.itemId">{{ item.name }}</option>
+              }
+            </select>
+            <input
+              type="number"
+              min="0"
+              step="0.1"
+              placeholder="Napi mennyiség (kg)"
+              [(ngModel)]="row.usageKg"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <button type="button" class="link-button" (click)="removeStableBeddingRow($index)">
+              Törlés
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="bedding-footer">
+        <button type="button" class="secondary-button" (click)="addStableBeddingRow()">
+          Alom tétel hozzáadása
+        </button>
+        @if (stableBeddingItems.length > 0) {
+          <div class="bedding-total">
+            Összesen: <strong>{{ totalBeddingUsage | number: '1.0-2' }} kg/nap</strong>
+          </div>
+        }
+      </div>
     </div>
 
     <button type="submit" [disabled]="stableForm.invalid || loading" class="submit-button">

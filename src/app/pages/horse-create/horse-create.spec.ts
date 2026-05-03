@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
@@ -21,6 +21,7 @@ describe('HorseCreatePage', () => {
   let feedSchedService: jasmine.SpyObj<FeedSchedService>;
   let feedSchedItemService: jasmine.SpyObj<FeedSchedItemService>;
   let router: jasmine.SpyObj<Router>;
+  let currentNavigation: any = null;
   async function createComponent() {
     await configurePageTest(HorseCreatePage, {
       emptyTemplate: true,
@@ -49,7 +50,7 @@ describe('HorseCreatePage', () => {
     feedSchedItemService = jasmine.createSpyObj<FeedSchedItemService>('FeedSchedItemService', [
       'getAll',
     ]);
-    router = jasmine.createSpyObj<Router>('Router', ['navigate']);
+    router = jasmine.createSpyObj<Router>('Router', ['navigate', 'getCurrentNavigation']);
 
     horseService.create.and.returnValue(of({ id: 1 } as any));
     stableService.getAll.and.returnValue(of([{ stableName: 'Barn' }] as any));
@@ -59,10 +60,12 @@ describe('HorseCreatePage', () => {
       of([{ feedSchedId: 5, itemName: 'Szena', amount: 2 }] as any),
     );
     authService.hasAnyRole.and.returnValue(true);
+    currentNavigation = null;
+    router.getCurrentNavigation.and.callFake(() => currentNavigation);
   });
 
   it('preselects stable from navigation state and loads admin lookups', async () => {
-    spyOnProperty(history, 'state', 'get').and.returnValue({ preselectStableName: 'Barn' });
+    currentNavigation = { extras: { state: { preselectStableName: 'Barn' } } };
     authService.hasAnyRole.and.returnValue(true);
 
     await createComponent();
@@ -83,7 +86,6 @@ describe('HorseCreatePage', () => {
   });
 
   it('does not load admin-only lookups for non-admins', async () => {
-    spyOnProperty(history, 'state', 'get').and.returnValue({});
     authService.hasAnyRole.and.returnValue(false);
 
     await createComponent();
@@ -95,7 +97,6 @@ describe('HorseCreatePage', () => {
 
   it('shows error when horse creation fails', async () => {
     horseService.create.and.returnValue(throwError(() => new Error('fail')));
-    spyOnProperty(history, 'state', 'get').and.returnValue({});
     authService.hasAnyRole.and.returnValue(true);
 
     await createComponent();
@@ -106,8 +107,59 @@ describe('HorseCreatePage', () => {
     expect(component.loading).toBeFalse();
   });
 
+  it('blocks future birth dates before submit', async () => {
+    authService.hasAnyRole.and.returnValue(true);
+
+    await createComponent();
+
+    component.horse.dob = '2999-01-01';
+    component.onSubmit();
+
+    expect(horseService.create).not.toHaveBeenCalled();
+    expect(component.error).toBe('A születési idő nem lehet jövőbeli dátum.');
+    expect(component.loading).toBeFalse();
+  });
+
+  it('navigates to horses without request toast state after admin creation', fakeAsync(async () => {
+    authService.hasAnyRole.and.returnValue(true);
+
+    await createComponent();
+
+    component.horse.dob = '2020-01-01';
+    component.onSubmit();
+    tick(1200);
+
+    expect(router.navigate).toHaveBeenCalledWith(['/horses']);
+  }));
+
+  it('navigates back to the stable after creation when opened from a stable', fakeAsync(async () => {
+    currentNavigation = { extras: { state: { preselectStableName: 'Barn' } } };
+    authService.hasAnyRole.and.returnValue(true);
+
+    await createComponent();
+
+    component.horse.dob = '2020-01-01';
+    component.onSubmit();
+    tick(1200);
+
+    expect(router.navigate).toHaveBeenCalledWith(['/stables', 'Barn']);
+  }));
+
+  it('keeps request-sent state for non-admin creation', fakeAsync(async () => {
+    authService.hasAnyRole.and.returnValue(false);
+
+    await createComponent();
+
+    component.horse.dob = '2020-01-01';
+    component.onSubmit();
+    tick(1200);
+
+    expect(router.navigate).toHaveBeenCalledWith(['/horses'], {
+      state: { requestSent: true },
+    });
+  }));
+
   it('builds feed schedule select label with item details', async () => {
-    spyOnProperty(history, 'state', 'get').and.returnValue({});
     authService.hasAnyRole.and.returnValue(true);
 
     await createComponent();
@@ -121,5 +173,15 @@ describe('HorseCreatePage', () => {
 
     expect(label).toContain('REGGEL_5');
     expect(label).toContain('Szena (2)');
+  });
+
+  it('ignores stale browser history state when there is no navigation state', async () => {
+    spyOnProperty(history, 'state', 'get').and.returnValue({ preselectStableName: 'Barn' });
+    authService.hasAnyRole.and.returnValue(true);
+
+    await createComponent();
+
+    expect(component.preselectStableName).toBeNull();
+    expect(component.horse.stableName).toBe('');
   });
 });

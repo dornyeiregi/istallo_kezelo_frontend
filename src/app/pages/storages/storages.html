@@ -22,22 +22,26 @@
   } @else {
     @if (deleteMode) {
       <div class="delete-warning">Törlés mód aktív — kattints a törölni kívánt tárolóra.</div>
+    } @else if (stockActionMode === 'add') {
+      <div class="delete-warning">Készlet hozzáadás mód aktív — kattints a módosítani kívánt tárolóra.</div>
+    } @else if (stockActionMode === 'remove') {
+      <div class="delete-warning">Készlet levonás mód aktív — kattints a módosítani kívánt tárolóra.</div>
     }
 
     <section class="overview">
       <article class="overview-card">
-        <span class="label">Tárolt összes mennyiség</span>
-        <span class="value">{{ totalStored | number: '1.0-1' }} kg</span>
+        <span class="label">Napi összes felhasznált szálas takarmány</span>
+        <span class="value">{{ getDailyInUseByType('HAY') | number: '1.0-1' }} kg</span>
       </article>
 
       <article class="overview-card">
-        <span class="label">Használatban</span>
-        <span class="value">{{ totalInUse | number: '1.0-1' }} kg</span>
+        <span class="label">Napi összes felhasznált abraktakarmány</span>
+        <span class="value">{{ getDailyInUseByType('FEED') | number: '1.0-1' }} kg</span>
       </article>
 
       <article class="overview-card">
-        <span class="label">Tárolók száma</span>
-        <span class="value">{{ totalItems }}</span>
+        <span class="label">Napi összes felhasznált alom</span>
+        <span class="value">{{ getDailyInUseByType('BEDDING') | number: '1.0-1' }} kg</span>
       </article>
     </section>
 
@@ -51,8 +55,9 @@
           <div
             class="storage-card"
             [class.delete-mode]="deleteMode"
-            [class.selected]="selectedStorage?.storageId === storage.storageId"
-            (click)="editMode ? null : onStorageClick(storage)"
+            [class.interactive]="isNameEditMode || stockActionMode !== null"
+            [class.selected]="stockActionMode !== null && selectedStorage?.storageId === storage.storageId"
+            (click)="onStorageClick(storage)"
           >
             <ng-container
               [ngTemplateOutlet]="cardTemplate"
@@ -73,8 +78,9 @@
           <div
             class="storage-card"
             [class.delete-mode]="deleteMode"
-            [class.selected]="selectedStorage?.storageId === storage.storageId"
-            (click)="editMode ? null : onStorageClick(storage)"
+            [class.interactive]="isNameEditMode || stockActionMode !== null"
+            [class.selected]="stockActionMode !== null && selectedStorage?.storageId === storage.storageId"
+            (click)="onStorageClick(storage)"
           >
             <ng-container
               [ngTemplateOutlet]="cardTemplate"
@@ -88,7 +94,7 @@
 </div>
 
 <ng-template #cardTemplate let-storage="storage">
-  @if (!editMode) {
+  @if (!isNameEditMode) {
     <div class="storage-card-header">
       <div class="title-block">
         <h3>{{ getItemName(storage) }}</h3>
@@ -102,7 +108,7 @@
       <p><strong>Használatban:</strong> {{ storage.amountInUse | number: '1.0-1' }} kg</p>
       <p>
         <strong>Elérhető:</strong>
-        {{ storage.amountStored - storage.amountInUse | number: '1.0-1' }} kg
+        {{ getAvailableAmount(storage) | number: '1.0-1' }} kg
       </p>
     </div>
 
@@ -110,6 +116,8 @@
       <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
       @if (storage.daysRemaining !== null && storage.daysRemaining !== undefined) {
         {{ storage.daysRemaining }} napra elegendő készlet
+      } @else if (!storage.amountInUse || storage.amountInUse <= 0) {
+        Nincs használatban
       } @else {
         Nincs adat a készletről
       }

@@ -166,10 +166,22 @@ export class HorseProfilePage implements OnInit {
 
   private populateOwnerPhone(horse: HorseDTO): void {
     if (!horse.ownerId) return;
+    if (this.authService.hasAnyRole(['EMPLOYEE', 'ROLE_EMPLOYEE'])) {
+      if (this.horse) {
+        this.horse.ownerPhone = '';
+      }
+      return;
+    }
+
     this.userService.getById(horse.ownerId).subscribe({
       next: (user) => {
         if (this.horse) {
           this.horse.ownerPhone = user.phone || '';
+        }
+      },
+      error: () => {
+        if (this.horse) {
+          this.horse.ownerPhone = '';
         }
       },
     });

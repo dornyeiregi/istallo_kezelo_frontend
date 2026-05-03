@@ -70,18 +70,18 @@
             >
               <div class="stable-card-header">
                 <h3>{{ stable.stableName }}</h3>
-                <span class="horse-count">{{ stable.horses.length || 0 }} ló</span>
+                <span class="horse-count">{{ getActiveHorsesForStable(stable).length || 0 }} ló</span>
               </div>
 
-              @if (stable.horses.length > 0) {
+              @if (getActiveHorsesForStable(stable).length > 0) {
                 <ul class="horse-list">
-                  @for (horse of stable.horses.slice(0, 3); track horse.horseName) {
+                  @for (horse of getActiveHorsesForStable(stable).slice(0, 3); track horse.horseName) {
                     <li class="horse-item">{{ horse.horseName }}</li>
                   }
                 </ul>
 
-                @if (stable.horses.length > 3) {
-                  <p class="more">+{{ stable.horses.length - 3 }} további ló</p>
+                @if (getActiveHorsesForStable(stable).length > 3) {
+                  <p class="more">+{{ getActiveHorsesForStable(stable).length - 3 }} további ló</p>
                 }
               } @else {
                 <p class="no-horses">Nincs ló ebben az istállóban.</p>

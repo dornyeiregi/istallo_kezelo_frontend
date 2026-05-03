@@ -69,6 +69,38 @@ describe('StoragesPage', () => {
     expect(component.loading).toBeFalse();
   });
 
+  it('caps available amount at zero', async () => {
+    await createComponent();
+
+    expect(
+      component.getAvailableAmount({ ...storage, amountStored: 3, amountInUse: 5 } as any),
+    ).toBe(0);
+    expect(component.getAvailableAmount({ ...storage, amountStored: 8, amountInUse: 5 } as any)).toBe(3);
+  });
+
+  it('sums daily in-use amounts by item type', async () => {
+    storageService.getAll.and.returnValue(
+      of([
+        { storageId: 1, itemId: 2, amountStored: 10, amountInUse: 2 },
+        { storageId: 2, itemId: 3, amountStored: 8, amountInUse: 1.5 },
+        { storageId: 3, itemId: 4, amountStored: 12, amountInUse: 4 },
+      ] as any),
+    );
+    itemService.getAll.and.returnValue(
+      of([
+        { itemId: 2, name: 'Szena', itemType: 'HAY', itemCategory: 'CONSUMABLE' },
+        { itemId: 3, name: 'Abrak', itemType: 'FEED', itemCategory: 'CONSUMABLE' },
+        { itemId: 4, name: 'Forgacs', itemType: 'BEDDING', itemCategory: 'OBJECT' },
+      ] as any),
+    );
+
+    await createComponent();
+
+    expect(component.getDailyInUseByType('HAY')).toBe(2);
+    expect(component.getDailyInUseByType('FEED')).toBe(1.5);
+    expect(component.getDailyInUseByType('BEDDING')).toBe(4);
+  });
+
   it('validates empty edited storage name', async () => {
     await createComponent();
 
@@ -77,6 +109,14 @@ describe('StoragesPage', () => {
 
     expect(itemService.update).not.toHaveBeenCalled();
     expect(component.error).toBe('A név nem lehet üres.');
+  });
+
+  it('does not select storage on click in normal mode', async () => {
+    await createComponent();
+
+    component.onStorageClick(storage as any);
+
+    expect(component.selectedStorage).toBeNull();
   });
 
   it('shows toast when add stock modal is opened without selection', async () => {
@@ -99,6 +139,20 @@ describe('StoragesPage', () => {
     expect(component.modalError).toBeNull();
   });
 
+  it('activates add stock mode from CRUD menu and opens modal on card click', async () => {
+    await createComponent();
+
+    component.toggleStockActionMode('add');
+
+    expect(component.editMode).toBeTrue();
+    expect(component.stockActionMode).toBe('add');
+
+    component.onStorageClick(storage as any);
+
+    expect(component.selectedStorage).toEqual(storage as any);
+    expect(component.showAddStockModal).toBeTrue();
+  });
+
   it('validates add stock modal input', async () => {
     await createComponent();
 
@@ -115,7 +169,8 @@ describe('StoragesPage', () => {
   it('updates stock amount on successful add stock', async () => {
     await createComponent();
 
-    component.selectedStorage = { ...storage } as any;
+    component.toggleStockActionMode('add');
+    component.onStorageClick({ ...storage } as any);
     component.addStockServings = 2;
     component.addStockServingKg = 3;
 
@@ -125,8 +180,10 @@ describe('StoragesPage', () => {
       1,
       jasmine.objectContaining({ amountStored: 16 }),
     );
-    expect(component.selectedStorage?.amountStored).toBe(16);
+    expect(component.selectedStorage).toBeNull();
     expect(component.showAddStockModal).toBeFalse();
+    expect(component.stockActionMode).toBeNull();
+    expect(component.editMode).toBeFalse();
     expect(component.toastMessage).toBe('Készlet sikeresen hozzáadva.');
   });
 
@@ -158,7 +215,8 @@ describe('StoragesPage', () => {
   it('updates stock amount on successful remove stock', async () => {
     await createComponent();
 
-    component.selectedStorage = { ...storage } as any;
+    component.toggleStockActionMode('remove');
+    component.onStorageClick({ ...storage } as any);
     component.stockChangeAmount = 4;
 
     component.confirmRemoveStock();
@@ -167,8 +225,10 @@ describe('StoragesPage', () => {
       1,
       jasmine.objectContaining({ amountStored: 6 }),
     );
-    expect(component.selectedStorage?.amountStored).toBe(6);
+    expect(component.selectedStorage).toBeNull();
     expect(component.showRemoveStockModal).toBeFalse();
+    expect(component.stockActionMode).toBeNull();
+    expect(component.editMode).toBeFalse();
     expect(component.toastMessage).toBe('Készlet sikeresen levonva.');
   });
 

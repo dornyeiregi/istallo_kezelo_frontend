@@ -60,12 +60,13 @@ describe('HorsesPage', () => {
     spyOnProperty(history, 'state', 'get').and.returnValue({});
   });
 
-  it('blocks inactive view without admin permission', async () => {
+  it('blocks inactive view switching without admin permission', async () => {
     await createComponent();
 
     component.setView('INACTIVE');
 
-    expect(component.error).toBe('Nincs jogosultság az inaktív lovak megtekintéséhez.');
+    expect(component.activeView).toBe('MINE');
+    expect(component.error).toBe('');
     expect(horseService.getInactive).not.toHaveBeenCalled();
   });
 
@@ -96,24 +97,51 @@ describe('HorsesPage', () => {
     expect(component.error).toBe('Nem sikerült betölteni a lovakat.');
   });
 
-  it('loads pending horses for owners when switching to the pending view', async () => {
+  it('limits owners to the own-horses view', async () => {
     roles = ['OWNER'];
 
     await createComponent();
 
+    expect(component.availableViews).toEqual(['MINE']);
+    expect(component.activeView).toBe('MINE');
+
     component.setView('PENDING');
 
-    expect(horseService.getMyRequests).toHaveBeenCalled();
-    expect(component.activeView).toBe('PENDING');
+    expect(component.activeView).toBe('MINE');
+    expect(horseService.getMyRequests).toHaveBeenCalledTimes(1);
   });
 
-  it('blocks pending view without permission', async () => {
+  it('filters horses by name case-insensitively', async () => {
+    await createComponent();
+
+    component.horses = [
+      { id: 1, horseName: 'Csillag' },
+      { id: 2, horseName: 'Villam' },
+      { id: 3, horseName: 'Fecske' },
+    ] as any;
+
+    component.searchTerm = 'lla';
+    expect(component.filteredHorses.map((horse) => horse.horseName)).toEqual(['Csillag', 'Villam']);
+
+    component.searchTerm = 'FECS';
+    expect(component.filteredHorses.map((horse) => horse.horseName)).toEqual(['Fecske']);
+
+    component.searchTerm = '   ';
+    expect(component.filteredHorses.map((horse) => horse.horseName)).toEqual([
+      'Csillag',
+      'Villam',
+      'Fecske',
+    ]);
+  });
+
+  it('blocks unavailable view switching without changing the current list', async () => {
     await createComponent();
 
     component.setView('PENDING');
 
-    expect(component.error).toBe('Nincs jogosultság a függő lovak megtekintéséhez.');
-    expect(component.horses).toEqual([]);
+    expect(component.activeView).toBe('MINE');
+    expect(component.error).toBe('');
+    expect(component.horses).toEqual([{ id: 1, horseName: 'Csillag' }] as any);
   });
 
   it('navigates differently from card clicks in normal and edit mode', async () => {
@@ -223,6 +251,15 @@ describe('HorsesPage', () => {
     await createComponent();
 
     expect(component.crudActions.map((action) => action.label)).not.toContain('Törlés');
+  });
+
+  it('hides horse add and edit actions for employees', async () => {
+    roles = ['EMPLOYEE'];
+
+    await createComponent();
+
+    expect(component.crudActions.map((action) => action.label)).not.toContain('Új ló hozzáadása');
+    expect(component.crudActions.map((action) => action.label)).not.toContain('Szerkesztés');
   });
 
   it('exposes admin crud actions and sex labels', async () => {

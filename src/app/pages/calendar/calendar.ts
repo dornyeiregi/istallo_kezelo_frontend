@@ -54,6 +54,12 @@ export class CalendarPage implements OnInit, OnDestroy {
   private treatmentById = new Map<number, TreatmentDTO>();
   private farrierById = new Map<number, FarrierAppDTO>();
   private tooltipEl?: HTMLDivElement;
+  readonly eventTypeLabels: Record<string, string> = {
+    SHOT: 'Oltás',
+    TREATMENT: 'Kezelés',
+    FARRIER_APP: 'Patkolás',
+    CUSTOM: 'Egyéb',
+  };
 
   private viewStart: string | null = null;
   private viewEnd: string | null = null;
@@ -104,6 +110,21 @@ export class CalendarPage implements OnInit, OnDestroy {
 
   get canCreateAppointments(): boolean {
     return this.authService.hasAnyRole(['ADMIN', 'OWNER', 'ROLE_ADMIN', 'ROLE_OWNER']);
+  }
+
+  get availableEventTypes(): string[] {
+    const types = ['all'];
+    if (this.canViewShots) {
+      types.push('SHOT');
+    }
+    if (this.canViewTreatments) {
+      types.push('TREATMENT');
+    }
+    if (this.canViewFarrierApps) {
+      types.push('FARRIER_APP');
+    }
+    types.push('CUSTOM');
+    return types;
   }
 
   toggleAddMenu(): void {
@@ -186,8 +207,8 @@ export class CalendarPage implements OnInit, OnDestroy {
   }
 
   private onDatesSet(arg: DatesSetArg): void {
-    this.viewStart = this.toIsoDate(arg.start);
-    this.viewEnd = this.toIsoDate(arg.end);
+    this.viewStart = this.toCalendarDateString(arg.start);
+    this.viewEnd = this.toCalendarDateString(arg.end);
     this.reload();
   }
 
@@ -470,8 +491,25 @@ export class CalendarPage implements OnInit, OnDestroy {
     return (eventType || '').toUpperCase().replace(/[^A-Z]/g, '_');
   }
 
-  private toIsoDate(date: Date): string {
-    return date.toISOString().split('T')[0];
+  private toCalendarDateString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseCalendarDate(value: string): Date {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      return parsed;
+    }
+
+    return new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
   }
 
   onFilterChange(): void {
@@ -491,12 +529,14 @@ export class CalendarPage implements OnInit, OnDestroy {
         this.canViewShots = !!settings.viewShots;
         this.canViewTreatments = !!settings.viewTreatments;
         this.canViewFarrierApps = !!settings.viewFarrierApps;
+        this.ensureValidSelectedEventType();
         this.reload();
       },
       error: () => {
         this.canViewShots = false;
         this.canViewTreatments = false;
         this.canViewFarrierApps = false;
+        this.ensureValidSelectedEventType();
         this.reload();
       },
     });
@@ -506,6 +546,10 @@ export class CalendarPage implements OnInit, OnDestroy {
     const typeFilter = this.selectedEventType;
     const horseFilter = this.selectedHorseId;
     const filtered = this.allEvents.filter((event) => {
+      if (!this.canViewEventType(event.eventType)) {
+        return false;
+      }
+
       if (typeFilter !== 'all') {
         const normalized = this.normalizeEventType(event.eventType);
         if (typeFilter === 'SHOT') {
@@ -533,6 +577,36 @@ export class CalendarPage implements OnInit, OnDestroy {
     this.setCalendarEvents(filtered);
   }
 
+  private ensureValidSelectedEventType(): void {
+    if (!this.availableEventTypes.includes(this.selectedEventType)) {
+      this.selectedEventType = 'all';
+    }
+  }
+
+  private canViewEventType(eventType: string): boolean {
+    const normalized = this.normalizeEventType(eventType);
+
+    if (normalized === 'SHOT' || normalized === 'SHOT_DUE') {
+      return this.canViewShots;
+    }
+
+    if (normalized === 'TREATMENT' || normalized === 'TREATMENT_DUE') {
+      return this.canViewTreatments;
+    }
+
+    if (
+      normalized === 'FARRIER_APP' ||
+      normalized === 'FARRIERAPP' ||
+      normalized === 'FARRIER' ||
+      normalized === 'FARRIER_APP_DUE' ||
+      normalized === 'FARRIERAPP_DUE'
+    ) {
+      return this.canViewFarrierApps;
+    }
+
+    return true;
+  }
+
   private buildDueShotEvents(
     shots: ShotDTO[],
     horses: HorseDTO[],
@@ -550,13 +624,13 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (!shot.frequencyValue || !shot.frequencyUnit) return;
       if (!shot.horseIds || shot.horseIds.length === 0) return;
 
-      const baseDate = new Date(shot.date);
+      const baseDate = this.parseCalendarDate(shot.date);
       if (Number.isNaN(baseDate.getTime())) return;
 
       const nextDate = this.addFrequency(baseDate, shot.frequencyValue, shot.frequencyUnit);
       if (!nextDate) return;
 
-      const nextIso = this.toIsoDate(nextDate);
+      const nextIso = this.toCalendarDateString(nextDate);
       if (start && nextIso < start) return;
       if (end && nextIso >= end) return;
 
@@ -591,7 +665,7 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (!treatment.frequencyValue || !treatment.frequencyUnit) return;
       if (!treatment.horseIds || treatment.horseIds.length === 0) return;
 
-      const baseDate = new Date(treatment.date);
+      const baseDate = this.parseCalendarDate(treatment.date);
       if (Number.isNaN(baseDate.getTime())) return;
 
       const nextDate = this.addFrequency(
@@ -601,7 +675,7 @@ export class CalendarPage implements OnInit, OnDestroy {
       );
       if (!nextDate) return;
 
-      const nextIso = this.toIsoDate(nextDate);
+      const nextIso = this.toCalendarDateString(nextDate);
       if (start && nextIso < start) return;
       if (end && nextIso >= end) return;
 
@@ -636,13 +710,13 @@ export class CalendarPage implements OnInit, OnDestroy {
       if (!app.frequencyValue || !app.frequencyUnit) return;
       if (!app.horseIds || app.horseIds.length === 0) return;
 
-      const baseDate = new Date(app.appointmentDate);
+      const baseDate = this.parseCalendarDate(app.appointmentDate);
       if (Number.isNaN(baseDate.getTime())) return;
 
       const nextDate = this.addFrequency(baseDate, app.frequencyValue, app.frequencyUnit);
       if (!nextDate) return;
 
-      const nextIso = this.toIsoDate(nextDate);
+      const nextIso = this.toCalendarDateString(nextDate);
       if (start && nextIso < start) return;
       if (end && nextIso >= end) return;
 

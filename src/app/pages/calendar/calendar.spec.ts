@@ -196,6 +196,47 @@ describe('CalendarPage', () => {
     expect(events[0].title).toContain('Oltás');
   });
 
+  it('hides disallowed event types for employees from filters and rendered events', async () => {
+    authService.hasAnyRole.and.callFake((roles: string[]) =>
+      roles.includes('EMPLOYEE') || roles.includes('ROLE_EMPLOYEE'),
+    );
+    settingsService.getEmployeeAccess.and.returnValue(
+      of({ viewShots: false, viewTreatments: true, viewFarrierApps: false }),
+    );
+
+    await createComponent();
+
+    expect(component.availableEventTypes).toEqual(['all', 'TREATMENT', 'CUSTOM']);
+
+    (component as any).allEvents = [
+      { eventType: 'SHOT', horseId: 1, eventDate: '2026-05-01', horseName: 'Csillag' },
+      { eventType: 'TREATMENT', horseId: 1, eventDate: '2026-05-02', horseName: 'Csillag' },
+      { eventType: 'FARRIER_APP', horseId: 1, eventDate: '2026-05-03', horseName: 'Csillag' },
+      { eventType: 'CUSTOM', horseId: 1, eventDate: '2026-05-04', horseName: 'Csillag' },
+    ];
+
+    component.onFilterChange();
+
+    const events = component.calendarOptions.events as any[];
+    expect(events.map((event) => event.title)).toEqual([
+      jasmine.stringMatching('Kezelés'),
+      jasmine.stringMatching('Egyéb esemény'),
+    ]);
+  });
+
+  it('resets selected type filter when employee access removes it', async () => {
+    await createComponent();
+
+    component.selectedEventType = 'SHOT';
+    component.canViewShots = false;
+    component.canViewTreatments = false;
+    component.canViewFarrierApps = false;
+
+    (component as any).ensureValidSelectedEventType();
+
+    expect(component.selectedEventType).toBe('all');
+  });
+
   it('routes treatment and farrier due events to the proper profile page', async () => {
     await createComponent();
 
@@ -248,6 +289,42 @@ describe('CalendarPage', () => {
     expect((component as any).viewStart).toBe('2026-05-01');
     expect((component as any).viewEnd).toBe('2026-06-01');
     expect(component.reload).toHaveBeenCalled();
+  });
+
+  it('formats visible range dates without utc day shifting', async () => {
+    await createComponent();
+
+    expect((component as any).toCalendarDateString(new Date(2026, 4, 1))).toBe('2026-05-01');
+    expect((component as any).parseCalendarDate('2026-05-01')).toEqual(new Date(2026, 4, 1));
+  });
+
+  it('builds due shot dates in local calendar days', async () => {
+    await createComponent();
+
+    const result = (component as any).buildDueShotEvents(
+      [
+        {
+          shotId: 9,
+          date: '2026-05-01',
+          frequencyValue: 30,
+          frequencyUnit: 'DAY',
+          horseIds: [1],
+        },
+      ],
+      [{ id: 1, horseName: 'Csillag' }],
+      '2026-05-01',
+      '2026-06-30',
+    );
+
+    expect(result).toEqual([
+      jasmine.objectContaining({
+        horseId: 1,
+        horseName: 'Csillag',
+        eventType: 'SHOT_DUE',
+        eventDate: '2026-05-31',
+        relatedEntityId: 9,
+      }),
+    ]);
   });
 
   it('shows and removes tooltip handlers on mounted events', async () => {

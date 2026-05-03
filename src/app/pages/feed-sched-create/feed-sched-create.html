@@ -81,7 +81,7 @@
 
     <div class="form-group item-list">
       <label>Összetevők</label>
-      <p class="muted">Mértékegység: kg/adag.</p>
+      <p class="muted">A megadott mennyiségek kilogrammban értendők.</p>
 
       <div class="item-section">
         <p class="section-title">Széna</p>
@@ -105,7 +105,7 @@
                 [(ngModel)]="itemAmounts[item.itemId!]"
                 [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
                 [required]="selectedItemIds.has(toNumber(item.itemId!))"
-                placeholder="Mennyiség (kg/adag)"
+                placeholder="Mennyiség"
               />
             </label>
           }
@@ -134,7 +134,7 @@
                 [(ngModel)]="itemAmounts[item.itemId!]"
                 [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
                 [required]="selectedItemIds.has(toNumber(item.itemId!))"
-                placeholder="Mennyiség (kg/adag)"
+                placeholder="Mennyiség"
               />
             </label>
           }
@@ -163,7 +163,7 @@
                 [(ngModel)]="itemAmounts[item.itemId!]"
                 [disabled]="!selectedItemIds.has(toNumber(item.itemId!))"
                 [required]="selectedItemIds.has(toNumber(item.itemId!))"
-                placeholder="Mennyiség (kg/adag)"
+                placeholder="Mennyiség"
               />
             </label>
           }
