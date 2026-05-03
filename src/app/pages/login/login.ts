@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AuthResponse } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
@@ -16,7 +16,6 @@ export class LoginPage implements OnInit {
   form!: FormGroup;
   loading = false;
   error = '';
-  successMessage = '';
   private returnUrl: string | null = null;
 
   constructor(
@@ -33,16 +32,6 @@ export class LoginPage implements OnInit {
     });
 
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    const registered = this.route.snapshot.queryParamMap.get('registered');
-    const prefilledUsername = this.route.snapshot.queryParamMap.get('username');
-
-    if (registered === 'true') {
-      this.successMessage = 'Sikeres regisztráció! Jelentkezz be az imént megadott adatokkal.';
-    }
-
-    if (prefilledUsername) {
-      this.form.patchValue({ username: prefilledUsername });
-    }
   }
 
   submit(): void {

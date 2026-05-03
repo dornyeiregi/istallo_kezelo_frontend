@@ -1,21 +1,21 @@
 :root {
-  --app-bg: #f7f7fa;
+  --app-bg: #f4f7f2;
   --app-surface: #ffffff;
-  --app-text: #3b2a30;
-  --app-primary: #6a1e2f;
-  --app-accent: #e05d74;
-  --app-accent-rgb: 224, 93, 116;
-  --app-accent-deep: #c5354f;
-  --app-accent-strong: #a25565;
-  --app-border: #f2b6c0;
-  --app-muted: #84606c;
-  --app-chip-bg: #fbe3e8;
-  --app-chip-text: #f8f3f5;
-  --app-nav-start: #401823;
-  --app-nav-end: #732c3e;
-  --app-danger: #b52b27;
-  --app-danger-bg: #fbeaea;
-  --app-danger-border: #d9534f;
+  --app-text: #2d3b35;
+  --app-primary: #2f4f3b;
+  --app-accent: #5d8a72;
+  --app-accent-rgb: 93, 138, 114;
+  --app-accent-deep: #3f6a54;
+  --app-accent-strong: #3f6a54;
+  --app-border: #cfe0d5;
+  --app-muted: #6b7f74;
+  --app-chip-bg: #e4efe7;
+  --app-chip-text: #f8f9f7;
+  --app-nav-start: #1f3a2c;
+  --app-nav-end: #3a5a45;
+  --app-danger: #9a2a27;
+  --app-danger-bg: #f5eded;
+  --app-danger-border: #c84a46;
 }
 
 :root[data-theme='sage'] {

@@ -113,15 +113,6 @@ input[type='password']:focus {
   font-size: 0.95rem;
 }
 
-.success {
-  background: #e9f9ef;
-  color: #2a7c47;
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  border: 1px solid #b8e4c8;
-}
-
 button[type='submit'] {
   display: inline-flex;
   align-items: center;
@@ -165,20 +156,15 @@ button[type='submit']:disabled {
   }
 }
 
-.switch-link {
+.access-note {
   margin-top: 1.5rem;
-  color: #7c5a64;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: var(--app-chip-bg);
+  border: 1px solid var(--app-border);
+  color: var(--app-primary);
   text-align: center;
-}
-
-.switch-link a {
-  color: var(--app-accent);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.switch-link a:hover {
-  text-decoration: underline;
+  line-height: 1.5;
 }
 
 @media (max-width: 960px) {

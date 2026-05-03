@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
-import { AuthResponse, AuthUser, LoginPayload, RegisterPayload } from '../models/auth.model';
+import { AuthResponse, AuthUser, LoginPayload } from '../models/auth.model';
 import { API_BASE_URL } from '../config';
 
 const TOKEN_KEY = 'auth.token';
@@ -28,10 +28,6 @@ export class AuthService {
         this.currentUserSubject.next(response.user);
       }),
     );
-  }
-
-  register(payload: RegisterPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiBase}/signup`, payload);
   }
 
   logout(): void {

@@ -35,7 +35,6 @@
         </label>
 
         <div class="error" *ngIf="error">{{ error }}</div>
-        <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
 
         <button type="submit" [disabled]="loading">
           <ng-container *ngIf="loading; else loginBtn">
@@ -48,10 +47,10 @@
         </button>
       </form>
 
-      <p class="switch-link">
-        Még nincs fiókod?
-        <a routerLink="/register">Regisztrálj új felhasználót</a>.
-      </p>
+      <div class="access-note">
+        Új felhasználót csak adminisztrátor tud hozzáadni. Hozzáférés igényléséhez keresd az
+        adminisztrátort.
+      </div>
     </div>
   </section>
 </div>

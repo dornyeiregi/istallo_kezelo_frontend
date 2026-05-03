@@ -319,7 +319,7 @@ const defaultProviders = [
   {
     provide: ThemeService,
     useValue: {
-      getTheme: () => 'rose',
+      getTheme: () => 'sage',
       setTheme: () => undefined,
     },
   },

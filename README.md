@@ -53,7 +53,7 @@ A legfontosabb sorok:
 
 ```env
 APP_HOST_IP=192.0.2.10
-JWT_SECRET=change-this-to-a-long-random-secret
+JWT_SECRET=change-this-to-a-long-random-secret-123456
 APP_MAIL_ENABLED=true
 APP_MAIL_FROM=your-email@example.com
 APP_MAIL_TO=
@@ -66,7 +66,7 @@ SPRING_MAIL_PASSWORD=your-smtp-or-app-password
 Mit kell átírni?
 
 - `APP_HOST_IP`: annak a gépnek a helyi IP-címe, amelyen a Docker fut. A `192.0.2.10` csak példa, ezt mindenképp írd át.
-- `JWT_SECRET`: saját hosszú titok
+- `JWT_SECRET`: saját titok, legalább 32 karakter hosszúsággal
 - `APP_MAIL_FROM`: a saját email címed
 - `SPRING_MAIL_USERNAME`: ugyanaz legyen, mint az `APP_MAIL_FROM`
 - `SPRING_MAIL_PASSWORD`: az `APP_MAIL_FROM` email-címhez tartozó, alkalmazás számára használt SMTP jelszó vagy app password

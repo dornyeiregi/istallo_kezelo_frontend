@@ -8,7 +8,6 @@ import { StablesPage } from './pages/stables/stables';
 import { StableProfilePage } from './pages/stable-profile/stable-profile';
 import { StableCreatePage } from './pages/stable-create/stable-create';
 import { LoginPage } from './pages/login/login';
-import { RegisterPage } from './pages/register/register';
 import { authGuard } from './guards/auth.guard';
 import { HorseEditPage } from './pages/horse-edit/horse-edit';
 import { StoragesPage } from './pages/storages/storages';
@@ -32,7 +31,6 @@ import { RequestsPage } from './pages/requests/requests';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
-  { path: 'register', component: RegisterPage },
   {
     path: '',
     component: HomePage,

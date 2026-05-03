@@ -52,14 +52,14 @@ export class SettingsPage implements OnInit {
 
   themes: { value: AppTheme; label: string; description: string }[] = [
     {
-      value: 'rose',
-      label: 'Rose',
-      description: 'Rózsaszín téma',
-    },
-    {
       value: 'sage',
       label: 'Sage',
       description: 'Zöldes paletta',
+    },
+    {
+      value: 'rose',
+      label: 'Rose',
+      description: 'Rózsaszín téma',
     },
   ];
 

@@ -8,12 +8,12 @@ export type AppTheme = 'rose' | 'sage';
 })
 export class ThemeService {
   private readonly storageKey = 'app.theme';
-  private readonly themeSubject = new BehaviorSubject<AppTheme>('rose');
+  private readonly themeSubject = new BehaviorSubject<AppTheme>('sage');
   readonly theme$ = this.themeSubject.asObservable();
 
   init(): void {
     const stored = localStorage.getItem(this.storageKey) as AppTheme | null;
-    const theme = stored ?? 'rose';
+    const theme = stored ?? 'sage';
     this.applyTheme(theme);
     this.themeSubject.next(theme);
   }

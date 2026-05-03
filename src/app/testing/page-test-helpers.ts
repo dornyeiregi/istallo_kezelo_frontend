@@ -304,7 +304,7 @@ export function buildPageTestProviders(options: PageTestOptions = {}): Provider[
     {
       provide: ThemeService,
       useValue: {
-        getTheme: () => 'rose',
+        getTheme: () => 'sage',
         setTheme: () => undefined,
       },
     },

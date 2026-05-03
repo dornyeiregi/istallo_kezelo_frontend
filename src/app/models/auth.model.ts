@@ -20,15 +20,3 @@ export interface AuthResponse {
   refreshToken?: string;
   user: AuthUser;
 }
-
-export interface RegisterPayload {
-  username: string;
-  password: string;
-  email: string;
-  fName: string;
-  lName: string;
-  f_name?: string;
-  l_name?: string;
-  phone?: string;
-  userType: UserType;
-}

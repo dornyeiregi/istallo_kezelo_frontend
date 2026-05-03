@@ -82,7 +82,7 @@ describe('SettingsPage', () => {
     );
 
     themeService = jasmine.createSpyObj<ThemeService>('ThemeService', ['getTheme', 'setTheme']);
-    themeService.getTheme.and.returnValue('rose');
+    themeService.getTheme.and.returnValue('sage');
 
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
   });
@@ -321,7 +321,7 @@ describe('SettingsPage', () => {
     component.goBack();
 
     expect(themeService.setTheme).toHaveBeenCalledWith('sage');
-    expect(component.currentTheme).toBe('rose');
+    expect(component.currentTheme).toBe('sage');
     expect(router.navigate).toHaveBeenCalledWith(['/']);
   });
 });

@@ -51,36 +51,6 @@ describe('AuthService', () => {
     expect(service.isLoggedIn()).toBeTrue();
   });
 
-  it('sends register payload without mutating auth state', () => {
-    const payload = {
-      fName: 'Anna',
-      f_name: 'Anna',
-      lName: 'Nagy',
-      l_name: 'Nagy',
-      email: 'anna@example.com',
-      phone: '',
-      username: 'anna',
-      password: 'secret123',
-      userType: 'OWNER' as const,
-    };
-    const response: AuthResponse = {
-      token: 'signup-token',
-      user: { id: 1, username: 'anna' } as AuthUser,
-    };
-
-    service.register(payload).subscribe((data) => {
-      expect(data).toEqual(response);
-    });
-
-    const req = httpMock.expectOne(`${API_BASE_URL}/api/auth/signup`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(payload);
-    req.flush(response);
-
-    expect(localStorage.getItem(TOKEN_KEY)).toBeNull();
-    expect(localStorage.getItem(USER_KEY)).toBeNull();
-  });
-
   it('logout clears storage and current user', () => {
     localStorage.setItem(TOKEN_KEY, 'tkn');
     localStorage.setItem(USER_KEY, JSON.stringify({ id: 1, username: 'u' }));
